@@ -1,0 +1,46 @@
+<resources>
+  <string name="app_name">ab-log server</string>
+  <string name="nav_header_title">ab-log.ru /droid</string>
+  <string name="ab_logo_desc">Smart home with ab-log.ru</string>
+  <string name="nav_sub_header">daemon tools (unofficial)</string>
+  <string name="navigation_drawer_open">Open navigation drawer</string>
+  <string name="navigation_drawer_close">Close navigation drawer</string>
+
+  <string name="ok_title">Ok</string>
+  <string name="name_title">Name</string>
+  <string name="logs_title">Logs</string>
+  <string name="about_title">About</string>
+  <string name="users_title">Users</string>
+  <string name="cloud_title">Cloud</string>
+  <string name="email_title">Email</string>
+  <string name="address_title">Address</string>
+  <string name="megad_title">MegaD-2561</string>
+  <string name="services_title">Services</string>
+  <string name="new_user_title">New user</string>
+  <string name="password_title">Password</string>
+  <string name="ab_log_ru_title">ab-log.ru</string>
+  <string name="hardwares_title">Hardwares</string>
+  <string name="add_hardware_title">Add hardware</string>
+  <string name="ab_log_ru_title2">ab-log  ⁞ hardware</string>
+  <string name="source_github_title2">GitHub ⁞ source</string>
+  <string name="create_new_user_title">Create new user</string>
+
+  <string name="alarms_title">Alarms *</string>
+  <string name="alarm_short_label">{A} *</string>
+  <string name="interpretation_alarm_for_hardware">*  sending alarms to users</string>
+  <string name="interpretation_alarm_for_user">*  receive notifications from the server/controller</string>
+
+  <string name="commands_title">Commands **</string>
+  <string name="command_short_label">[C] **</string>
+  <string name="interpretation_command_for_hardware">**  command execution from remote users</string>
+  <string name="interpretation_command_for_user">**  allow sending commands to the server/controller</string>
+
+  <string name="hardware_adding_subtitle">Add connected hardware</string>
+
+  <string name="phone_hint">Phone: +79994443322</string>
+  <string name="email_hint">E-mail: my@domain.com</string>
+  <string name="telegram_hint">Telegram id: 45678912345</string>
+
+  <string name="nav_sub_header_title">configurator</string>
+  <string name="about_app_information">Application:\n Xamarin AndroidX .Net C#\n\nOpen source project:\n  https://github.com/badhitman/ab-log-app \n\nHardware oficial site/shop:\n  https://ab-log.ru </string>
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+  <group android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_hardware"
+        android:checked="true"
+        android:icon="@drawable/ic_dvr"
+        android:title="@string/megad_title" />
+    <item
+        android:id="@+id/nav_users"
+        android:icon="@drawable/ic_people"
+        android:title="@string/users_title" />
+    <item
+        android:id="@+id/nav_cloud_queue"
+        android:icon="@drawable/ic_cloud_queue"
+        android:title="@string/cloud_title" />
+    <item
+        android:id="@+id/nav_smart_button"
+        android:icon="@drawable/ic_smart_button"
+        android:title="@string/services_title" />
+  </group>
+
+  <item android:title="Links">
+    <menu>
+      <item
+          android:id="@+id/nav_goto_official_site"
+          android:icon="@drawable/ic_menu_send"
+          android:title="@string/ab_log_ru_title2" />
+      <item
+          android:id="@+id/nav_developer_board"
+          android:icon="@drawable/ic_developer_board"
+          android:title="@string/source_github_title2" />
+    </menu>
+  </item>
+</menu>
