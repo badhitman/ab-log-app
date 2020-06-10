@@ -83,7 +83,7 @@ namespace ab
                 errMsg = $"{(errMsg + "Error empty 'Password' hardware").Trim()}\n";
             }
 
-            lock (gs.DbLocker)
+            lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
@@ -113,7 +113,7 @@ namespace ab
                 return;
             }
 
-            lock (gs.DbLocker)
+            lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {

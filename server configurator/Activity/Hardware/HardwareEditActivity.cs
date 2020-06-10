@@ -25,7 +25,7 @@ namespace ab
             base.OnCreate(savedInstanceState);
             ReadView();
 
-            lock (gs.DbLocker)
+            lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
@@ -102,7 +102,7 @@ namespace ab
             ButtonConfirmDeleteHardware.SetTextColor(Color.DarkRed);
             ButtonConfirmDeleteHardware.Click += new EventHandler((sender, eventArg) =>
             {
-                lock (gs.DbLocker)
+                lock (DatabaseContext.DbLocker)
                 {
                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                     {
@@ -128,7 +128,7 @@ namespace ab
                 return;
             }
 
-            lock (gs.DbLocker)
+            lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {

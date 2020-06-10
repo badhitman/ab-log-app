@@ -15,7 +15,7 @@ namespace ab.Services
     {
         public event EventHandler<int> ItemClick;
 
-        public override int ItemCount=> DatabaseContext.UsersCached.Count();
+        public override int ItemCount => DatabaseContext.UsersCached.Count();
 
         void OnClick(int position)
         {
@@ -26,17 +26,17 @@ namespace ab.Services
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             UserViewHolder vh = holder as UserViewHolder;
-            lock (gs.DbLocker)
+            lock (DatabaseContext.DbLocker)
             {
                 //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 //{
-                    UserModel user = DatabaseContext.UsersCached.Skip(position).FirstOrDefault();
-                    vh.Name.Text = user.Name;
-                    vh.AlarmSubscriber.Text = user.AlarmSubscriber ? "{A}" : " ";
-                    vh.CommandsAllowed.Text = user.CommandsAllowed ? "[C]" : " ";
-                    vh.Email.Text = $"e-mail: {user.Email}";
-                    vh.Phone.Text = $"phone: {user.Phone}";
-                    vh.TelegramId.Text = $"telegram: {user.TelegramId}";
+                UserModel user = DatabaseContext.UsersCached.Skip(position).FirstOrDefault();
+                vh.Name.Text = user.Name;
+                vh.AlarmSubscriber.Text = user.AlarmSubscriber ? "{A}" : " ";
+                vh.CommandsAllowed.Text = user.CommandsAllowed ? "[C]" : " ";
+                vh.Email.Text = $"e-mail: {user.Email}";
+                vh.Phone.Text = $"phone: {user.Phone}";
+                vh.TelegramId.Text = $"telegram: {user.TelegramId}";
                 //}
             }
             if (string.IsNullOrWhiteSpace(vh.AlarmSubscriber.Text + vh.CommandsAllowed.Text))

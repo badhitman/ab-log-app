@@ -26,7 +26,7 @@ namespace ab.Services
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             HardwareViewHolder vh = holder as HardwareViewHolder;
-            lock (gs.DbLocker)
+            lock (DatabaseContext.DbLocker)
             {
                 //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 //{

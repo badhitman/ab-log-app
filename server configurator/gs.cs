@@ -11,8 +11,6 @@ namespace ab
     /// </summary>
     public static class gs
     {
-        public static object DbLocker = new object();
-
         /// <summary>
         /// имя файла основной базы данны
         /// </summary>

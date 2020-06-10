@@ -26,7 +26,7 @@ namespace ab
             base.OnCreate(savedInstanceState);
             ReadView();
             UserCardSubHeader.Text = "Edit user";
-            lock (gs.DbLocker)
+            lock (DatabaseContext.DbLocker)
             {
                 //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 //{
@@ -101,7 +101,7 @@ namespace ab
             buttonConfirmDeleteUser.SetTextColor(Color.DarkRed);
             buttonConfirmDeleteUser.Click += new EventHandler((sender, eventArg) =>
             {
-                lock (gs.DbLocker)
+                lock (DatabaseContext.DbLocker)
                 {
                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                     {
@@ -128,7 +128,7 @@ namespace ab
                 return;
             }
 
-            lock (gs.DbLocker)
+            lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {

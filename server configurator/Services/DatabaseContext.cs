@@ -11,6 +11,7 @@ namespace ab.Services
     public class DatabaseContext : DbContext
     {
         private string _databasePath;
+        public static object DbLocker = new object();
 
         public static List<HardwareModel> HardwaresCached { get; set; }
 

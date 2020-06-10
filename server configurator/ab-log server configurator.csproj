@@ -83,7 +83,7 @@
     <Compile Include="Activity\AboutPageActivity.cs" />
     <Compile Include="Activity\CloudActivity.cs" />
     <Compile Include="Services\abstract\aViewHolder.cs" />
-    <Compile Include="Services\ApplicationContext.cs" />
+    <Compile Include="Services\DatabaseContext.cs" />
     <Compile Include="Services\hardware\HardwareListAdapter.cs" />
     <Compile Include="Services\hardware\HardwareViewHolder.cs" />
     <Compile Include="Activity\Users\UsersListActivity.cs" />
