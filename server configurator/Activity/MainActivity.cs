@@ -38,21 +38,21 @@ namespace ab
                 main_splash = FindViewById<LinearLayout>(Resource.Id.main_splash);
             });
             var Gravity = Android.Views.GravityFlags.CenterHorizontal;
-            //#if DEBUG
-            //            if (DemoDataBase)
-            //            {
-            //                RunOnUiThread(() =>
-            //                {
-            //                    AppCompatTextView appCompatTextView = new AppCompatTextView(this)
-            //                    {
-            //                        Text = "automatic delete database!",
-            //                        Gravity = Gravity
-            //                    };
-            //                    main_splash.AddView(appCompatTextView);
-            //                });
-            //                File.Delete(gs.DatabasePathBase);
-            //            }
-            //#endif
+#if DEBUG
+            if (DemoDataBase)
+            {
+                RunOnUiThread(() =>
+                {
+                    AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+                    {
+                        Text = "auto-delete database!",
+                        Gravity = Gravity
+                    };
+                    main_splash.AddView(appCompatTextView);
+                });
+                File.Delete(gs.DatabasePathBase);
+            }
+#endif
             using (var db = new DatabaseContext(gs.DatabasePathBase))
             {
                 RunOnUiThread(() =>
