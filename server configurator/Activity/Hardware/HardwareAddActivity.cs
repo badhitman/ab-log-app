@@ -117,16 +117,18 @@ namespace ab
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    db.Hardwares.Add(new HardwareModel()
+                    HardwareModel hardware = new HardwareModel()
                     {
                         AlarmSubscriber = HardwareAlarmSubscribing.Checked,
                         CommandsAllowed = HardwareCommandsAllowed.Checked,
                         Name = HardwareName.Text.Trim(),
                         Address = HardwareAddress.Text.Trim(),
                         Password = HardwarePassword.Text.Trim()
-                    });
+                    };
+                    db.Hardwares.Add(hardware);
 
                     db.SaveChanges();
+                    DatabaseContext.HardwaresCached.Add(hardware);
                 }
             }
             StartActivity(typeof(HardwaresListActivity));

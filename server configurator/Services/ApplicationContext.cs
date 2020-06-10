@@ -12,7 +12,7 @@ namespace ab.Services
     {
         private string _databasePath;
 
-        public static HardwareModel[] HardwaresCached { get; set; }
+        public static List<HardwareModel> HardwaresCached { get; set; }
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<HardwareModel> Hardwares { get; set; }

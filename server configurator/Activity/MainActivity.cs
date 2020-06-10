@@ -36,14 +36,18 @@ namespace ab
                 SetContentView(Resource.Layout.main_activity);
                 main_splash = FindViewById<LinearLayout>(Resource.Id.main_splash);
             });
+            var Gravity = Android.Views.GravityFlags.CenterHorizontal;
 #if DEBUG
             if (DemoDataBase)
             {
                 RunOnUiThread(() =>
                 {
-                    AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "automatic delete database!" };
+                    AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+                    {
+                        Text = "automatic delete database!",
+                        Gravity = Gravity
+                    };
                     main_splash.AddView(appCompatTextView);
-                    //Toast.MakeText(this, "automatic delete database!", ToastLength.Short).Show();
                 });
                 File.Delete(gs.DatabasePathBase);
             }
@@ -52,8 +56,11 @@ namespace ab
             {
                 RunOnUiThread(() =>
                 {
-                    //Toast.MakeText(this, "checking the database ...", ToastLength.Short).Show(); 
-                    AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "checking the database ..." };
+                    AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+                    {
+                        Text = "checking the database ...",
+                        Gravity = Gravity
+                    };
                     main_splash.AddView(appCompatTextView);
                 });
                 db.Database.EnsureCreatedAsync();
@@ -62,8 +69,11 @@ namespace ab
                 {
                     RunOnUiThread(() =>
                     {
-                        //Toast.MakeText(this, "load of demo Users ...", ToastLength.Short).Show(); 
-                        AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "load of demo Users ..." };
+                        AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+                        {
+                            Text = "load of demo Users ...",
+                            Gravity = Gravity
+                        };
                         main_splash.AddView(appCompatTextView);
                     });
                     db.Users.AddAsync(new UserModel { Name = "Tom", Email = "tom@gmail.com", Phone = "+79995554422", TelegramId = "00000000000", AlarmSubscriber = true, CommandsAllowed = true });
@@ -74,8 +84,11 @@ namespace ab
                 {
                     RunOnUiThread(() =>
                     {
-                        //Toast.MakeText(this, "load of demo Hardwares ...", ToastLength.Short).Show(); 
-                        AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "load of demo Hardwares ..." };
+                        AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+                        {
+                            Text = "load of demo Hardwares ...",
+                            Gravity = Gravity
+                        };
                         main_splash.AddView(appCompatTextView);
                     });
                     db.Hardwares.AddAsync(new HardwareModel { Name = "Home", Address = "192.168.1.5", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
@@ -84,16 +97,23 @@ namespace ab
                 }
                 RunOnUiThread(() =>
                 {
-                    //Toast.MakeText(this, "caching controllers ...", ToastLength.Short).Show(); 
-                    AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "caching controllers ..." };
+                    AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+                    {
+                        Text = "caching controllers ...",
+                        Gravity = Gravity
+                    };
                     main_splash.AddView(appCompatTextView);
                 });
-                DatabaseContext.HardwaresCached = db.Hardwares.OrderBy(x => x.Id).ToArray();
+                DatabaseContext.HardwaresCached = db.Hardwares.OrderBy(x => x.Id).ToList();
             }
             RunOnUiThread(() =>
             {
-                //Toast.MakeText(this, "start app ...", ToastLength.Short).Show(); 
-                AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "start app ..." };
+                Toast.MakeText(this, "start app ...", ToastLength.Short).Show();
+                AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+                {
+                    Text = "start app ...",
+                    Gravity = Gravity
+                };
                 main_splash.AddView(appCompatTextView);
             });
             StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));

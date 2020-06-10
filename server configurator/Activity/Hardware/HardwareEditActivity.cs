@@ -92,7 +92,7 @@ namespace ab
             ButtonDeletingHardware.Enabled = false;
             ButtonDeletingHardware.SetTextColor(Color.Gray);
 
-            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "WANTED! Deleting hardware!", TextSize = 20 };
+            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "Deleting hardware!", TextSize = 20 };
             appCompatTextView.SetTextColor(Color.Red);
             appCompatTextView.SetWidth(3);
             HardwareFooterLayout.AddView(appCompatTextView);
@@ -109,6 +109,7 @@ namespace ab
                         HardwareModel hardware = db.Hardwares.Find(hardwareId);
                         db.Hardwares.Remove(hardware);
                         db.SaveChanges();
+                        DatabaseContext.HardwaresCached.RemoveAt(gs.SelectedListPosition);
                         StartActivity(typeof(HardwaresListActivity));
                     }
                 }
@@ -142,6 +143,7 @@ namespace ab
 
                     db.Hardwares.Update(hw);
                     db.SaveChanges();
+                    DatabaseContext.HardwaresCached[gs.SelectedListPosition] = hw;
                 }
             }
             StartActivity(typeof(HardwaresListActivity));

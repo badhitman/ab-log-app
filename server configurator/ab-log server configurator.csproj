@@ -102,9 +102,6 @@
     <AndroidResource Include="Resources\layout\main_activity.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\main_app_bar.xml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\layout\main_content.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
