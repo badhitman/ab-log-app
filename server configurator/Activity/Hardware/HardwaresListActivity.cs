@@ -31,7 +31,7 @@ namespace ab
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.SetLayoutManager(mLayoutManager);
 
-            mAdapter = new HardwareListAdapter();
+            mAdapter = new HardwareListAdapter(this);
 
             mRecyclerView.SetAdapter(mAdapter);
         }

@@ -25,29 +25,30 @@ namespace ab
         {
             base.OnCreate(savedInstanceState);
             ReadView();
-            UserCardSubHeader.Text = "Edit user";
+
             lock (DatabaseContext.DbLocker)
             {
                 //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 //{
                 if (gs.SelectedListPosition < 0 || DatabaseContext.UsersCached.Count() < gs.SelectedListPosition + 1)
                 {
-                    UserName.Text = "-error-";
+                    string err_title = Resources.GetString(Resource.String.err_title_2);
+                    UserName.Text = err_title;
                     UserName.Enabled = false;
 
-                    UserEmail.Text = "-error-";
+                    UserEmail.Text = err_title;
                     UserEmail.Enabled = false;
 
-                    UserPhone.Text = "-error-";
+                    UserPhone.Text = err_title;
                     UserPhone.Enabled = false;
 
-                    UserTelegram.Text = "-error-";
+                    UserTelegram.Text = err_title;
                     UserTelegram.Enabled = false;
 
                     UserAlarmSubscribing.Enabled = false;
                     UserCommandsAllowed.Enabled = false;
 
-                    UserCardSubHeader.Text = "-error-";
+                    UserCardSubHeader.Text = err_title;
                     UserCardSubHeader.Enabled = false;
 
                     UserCardButtonOk.Enabled = false;
@@ -65,10 +66,10 @@ namespace ab
                 //}
             }
 
-            UserCardHeader.Text = "Edit user";
-            UserCardSubHeader.Text = "View & edit existing user";
+            UserCardHeader.Text = Resources.GetString(Resource.String.edit_user_title);
+            UserCardSubHeader.Text = Resources.GetString(Resource.String.edit_user_sub_title);
 
-            AppCompatButton buttonDeleteUser = new AppCompatButton(this) { Text = "Delete" };
+            AppCompatButton buttonDeleteUser = new AppCompatButton(this) { Text = Resources.GetString(Resource.String.delete_title) };
             buttonDeleteUser.SetTextColor(Color.DarkRed);
             buttonDeleteUser.Click += ButtonDeleteUser_Click;
             buttonDeleteUser.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
@@ -80,24 +81,24 @@ namespace ab
             AppCompatButton buttonDeleteUser = sender as AppCompatButton;
             buttonDeleteUser.Enabled = false;
             UserCardButtonOk.Enabled = false;
-            UserCardButtonOk.Text = "deleting user ...";
+            UserCardButtonOk.Text = Resources.GetString(Resource.String.ok_mute_button_with_remove_user);
             UserName.Enabled = false;
             UserEmail.Enabled = false;
             UserPhone.Enabled = false;
             UserTelegram.Enabled = false;
             UserAlarmSubscribing.Enabled = false;
             UserCommandsAllowed.Enabled = false;
-            UserCardSubHeader.Text = "Request delete remote user account from database!";
-            UserCardHeader.Text = "Remove user";
+            UserCardSubHeader.Text = Resources.GetString(Resource.String.delete_user_card_sub_title);
+            UserCardHeader.Text = Resources.GetString(Resource.String.delete_user_card_header);
             UserCardSubHeader.SetTextColor(Color.IndianRed);
             buttonDeleteUser.SetTextColor(Color.Gray);
 
-            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "WANTED! Confirm delete user?", TextSize = 20 };
+            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = Resources.GetString(Resource.String.footer_text_with_remove_user), TextSize = 15 };
             appCompatTextView.SetTextColor(Color.Red);
             appCompatTextView.SetWidth(3);
             UserFooterLayout.AddView(appCompatTextView);
 
-            AppCompatButton buttonConfirmDeleteUser = new AppCompatButton(this) { Text = "Confirm Delete" };
+            AppCompatButton buttonConfirmDeleteUser = new AppCompatButton(this) { Text = Resources.GetString(Resource.String.button_confirm_remove) };
             buttonConfirmDeleteUser.SetTextColor(Color.DarkRed);
             buttonConfirmDeleteUser.Click += new EventHandler((sender, eventArg) =>
             {
@@ -123,7 +124,7 @@ namespace ab
             if (!string.IsNullOrWhiteSpace(errMsg))
             {
                 UserCardSubHeader.Text = errMsg;
-                UserCardSubHeader.SetTextColor(Android.Graphics.Color.Red);
+                UserCardSubHeader.SetTextColor(Color.Red);
                 Toast.MakeText(this, errMsg, ToastLength.Short).Show();
                 return;
             }

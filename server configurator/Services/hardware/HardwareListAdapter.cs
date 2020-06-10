@@ -5,6 +5,7 @@
 using System;
 using System.Linq;
 using ab.Model;
+using Android.Content;
 using Android.Graphics;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
@@ -14,8 +15,14 @@ namespace ab.Services
     public class HardwareListAdapter : RecyclerView.Adapter
     {
         public event EventHandler<int> ItemClick;
+        Context mContext;
 
         public override int ItemCount => DatabaseContext.HardwaresCached.Count();
+
+        public HardwareListAdapter(Context _mContext)
+        {
+            mContext = _mContext;
+        }
 
         void OnClick(int position)
         {
@@ -35,12 +42,12 @@ namespace ab.Services
                 vh.Address.Text = hardware.Address;
                 if (!hardware.AlarmSubscriber)
                 {
-                    vh.AlarmSubscriber.Text = "-mute-";
+                    vh.AlarmSubscriber.Text = mContext.Resources.GetString(Resource.String.mute_marker_title);
                     vh.AlarmSubscriber.SetTextColor(Color.LightGray);
                 }
                 if (!hardware.CommandsAllowed)
                 {
-                    vh.CommandsAllowed.Text = "-deaf-";
+                    vh.CommandsAllowed.Text = mContext.Resources.GetString(Resource.String.deaf_marker_title);
                     vh.CommandsAllowed.SetTextColor(Color.LightGray);
                 }
                 //}

@@ -1,0 +1,74 @@
+<resources>
+  <string name="app_name">ab-log сервер</string>
+  <string name="nav_header_title">ab-log.ru /droid</string>
+  <string name="ab_logo_desc">Умный дом с ab-log.ru</string>
+  <string name="nav_sub_header">daemon tools (неофициальный)</string>
+  <string name="navigation_drawer_open">Open navigation drawer</string>
+  <string name="navigation_drawer_close">Close navigation drawer</string>
+
+  <string name="ok_title">Ok</string>
+  <string name="name_title">Имя</string>
+  <string name="logs_title">Логи</string>
+  <string name="about_title">О программе</string>
+  <string name="users_title">Пользователи</string>
+  <string name="cloud_title">Облако</string>
+  <string name="email_title">Email</string>
+  <string name="delete_title">Удалить</string>
+  <string name="delete_hardware_card_title">Удаление устройства</string>
+  <string name="delete_hardware_card_sub_title">Запрос удаления устройства из базы данных!</string>
+  <string name="address_title">Адрес</string>
+  <string name="megad_title">MegaD-2561</string>
+  <string name="services_title">Службы</string>
+  <string name="new_user_title">Новый пользователь</string>
+  <string name="password_title">Пароль</string>
+  <string name="ab_log_ru_title">ab-log.ru</string>
+  <string name="hardwares_title">Устройства</string>
+  <string name="edit_hardware_title">Изменить устройство</string>
+  <string name="edit_hardware_sub_title">Просмотр/редактирование вашего устройства</string>
+  <string name="add_hardware_title">Добавить устройство</string>
+  <string name="ab_log_ru_title2">ab-log  ⁞ устройства</string>
+  <string name="source_github_title2">GitHub ⁞ исходники</string>
+  <string name="create_new_user_title">Создать нового пользователя</string>
+  <string name="err_title_2">-ошибка-</string>
+  <string name="ok_mute_button_with_remove_hardware">удаление устройства ...</string>
+  <string name="footer_text_with_remove_hardware">Внимание! Удаление управляющего контроллера? Данное действие невозможно отменить!</string>
+  <string name="button_confirm_remove">Подтвердить удаление</string>
+  <string name="error_empty_name_hardware">Ошибка! пустое Имя устройства</string>
+  <string name="error_empty_address_hardware">Ошибка! пустой адрес устройства</string>
+  <string name="error_empty_password_hardware">Ошибка! пустой пароль устройства</string>
+  <string name="error_duplicate_name_hardware">Ошибка! Такое имя уже используется другим устройством</string>
+  <string name="error_duplicate_address_hardware">Ошибка! Такой адрес уже используется другим устройством</string>
+  <string name="mute_marker_title">-молчит-</string>
+  <string name="deaf_marker_title">-глухой-</string>
+  <string name="error_empty_name_user">Ошибка! пустое Имя пользователя</string>
+  <string name="error_empty_contacts_user">Ошибка! Не указаны контакты пользователя</string>
+  <string name="error_duplicate_name_user">Ошибка! Такое имя пользователя уже используется</string>
+  <string name="error_duplicate_email_user">Ошибка! Такой E-mail уже используется у другого пользователя</string>
+  <string name="error_duplicate_phone_user">Ошибка! Такой телефон уже используется у другого пользователя</string>
+  <string name="error_duplicate_telegram_user">Ошибка! Такой TelegramId уже используется у другого пользователя</string>
+  <string name="edit_user_title">Редактирвоание пользователя</string>
+  <string name="edit_user_sub_title">Просмотр/изменение акаунта существующего пользователя</string>
+  <string name="ok_mute_button_with_remove_user">удаление пользователя ...</string>
+  <string name="delete_user_card_sub_title">Запрос удаления пользователя из базы данных!</string>
+  <string name="delete_user_card_header">Удалить пользователя</string>
+  <string name="footer_text_with_remove_user">Внимание! Удаление пользователя? Данное действие невозможно будет отменить!</string>
+
+  <string name="alarms_title">Информирование *</string>
+  <string name="alarm_short_label">{И} *</string>
+  <string name="interpretation_alarm_for_hardware">*  отправка уведомлений пользователям</string>
+  <string name="interpretation_alarm_for_user">*  получение уведомлений от сервера</string>
+
+  <string name="commands_title">Команды **</string>
+  <string name="command_short_label">[К] **</string>
+  <string name="interpretation_command_for_hardware">**  выполнение команд удалённых пользователей</string>
+  <string name="interpretation_command_for_user">**  разрешение на отправку команд серверу</string>
+
+  <string name="hardware_adding_subtitle">Добавление подключённого к сети устройства</string>
+
+  <string name="phone_hint">Телефон: +79994443322</string>
+  <string name="email_hint">E-mail: my@domain.com</string>
+  <string name="telegram_hint">Telegram id: 45678912345</string>
+
+  <string name="nav_sub_header_title">конфигуратор</string>
+  <string name="about_app_information">Приложение:\n Xamarin AndroidX .Net C#\n\nOpen source проект:\n  https://github.com/badhitman/ab-log-app \n\nОфициальный сайт производителя контроллеров:\n  https://ab-log.ru </string>
+</resources>

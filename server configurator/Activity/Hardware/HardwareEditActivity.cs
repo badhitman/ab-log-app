@@ -31,19 +31,20 @@ namespace ab
                 {
                     if (gs.SelectedListPosition < 0 || db.Hardwares.Count() < gs.SelectedListPosition + 1)
                     {
-                        HardwareName.Text = "-error-";
+                        string err_title = Resources.GetString(Resource.String.err_title_2);
+                        HardwareName.Text = err_title;
                         HardwareName.Enabled = false;
 
-                        HardwareAddress.Text = "-error-";
+                        HardwareAddress.Text = err_title;
                         HardwareAddress.Enabled = false;
 
-                        HardwarePassword.Text = "-error-";
+                        HardwarePassword.Text = err_title;
                         HardwarePassword.Enabled = false;
 
                         HardwareAlarmSubscribing.Enabled = false;
                         HardwareCommandsAllowed.Enabled = false;
 
-                        HardwareCardSubHeader.Text = "-error-";
+                        HardwareCardSubHeader.Text = err_title;
                         HardwareCardSubHeader.Enabled = false;
 
                         HardwareCardButtonOk.Enabled = false;
@@ -61,10 +62,10 @@ namespace ab
                 }
             }
 
-            HardwareCardHeader.Text = "Edit hardware";
-            HardwareCardSubHeader.Text = "View & edit existing hardware";
+            HardwareCardHeader.Text = Resources.GetString(Resource.String.edit_hardware_title);
+            HardwareCardSubHeader.Text = Resources.GetString(Resource.String.edit_hardware_sub_title);
 
-            AppCompatButton buttonDeleteHardware = new AppCompatButton(this) { Text = "Delete" };
+            AppCompatButton buttonDeleteHardware = new AppCompatButton(this) { Text = Resources.GetString(Resource.String.delete_title) };
             buttonDeleteHardware.SetTextColor(Color.DarkRed);
             buttonDeleteHardware.Click += ButtonDeleteHardware_Click;
             buttonDeleteHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
@@ -73,9 +74,9 @@ namespace ab
 
         private void ButtonDeleteHardware_Click(object sender, EventArgs e)
         {
-            HardwareCardHeader.Text = "Removing hardware";
+            HardwareCardHeader.Text = Resources.GetString(Resource.String.delete_hardware_card_title);
 
-            HardwareCardSubHeader.Text = "Request delete remote hardware from database!";
+            HardwareCardSubHeader.Text = Resources.GetString(Resource.String.delete_hardware_card_sub_title);
             HardwareCardSubHeader.SetTextColor(Color.IndianRed);
 
             HardwareName.Enabled = false;
@@ -86,18 +87,18 @@ namespace ab
             HardwareCommandsAllowed.Enabled = false;
 
             HardwareCardButtonOk.Enabled = false;
-            HardwareCardButtonOk.Text = "deleting hardware ...";
+            HardwareCardButtonOk.Text = Resources.GetString(Resource.String.ok_mute_button_with_remove_hardware);
 
             AppCompatButton ButtonDeletingHardware = sender as AppCompatButton;
             ButtonDeletingHardware.Enabled = false;
             ButtonDeletingHardware.SetTextColor(Color.Gray);
 
-            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "Deleting hardware!", TextSize = 20 };
+            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = Resources.GetString(Resource.String.footer_text_with_remove_hardware), TextSize = 15 };
             appCompatTextView.SetTextColor(Color.Red);
             appCompatTextView.SetWidth(3);
             HardwareFooterLayout.AddView(appCompatTextView);
 
-            AppCompatButton ButtonConfirmDeleteHardware = new AppCompatButton(this) { Text = "Confirm Delete" };
+            AppCompatButton ButtonConfirmDeleteHardware = new AppCompatButton(this) { Text = Resources.GetString(Resource.String.button_confirm_remove) };
             ButtonConfirmDeleteHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             ButtonConfirmDeleteHardware.SetTextColor(Color.DarkRed);
             ButtonConfirmDeleteHardware.Click += new EventHandler((sender, eventArg) =>
