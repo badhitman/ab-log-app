@@ -13,6 +13,7 @@ using Android.OS;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.AppCompat.Widget;
+using Microsoft.EntityFrameworkCore;
 
 namespace ab
 {
@@ -29,7 +30,7 @@ namespace ab
             ThreadPool.QueueUserWorkItem(o => SimulateStartup());
         }
 
-        void SimulateStartup()
+        async void SimulateStartup()
         {
             RunOnUiThread(() =>
             {
@@ -37,21 +38,21 @@ namespace ab
                 main_splash = FindViewById<LinearLayout>(Resource.Id.main_splash);
             });
             var Gravity = Android.Views.GravityFlags.CenterHorizontal;
-#if DEBUG
-            if (DemoDataBase)
-            {
-                RunOnUiThread(() =>
-                {
-                    AppCompatTextView appCompatTextView = new AppCompatTextView(this)
-                    {
-                        Text = "automatic delete database!",
-                        Gravity = Gravity
-                    };
-                    main_splash.AddView(appCompatTextView);
-                });
-                File.Delete(gs.DatabasePathBase);
-            }
-#endif
+//#if DEBUG
+//            if (DemoDataBase)
+//            {
+//                RunOnUiThread(() =>
+//                {
+//                    AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+//                    {
+//                        Text = "automatic delete database!",
+//                        Gravity = Gravity
+//                    };
+//                    main_splash.AddView(appCompatTextView);
+//                });
+//                File.Delete(gs.DatabasePathBase);
+//            }
+//#endif
             using (var db = new DatabaseContext(gs.DatabasePathBase))
             {
                 RunOnUiThread(() =>
@@ -63,9 +64,9 @@ namespace ab
                     };
                     main_splash.AddView(appCompatTextView);
                 });
-                db.Database.EnsureCreatedAsync();
+                await db.Database.EnsureCreatedAsync();
 
-                if (db.Users.Count() == 0)
+                if (await db.Users.CountAsync() == 0)
                 {
                     RunOnUiThread(() =>
                     {
@@ -76,9 +77,9 @@ namespace ab
                         };
                         main_splash.AddView(appCompatTextView);
                     });
-                    db.Users.AddAsync(new UserModel { Name = "Tom", Email = "tom@gmail.com", Phone = "+79995554422", TelegramId = "00000000000", AlarmSubscriber = true, CommandsAllowed = true });
-                    db.Users.AddAsync(new UserModel { Name = "Alice", Email = "alice@gmail.com", Phone = "+75556664411", TelegramId = "159357456258", AlarmSubscriber = false, CommandsAllowed = true });
-                    db.SaveChangesAsync();
+                    await db.Users.AddAsync(new UserModel { Name = "Tom", Email = "tom@gmail.com", Phone = "+79995554422", TelegramId = "00000000000", AlarmSubscriber = true, CommandsAllowed = true });
+                    await db.Users.AddAsync(new UserModel { Name = "Alice", Email = "alice@gmail.com", Phone = "+75556664411", TelegramId = "159357456258", AlarmSubscriber = false, CommandsAllowed = true });
+                    await db.SaveChangesAsync();
                 }
                 if (db.Hardwares.Count() == 0)
                 {
@@ -91,20 +92,31 @@ namespace ab
                         };
                         main_splash.AddView(appCompatTextView);
                     });
-                    db.Hardwares.AddAsync(new HardwareModel { Name = "Home", Address = "192.168.1.5", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
-                    db.Hardwares.AddAsync(new HardwareModel { Name = "Outdoor", Address = "192.168.1.6", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
-                    db.SaveChangesAsync();
+                    await db.Hardwares.AddAsync(new HardwareModel { Name = "Home", Address = "192.168.1.5", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
+                    await db.Hardwares.AddAsync(new HardwareModel { Name = "Outdoor", Address = "192.168.1.6", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
+                    await db.SaveChangesAsync();
                 }
                 RunOnUiThread(() =>
                 {
                     AppCompatTextView appCompatTextView = new AppCompatTextView(this)
                     {
-                        Text = "caching controllers ...",
+                        Text = "caching hardware list ...",
                         Gravity = Gravity
                     };
                     main_splash.AddView(appCompatTextView);
                 });
-                DatabaseContext.HardwaresCached = db.Hardwares.OrderBy(x => x.Id).ToList();
+                DatabaseContext.HardwaresCached = await db.Hardwares.OrderBy(x => x.Id).ToListAsync();
+
+                RunOnUiThread(() =>
+                {
+                    AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+                    {
+                        Text = "caching users list ...",
+                        Gravity = Gravity
+                    };
+                    main_splash.AddView(appCompatTextView);
+                });
+                DatabaseContext.UsersCached = await db.Users.OrderBy(x => x.Id).ToListAsync();
             }
             RunOnUiThread(() =>
             {

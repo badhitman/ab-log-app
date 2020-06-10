@@ -30,19 +30,19 @@ namespace ab.Services
             {
                 //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 //{
-                    HardwareModel hardware = DatabaseContext.HardwaresCached.Skip(position).FirstOrDefault();
-                    vh.Name.Text = hardware.Name;
-                    vh.Address.Text = hardware.Address;
-                    if (!hardware.AlarmSubscriber)
-                    {
-                        vh.AlarmSubscriber.Text = "-mute-";
-                        vh.AlarmSubscriber.SetTextColor(Color.LightGray);
-                    }
-                    if (!hardware.CommandsAllowed)
-                    {
-                        vh.CommandsAllowed.Text = "-deaf-";
-                        vh.CommandsAllowed.SetTextColor(Color.LightGray);
-                    }
+                HardwareModel hardware = DatabaseContext.HardwaresCached.Skip(position).FirstOrDefault();
+                vh.Name.Text = hardware.Name;
+                vh.Address.Text = hardware.Address;
+                if (!hardware.AlarmSubscriber)
+                {
+                    vh.AlarmSubscriber.Text = "-mute-";
+                    vh.AlarmSubscriber.SetTextColor(Color.LightGray);
+                }
+                if (!hardware.CommandsAllowed)
+                {
+                    vh.CommandsAllowed.Text = "-deaf-";
+                    vh.CommandsAllowed.SetTextColor(Color.LightGray);
+                }
                 //}
             }
         }

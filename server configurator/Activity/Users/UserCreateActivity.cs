@@ -83,25 +83,25 @@ namespace ab
 
             lock (gs.DbLocker)
             {
-                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                //{
+                if (!string.IsNullOrWhiteSpace(UserName.Text) && DatabaseContext.UsersCached.Where(x => x.Name.Trim().ToLower() == UserName.Text.ToLower() && x.Id != userId).Any())
                 {
-                    if (!string.IsNullOrWhiteSpace(UserName.Text) && db.Users.Where(x => x.Name.Trim().ToLower() == UserName.Text.ToLower() && x.Id != userId).Any())
-                    {
-                        errMsg = $"{(errMsg + "Error duplicate 'Name' user").Trim()}\n";
-                    }
-                    if (!string.IsNullOrWhiteSpace(UserEmail.Text) && db.Users.Where(x => x.Email.Trim().ToLower() == UserEmail.Text.ToLower() && x.Id != userId).Any())
-                    {
-                        errMsg = $"{(errMsg + "Error duplicate 'Email' user").Trim()}\n";
-                    }
-                    if (!string.IsNullOrWhiteSpace(UserPhone.Text) && db.Users.Where(x => x.Phone.Trim().ToLower() == UserPhone.Text.ToLower() && x.Id != userId).Any())
-                    {
-                        errMsg = $"{(errMsg + "Error duplicate 'Phone' user").Trim()}\n";
-                    }
-                    if (!string.IsNullOrWhiteSpace(UserTelegram.Text) && db.Users.Where(x => x.TelegramId.Trim().ToLower() == UserTelegram.Text.ToLower() && x.Id != userId).Any())
-                    {
-                        errMsg = $"{(errMsg + "Error duplicate 'Telegram Id' user").Trim()}\n";
-                    }
+                    errMsg = $"{(errMsg + "Error duplicate 'Name' user").Trim()}\n";
                 }
+                if (!string.IsNullOrWhiteSpace(UserEmail.Text) && DatabaseContext.UsersCached.Where(x => x.Email.Trim().ToLower() == UserEmail.Text.ToLower() && x.Id != userId).Any())
+                {
+                    errMsg = $"{(errMsg + "Error duplicate 'Email' user").Trim()}\n";
+                }
+                if (!string.IsNullOrWhiteSpace(UserPhone.Text) && DatabaseContext.UsersCached.Where(x => x.Phone.Trim().ToLower() == UserPhone.Text.ToLower() && x.Id != userId).Any())
+                {
+                    errMsg = $"{(errMsg + "Error duplicate 'Phone' user").Trim()}\n";
+                }
+                if (!string.IsNullOrWhiteSpace(UserTelegram.Text) && DatabaseContext.UsersCached.Where(x => x.TelegramId.Trim().ToLower() == UserTelegram.Text.ToLower() && x.Id != userId).Any())
+                {
+                    errMsg = $"{(errMsg + "Error duplicate 'Telegram Id' user").Trim()}\n";
+                }
+                //}
             }
 
             return errMsg.Trim();
@@ -123,7 +123,7 @@ namespace ab
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    db.Users.Add(new UserModel()
+                    UserModel user = new UserModel()
                     {
                         AlarmSubscriber = UserAlarmSubscribing.Checked,
                         CommandsAllowed = UserCommandsAllowed.Checked,
@@ -131,9 +131,10 @@ namespace ab
                         Email = UserEmail.Text.Trim(),
                         Phone = UserPhone.Text.Trim(),
                         TelegramId = UserTelegram.Text.Trim()
-                    });
-
+                    };
+                    db.Users.Add(user);
                     db.SaveChanges();
+                    DatabaseContext.UsersCached.Add(user);
                 }
             }
             StartActivity(typeof(UsersActivity));

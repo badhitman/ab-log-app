@@ -16,6 +16,7 @@ namespace ab.Services
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<HardwareModel> Hardwares { get; set; }
+        public static List<UserModel> UsersCached { get; internal set; }
 
         public DatabaseContext(string databasePath)
         {

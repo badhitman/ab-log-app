@@ -28,41 +28,41 @@ namespace ab
             UserCardSubHeader.Text = "Edit user";
             lock (gs.DbLocker)
             {
-                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                //{
+                if (gs.SelectedListPosition < 0 || DatabaseContext.UsersCached.Count() < gs.SelectedListPosition + 1)
                 {
-                    if (gs.SelectedListPosition < 0 || db.Users.Count() < gs.SelectedListPosition + 1)
-                    {
-                        UserName.Text = "-error-";
-                        UserName.Enabled = false;
+                    UserName.Text = "-error-";
+                    UserName.Enabled = false;
 
-                        UserEmail.Text = "-error-";
-                        UserEmail.Enabled = false;
+                    UserEmail.Text = "-error-";
+                    UserEmail.Enabled = false;
 
-                        UserPhone.Text = "-error-";
-                        UserPhone.Enabled = false;
+                    UserPhone.Text = "-error-";
+                    UserPhone.Enabled = false;
 
-                        UserTelegram.Text = "-error-";
-                        UserTelegram.Enabled = false;
+                    UserTelegram.Text = "-error-";
+                    UserTelegram.Enabled = false;
 
-                        UserAlarmSubscribing.Enabled = false;
-                        UserCommandsAllowed.Enabled = false;
+                    UserAlarmSubscribing.Enabled = false;
+                    UserCommandsAllowed.Enabled = false;
 
-                        UserCardSubHeader.Text = "-error-";
-                        UserCardSubHeader.Enabled = false;
+                    UserCardSubHeader.Text = "-error-";
+                    UserCardSubHeader.Enabled = false;
 
-                        UserCardButtonOk.Enabled = false;
-                        return;
-                    }
-
-                    UserModel user = db.Users.OrderBy(x => x.Id).Skip(gs.SelectedListPosition).FirstOrDefault();
-                    userId = user?.Id ?? 0;
-                    UserName.Text = user?.Name;
-                    UserEmail.Text = user?.Email;
-                    UserPhone.Text = user?.Phone;
-                    UserTelegram.Text = user?.TelegramId;
-                    UserAlarmSubscribing.Checked = user.AlarmSubscriber;
-                    UserCommandsAllowed.Checked = user.CommandsAllowed;
+                    UserCardButtonOk.Enabled = false;
+                    return;
                 }
+
+                UserModel user = DatabaseContext.UsersCached.Skip(gs.SelectedListPosition).FirstOrDefault();
+                userId = user?.Id ?? 0;
+                UserName.Text = user?.Name;
+                UserEmail.Text = user?.Email;
+                UserPhone.Text = user?.Phone;
+                UserTelegram.Text = user?.TelegramId;
+                UserAlarmSubscribing.Checked = user.AlarmSubscriber;
+                UserCommandsAllowed.Checked = user.CommandsAllowed;
+                //}
             }
 
             UserCardHeader.Text = "Edit user";
@@ -91,12 +91,12 @@ namespace ab
             UserCardHeader.Text = "Remove user";
             UserCardSubHeader.SetTextColor(Color.IndianRed);
             buttonDeleteUser.SetTextColor(Color.Gray);
-            
+
             AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = "WANTED! Confirm delete user?", TextSize = 20 };
             appCompatTextView.SetTextColor(Color.Red);
             appCompatTextView.SetWidth(3);
             UserFooterLayout.AddView(appCompatTextView);
-            
+
             AppCompatButton buttonConfirmDeleteUser = new AppCompatButton(this) { Text = "Confirm Delete" };
             buttonConfirmDeleteUser.SetTextColor(Color.DarkRed);
             buttonConfirmDeleteUser.Click += new EventHandler((sender, eventArg) =>
@@ -108,6 +108,7 @@ namespace ab
                         UserModel user = db.Users.Find(userId);
                         db.Users.Remove(user);
                         db.SaveChanges();
+                        DatabaseContext.UsersCached.RemoveAt(gs.SelectedListPosition);
                         StartActivity(typeof(UsersActivity));
                     }
                 }
@@ -143,6 +144,7 @@ namespace ab
 
                     db.Users.Update(user);
                     db.SaveChanges();
+                    DatabaseContext.UsersCached[gs.SelectedListPosition] = user;
                 }
             }
             StartActivity(typeof(UsersActivity));
