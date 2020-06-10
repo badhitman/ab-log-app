@@ -17,4 +17,4 @@
 
 ![управляющие контроллеры](./screenshots/hardwares.png)
 
-![удалённые пользователи](./screenshots/user.png)
+![удалённые пользователи](./screenshots/users.png)
