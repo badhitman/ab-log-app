@@ -382,14 +382,6 @@
     <AndroidResource Include="Resources\drawable\splash_logo.png" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="screenshots\hardware-card.png" />
-    <Content Include="screenshots\hardwares-list.png" />
-    <Content Include="screenshots\init.png" />
-    <Content Include="screenshots\pre.png" />
-    <Content Include="screenshots\user-card.png" />
-    <Content Include="screenshots\users-list.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
