@@ -71,4 +71,21 @@
 
   <string name="nav_sub_header_title">конфигуратор</string>
   <string name="about_app_information">Приложение:\n Xamarin AndroidX .Net C#\n\nOpen source проект:\n  https://github.com/badhitman/ab-log-app \n\nОфициальный сайт производителя контроллеров:\n  https://ab-log.ru </string>
+
+  <string name="preference_cloud_first_email_title">Основное облако</string>
+  <string name="preference_cloud_first_email_login_hint">Login основного облака</string>
+
+  <string name="preference_cloud_second_email_title">Вспомагательное облако</string>
+  <string name="preference_cloud_second_email_login_hint">Login вспомагательного облака</string>
+
+  <string name="preference_cloud_email_pass_hint">Пароль от облака</string>
+  <string name="preference_cloud_email_pop3_hint">POP3 адрес:порт</string>
+  <string name="preference_cloud_email_smtp_hint">SMTP адрес:порт</string>
+
+  <string name="second_cloud_mode_prompt">Режим работы</string>
+  <string-array name="cloud_modes">
+    <item>Дублировать всегда</item>
+    <item>В случае отказа основного</item>
+  </string-array>
+  
 </resources>

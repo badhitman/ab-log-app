@@ -37,7 +37,6 @@ namespace ab
                 SetContentView(Resource.Layout.main_activity);
                 main_splash = FindViewById<LinearLayout>(Resource.Id.main_splash);
             });
-            var Gravity = Android.Views.GravityFlags.CenterHorizontal;
 #if DEBUG
             if (DemoDataBase)
             {
@@ -45,8 +44,7 @@ namespace ab
                 {
                     AppCompatTextView appCompatTextView = new AppCompatTextView(this)
                     {
-                        Text = "auto-delete database!",
-                        Gravity = Gravity
+                        Text = "delete existing database!"
                     };
                     main_splash.AddView(appCompatTextView);
                 });
@@ -59,8 +57,7 @@ namespace ab
                 {
                     AppCompatTextView appCompatTextView = new AppCompatTextView(this)
                     {
-                        Text = "checking the database ...",
-                        Gravity = Gravity
+                        Text = "Database.EnsureCreatedAsync() ..."
                     };
                     main_splash.AddView(appCompatTextView);
                 });
@@ -72,8 +69,7 @@ namespace ab
                     {
                         AppCompatTextView appCompatTextView = new AppCompatTextView(this)
                         {
-                            Text = "load of demo Users ...",
-                            Gravity = Gravity
+                            Text = "load demo Users ..."
                         };
                         main_splash.AddView(appCompatTextView);
                     });
@@ -87,8 +83,7 @@ namespace ab
                     {
                         AppCompatTextView appCompatTextView = new AppCompatTextView(this)
                         {
-                            Text = "load of demo Hardwares ...",
-                            Gravity = Gravity
+                            Text = "load demo Hardwares ..."
                         };
                         main_splash.AddView(appCompatTextView);
                     });
@@ -100,8 +95,7 @@ namespace ab
                 {
                     AppCompatTextView appCompatTextView = new AppCompatTextView(this)
                     {
-                        Text = "caching hardware list ...",
-                        Gravity = Gravity
+                        Text = "caching hardware list ..."
                     };
                     main_splash.AddView(appCompatTextView);
                 });
@@ -111,8 +105,7 @@ namespace ab
                 {
                     AppCompatTextView appCompatTextView = new AppCompatTextView(this)
                     {
-                        Text = "caching users list ...",
-                        Gravity = Gravity
+                        Text = "caching users list ..."
                     };
                     main_splash.AddView(appCompatTextView);
                 });
@@ -120,11 +113,9 @@ namespace ab
             }
             RunOnUiThread(() =>
             {
-                Toast.MakeText(this, "start app ...", ToastLength.Short).Show();
                 AppCompatTextView appCompatTextView = new AppCompatTextView(this)
                 {
-                    Text = "start app ...",
-                    Gravity = Gravity
+                    Text = "All done! starting app ..."
                 };
                 main_splash.AddView(appCompatTextView);
             });
