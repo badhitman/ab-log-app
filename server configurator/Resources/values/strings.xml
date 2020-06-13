@@ -74,13 +74,15 @@
 
   <string name="preference_cloud_first_email_title">The main cloud</string>
   <string name="preference_cloud_first_email_login_hint">Login main cloud</string>
+  <string name="main_cloud_layout">main_cloud_layout</string>
 
   <string name="preference_cloud_second_email_title">Second cloud</string>
   <string name="preference_cloud_second_email_login_hint">Login second cloud</string>
+  <string name="second_cloud_layout">second_cloud_layout</string>
 
   <string name="preference_cloud_email_pass_hint">Password cloud</string>
   <string name="preference_cloud_email_pop3_hint">POP3 address:port</string>
-  <string name="preference_cloud_email_smtp_hint">SMTP address:port</string>
+  <string name="preference_cloud_email_smtp_hint">SMTP/SSL address:port</string>
 
   <string name="second_cloud_mode_prompt">Operating mode</string>
   <string-array name="cloud_modes">

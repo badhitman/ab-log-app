@@ -21,3 +21,5 @@
 ![управляющие контроллеры](./screenshots/hardwares.png)
 
 ![удалённые пользователи](./screenshots/users.png)
+
+![облачное хранилище](./screenshots/cloud.png)

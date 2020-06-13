@@ -11,21 +11,13 @@
     tools:showIn="@layout/cloud_app_bar">
 
     <ScrollView
-        android:minWidth="25px"
-        android:minHeight="25px"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scrollView1">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fadeScrollbars="true"
-            android:overScrollMode="always"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:scrollbars="vertical"
-            android:verticalScrollbarPosition="right">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:text="@string/cloud_title"
@@ -50,7 +42,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="2dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:tag="@string/main_cloud_layout">
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -64,7 +57,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#ff5c6bc0"
-                        android:layout_marginBottom="5dp" />
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="5dp"/>
 
                     <Switch
                         android:layout_width="match_parent"
@@ -75,24 +69,28 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/cloud_first_email_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:hint="@string/preference_cloud_first_email_login_hint" />
 
                 <EditText
+                    android:id="@+id/cloud_first_pass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textVisiblePassword"
                     android:hint="@string/preference_cloud_email_pass_hint" />
 
                 <EditText
+                    android:id="@+id/cloud_first_pop3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:hint="@string/preference_cloud_email_pop3_hint" />
 
                 <EditText
+                    android:id="@+id/cloud_first_smtp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
@@ -105,7 +103,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="2dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:tag="second_cloud_layout">
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -129,40 +128,47 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dip"
-                    android:text="@string/second_cloud_mode_prompt" />
-                <Spinner
-                    android:id="@+id/second_cloud_mode_spinner"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:prompt="@string/second_cloud_mode_prompt" />
-
                 <EditText
+                    android:id="@+id/cloud_second_email_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:hint="@string/preference_cloud_second_email_login_hint" />
 
                 <EditText
+                    android:id="@+id/cloud_second_pass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:hint="@string/preference_cloud_email_pass_hint" />
 
                 <EditText
+                    android:id="@+id/cloud_second_pop3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:hint="@string/preference_cloud_email_pop3_hint" />
 
                 <EditText
+                    android:id="@+id/cloud_second_smtp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:hint="@string/preference_cloud_email_smtp_hint" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:text="@string/second_cloud_mode_prompt" />
+
+                <Spinner
+                    android:id="@+id/second_cloud_mode_spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/second_cloud_mode_prompt"
+                    app:backgroundTint="#ffff0000"
+                    app:backgroundTintMode="multiply" />
 
             </LinearLayout>
 

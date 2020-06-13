@@ -80,7 +80,7 @@
 
   <string name="preference_cloud_email_pass_hint">Пароль от облака</string>
   <string name="preference_cloud_email_pop3_hint">POP3 адрес:порт</string>
-  <string name="preference_cloud_email_smtp_hint">SMTP адрес:порт</string>
+  <string name="preference_cloud_email_smtp_hint">SMTP/SSL адрес:порт</string>
 
   <string name="second_cloud_mode_prompt">Режим работы</string>
   <string-array name="cloud_modes">
