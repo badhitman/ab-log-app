@@ -73,16 +73,29 @@
   <string name="about_app_information">Приложение:\n Xamarin AndroidX .Net C#\n\nOpen source проект:\n  https://github.com/badhitman/ab-log-app \n\nОфициальный сайт производителя контроллеров:\n  https://ab-log.ru </string>
 
   <string name="preference_cloud_first_email_title">Основное облако</string>
+  <string name="preference_cloud_first_email_address_hint">E-mail (основной)</string>
   <string name="preference_cloud_first_email_login_hint">Login основного облака</string>
 
   <string name="preference_cloud_second_email_title">Вспомагательное облако</string>
+  <string name="preference_cloud_second_email_address_hint">E-mail (вспомагательный)</string>
   <string name="preference_cloud_second_email_login_hint">Login вспомагательного облака</string>
+  <string name="second_cloud_mode_prompt">Режим работы</string>
 
   <string name="preference_cloud_email_pass_hint">Пароль от облака</string>
-  <string name="preference_cloud_email_pop3_hint">POP3 адрес:порт</string>
+  <string name="preference_cloud_email_pop3_hint">POP3/SSL адрес:порт</string>
   <string name="preference_cloud_email_smtp_hint">SMTP/SSL адрес:порт</string>
 
-  <string name="second_cloud_mode_prompt">Режим работы</string>
+  <string name="error_cloud_email_pop3_port">Порт POP3/SSL сервера не назначен. Укажите его в адресе сервера после двоеточия (my-domain.com:995)</string>
+  <string name="error_cloud_email_SMTP_port">Порт SMTP/SSL сервера не назначен. Укажите его в адресе сервера после двоеточия (my-domain.com:465)</string>
+  
+  <string name="err_empty_prop_any_cloud">Отказ! Все поля обязательны для заполнения</string>
+  
+  <string name="cloud_connection_smtp_successfully">Подключение SMTP/SSL успешно установлено</string>
+  <string name="error_connecting_smtp_cloud">Ошибка SMTP/SSL подключения к облаку</string>
+
+  <string name="cloud_connection_pop3_successfully">Подключение POP3/SSL успешно установлено</string>
+  <string name="error_connecting_pop3_cloud">Ошибка POP3/SSL подключения к облаку</string>
+    
   <string-array name="cloud_modes">
     <item>Дублировать всегда</item>
     <item>В случае отказа основного</item>

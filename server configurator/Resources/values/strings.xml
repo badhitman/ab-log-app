@@ -73,18 +73,32 @@
   <string name="about_app_information">Application:\n Xamarin AndroidX .Net C#\n\nOpen source project:\n  https://github.com/badhitman/ab-log-app \n\nHardware oficial site/shop:\n  https://ab-log.ru </string>
 
   <string name="preference_cloud_first_email_title">The main cloud</string>
+  <string name="preference_cloud_first_email_address_hint">E-mail (main cloud)</string>
   <string name="preference_cloud_first_email_login_hint">Login main cloud</string>
   <string name="main_cloud_layout">main_cloud_layout</string>
 
   <string name="preference_cloud_second_email_title">Second cloud</string>
+  
   <string name="preference_cloud_second_email_login_hint">Login second cloud</string>
   <string name="second_cloud_layout">second_cloud_layout</string>
-
-  <string name="preference_cloud_email_pass_hint">Password cloud</string>
-  <string name="preference_cloud_email_pop3_hint">POP3 address:port</string>
-  <string name="preference_cloud_email_smtp_hint">SMTP/SSL address:port</string>
-
+  <string name="preference_cloud_second_email_address_hint">E-mail (second cloud)</string>
   <string name="second_cloud_mode_prompt">Operating mode</string>
+  
+  <string name="preference_cloud_email_pass_hint">Password cloud</string>
+  <string name="preference_cloud_email_pop3_hint">POP3/SSL address:port</string>
+  <string name="preference_cloud_email_smtp_hint">SMTP/SSL address:port</string>
+  
+  <string name="error_cloud_email_pop3_port">The POP3/SSL server port is not assigned. Enter it in the server address after the colon (my-domain.com:995)</string>
+  <string name="error_cloud_email_smtp_port">The SMTP/SSL server port is not assigned. Enter it in the server address after the colon (my-domain.com:465)</string>
+
+  <string name="err_empty_prop_any_cloud">Refusal! All fields are required</string>
+  
+  <string name="cloud_connection_smtp_successfully">The connection SMTP/SSL was successfully established</string>
+  <string name="error_connecting_smtp_cloud">Error SMTP/SSL connecting to the cloud</string>
+
+  <string name="cloud_connection_pop3_successfully">The connection POP3/SSL was successfully established</string>
+  <string name="error_connecting_pop3_cloud">Error POP3/SSL connecting to the cloud</string>
+  
   <string-array name="cloud_modes">
     <item>Duplicate always</item>
     <item>If the main one fails</item>

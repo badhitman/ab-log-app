@@ -69,6 +69,13 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/cloud_first_email_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:hint="@string/preference_cloud_first_email_address_hint" />
+
+                <EditText
                     android:id="@+id/cloud_first_email_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -127,6 +134,14 @@
                         android:foregroundGravity="right" />
 
                 </LinearLayout>
+
+                
+                <EditText
+                    android:id="@+id/cloud_second_email_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:hint="@string/preference_cloud_second_email_address_hint" />
 
                 <EditText
                     android:id="@+id/cloud_second_email_login"
