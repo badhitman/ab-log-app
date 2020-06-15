@@ -22,24 +22,8 @@ namespace ab
         {
             get
             {
-                var basePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
+                string basePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
                 return Path.Combine(basePath, DatabaseFilenameBase);
-            }
-        }
-
-        /// <summary>
-        /// имя файла базы данны логов
-        /// </summary>
-        public const string DatabaseFilenameLogs = "ab-log-server-logs.db";
-        /// <summary>
-        /// путь к файлу базы данных логов
-        /// </summary>
-        public static string DatabasePathLogs
-        {
-            get
-            {
-                var basePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
-                return Path.Combine(basePath, DatabaseFilenameLogs);
             }
         }
 

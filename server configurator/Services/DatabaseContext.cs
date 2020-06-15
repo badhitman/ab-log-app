@@ -14,10 +14,11 @@ namespace ab.Services
         public static object DbLocker = new object();
 
         public static List<HardwareModel> HardwaresCached { get; set; }
+        public static List<UserModel> UsersCached { get; internal set; }
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<HardwareModel> Hardwares { get; set; }
-        public static List<UserModel> UsersCached { get; internal set; }
+        public DbSet<CloudEmailMessage> Messages { get; set; }
 
         public DatabaseContext(string databasePath)
         {

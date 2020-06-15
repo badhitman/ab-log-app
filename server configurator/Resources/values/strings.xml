@@ -70,7 +70,7 @@
   <string name="telegram_hint">Telegram id: 45678912345</string>
 
   <string name="nav_sub_header_title">configurator</string>
-  <string name="about_app_information">Application:\n Xamarin AndroidX .Net C#\n\nOpen source project:\n  https://github.com/badhitman/ab-log-app \n\nHardware oficial site/shop:\n  https://ab-log.ru </string>
+  <string name="about_app_information">Application:\n Xamarin AndroidX .Net C# (db: SQLite) / Android version 5.0 and latter\n\nOpen source project:\n  https://github.com/badhitman/ab-log-app \n\nHardware oficial site/shop:\n  https://ab-log.ru </string>
 
   <string name="preference_cloud_first_email_title">The main cloud</string>
   <string name="preference_cloud_first_email_address_hint">E-mail (main cloud)</string>
@@ -78,30 +78,40 @@
   <string name="main_cloud_layout">main_cloud_layout</string>
 
   <string name="preference_cloud_second_email_title">Second cloud</string>
-  
+
   <string name="preference_cloud_second_email_login_hint">Login second cloud</string>
   <string name="second_cloud_layout">second_cloud_layout</string>
   <string name="preference_cloud_second_email_address_hint">E-mail (second cloud)</string>
   <string name="second_cloud_mode_prompt">Operating mode</string>
-  
+
   <string name="preference_cloud_email_pass_hint">Password cloud</string>
   <string name="preference_cloud_email_pop3_hint">POP3/SSL address:port</string>
   <string name="preference_cloud_email_smtp_hint">SMTP/SSL address:port</string>
-  
+
   <string name="error_cloud_email_pop3_port">The POP3/SSL server port is not assigned. Enter it in the server address after the colon (my-domain.com:995)</string>
   <string name="error_cloud_email_smtp_port">The SMTP/SSL server port is not assigned. Enter it in the server address after the colon (my-domain.com:465)</string>
 
   <string name="err_empty_prop_any_cloud">Refusal! All fields are required</string>
-  
+
   <string name="cloud_connection_smtp_successfully">The connection SMTP/SSL was successfully established</string>
   <string name="error_connecting_smtp_cloud">Error SMTP/SSL connecting to the cloud</string>
 
   <string name="cloud_connection_pop3_successfully">The connection POP3/SSL was successfully established</string>
   <string name="error_connecting_pop3_cloud">Error POP3/SSL connecting to the cloud</string>
-  
+
   <string-array name="cloud_modes">
     <item>Duplicate always</item>
     <item>If the main one fails</item>
   </string-array>
 
+  <string name="start_app_msg">Start the app</string>
+  <string name="logs_database_ensure_created">[Logs] database EnsureCreatedAsync() ...</string>
+  <string name="deleting_outdated_logs">Deleting outdated logs (older than 7 days)</string>
+  <string name="deleting_main_database_file">Deleting the main database file:</string>
+  <string name="initializing_db_demo_data">Initializing the database with demo data</string>
+  <string name="load_demo_users">Loading users (DEMO) ...</string>
+  <string name="load_demo_hardwares">Loading hardwares (DEMO) ...</string>
+  <string name="caching_hardwares_list">caching hardwares list ...</string>
+  <string name="caching_users_list">caching users list ...</string>
+  <string name="finish_initializing_application">Launching the interface ...</string>
 </resources>

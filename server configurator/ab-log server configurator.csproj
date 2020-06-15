@@ -74,7 +74,10 @@
     <Compile Include="gs.cs" />
     <Compile Include="Model\abstract\abstractEFContext.cs" />
     <Compile Include="Model\abstract\abstractEF.cs" />
+    <Compile Include="Model\CloudEmailMessage.cs" />
     <Compile Include="Model\HardwareModel.cs" />
+    <Compile Include="Model\LogRowModel.cs" />
+    <Compile Include="Model\LogStatusesEnum.cs" />
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Activity\ServicesActivity.cs" />
     <Compile Include="Activity\LogsActivity.cs" />
@@ -83,6 +86,7 @@
     <Compile Include="Activity\AboutPageActivity.cs" />
     <Compile Include="Activity\CloudActivity.cs" />
     <Compile Include="Services\abstract\aViewHolder.cs" />
+    <Compile Include="Services\LogsContext.cs" />
     <Compile Include="Services\DatabaseContext.cs" />
     <Compile Include="Services\hardware\HardwareListAdapter.cs" />
     <Compile Include="Services\hardware\HardwareViewHolder.cs" />

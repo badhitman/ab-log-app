@@ -13167,415 +13167,445 @@ namespace ab
 			public const int button_confirm_remove = 2131820583;
 			
 			// aapt resource value: 0x7F110028
-			public const int character_counter_content_description = 2131820584;
+			public const int caching_hardwares_list = 2131820584;
 			
 			// aapt resource value: 0x7F110029
-			public const int character_counter_pattern = 2131820585;
+			public const int caching_users_list = 2131820585;
 			
 			// aapt resource value: 0x7F11002A
-			public const int cloud_connection_pop3_successfully = 2131820586;
+			public const int character_counter_content_description = 2131820586;
 			
 			// aapt resource value: 0x7F11002B
-			public const int cloud_connection_smtp_successfully = 2131820587;
+			public const int character_counter_pattern = 2131820587;
 			
 			// aapt resource value: 0x7F11002C
-			public const int cloud_title = 2131820588;
-			
-			// aapt resource value: 0x7F11002E
-			public const int commands_title = 2131820590;
+			public const int cloud_connection_pop3_successfully = 2131820588;
 			
 			// aapt resource value: 0x7F11002D
-			public const int command_short_label = 2131820589;
+			public const int cloud_connection_smtp_successfully = 2131820589;
 			
-			// aapt resource value: 0x7F11002F
-			public const int copy = 2131820591;
+			// aapt resource value: 0x7F11002E
+			public const int cloud_title = 2131820590;
 			
 			// aapt resource value: 0x7F110030
-			public const int copy_toast_msg = 2131820592;
+			public const int commands_title = 2131820592;
+			
+			// aapt resource value: 0x7F11002F
+			public const int command_short_label = 2131820591;
 			
 			// aapt resource value: 0x7F110031
-			public const int create_new_user_title = 2131820593;
+			public const int copy = 2131820593;
 			
 			// aapt resource value: 0x7F110032
-			public const int deaf_marker_title = 2131820594;
+			public const int copy_toast_msg = 2131820594;
 			
 			// aapt resource value: 0x7F110033
-			public const int delete_hardware_card_sub_title = 2131820595;
+			public const int create_new_user_title = 2131820595;
 			
 			// aapt resource value: 0x7F110034
-			public const int delete_hardware_card_title = 2131820596;
+			public const int deaf_marker_title = 2131820596;
 			
 			// aapt resource value: 0x7F110035
-			public const int delete_title = 2131820597;
+			public const int delete_hardware_card_sub_title = 2131820597;
 			
 			// aapt resource value: 0x7F110036
-			public const int delete_user_card_header = 2131820598;
+			public const int delete_hardware_card_title = 2131820598;
 			
 			// aapt resource value: 0x7F110037
-			public const int delete_user_card_sub_title = 2131820599;
+			public const int delete_title = 2131820599;
 			
 			// aapt resource value: 0x7F110038
-			public const int edit_hardware_sub_title = 2131820600;
+			public const int delete_user_card_header = 2131820600;
 			
 			// aapt resource value: 0x7F110039
-			public const int edit_hardware_title = 2131820601;
+			public const int delete_user_card_sub_title = 2131820601;
 			
 			// aapt resource value: 0x7F11003A
-			public const int edit_user_sub_title = 2131820602;
+			public const int deleting_main_database_file = 2131820602;
 			
 			// aapt resource value: 0x7F11003B
-			public const int edit_user_title = 2131820603;
+			public const int deleting_outdated_logs = 2131820603;
 			
 			// aapt resource value: 0x7F11003C
-			public const int email_hint = 2131820604;
+			public const int edit_hardware_sub_title = 2131820604;
 			
 			// aapt resource value: 0x7F11003D
-			public const int email_title = 2131820605;
-			
-			// aapt resource value: 0x7F110041
-			public const int error_cloud_email_pop3_port = 2131820609;
-			
-			// aapt resource value: 0x7F110042
-			public const int error_cloud_email_smtp_port = 2131820610;
-			
-			// aapt resource value: 0x7F110043
-			public const int error_connecting_pop3_cloud = 2131820611;
-			
-			// aapt resource value: 0x7F110044
-			public const int error_connecting_smtp_cloud = 2131820612;
-			
-			// aapt resource value: 0x7F110045
-			public const int error_duplicate_address_hardware = 2131820613;
-			
-			// aapt resource value: 0x7F110046
-			public const int error_duplicate_email_user = 2131820614;
-			
-			// aapt resource value: 0x7F110047
-			public const int error_duplicate_name_hardware = 2131820615;
-			
-			// aapt resource value: 0x7F110048
-			public const int error_duplicate_name_user = 2131820616;
-			
-			// aapt resource value: 0x7F110049
-			public const int error_duplicate_phone_user = 2131820617;
-			
-			// aapt resource value: 0x7F11004A
-			public const int error_duplicate_telegram_user = 2131820618;
-			
-			// aapt resource value: 0x7F11004B
-			public const int error_empty_address_hardware = 2131820619;
-			
-			// aapt resource value: 0x7F11004C
-			public const int error_empty_contacts_user = 2131820620;
-			
-			// aapt resource value: 0x7F11004D
-			public const int error_empty_name_hardware = 2131820621;
-			
-			// aapt resource value: 0x7F11004E
-			public const int error_empty_name_user = 2131820622;
-			
-			// aapt resource value: 0x7F11004F
-			public const int error_empty_password_hardware = 2131820623;
+			public const int edit_hardware_title = 2131820605;
 			
 			// aapt resource value: 0x7F11003E
-			public const int err_empty_prop_any_cloud = 2131820606;
+			public const int edit_user_sub_title = 2131820606;
 			
 			// aapt resource value: 0x7F11003F
-			public const int err_title_2 = 2131820607;
+			public const int edit_user_title = 2131820607;
+			
+			// aapt resource value: 0x7F110040
+			public const int email_hint = 2131820608;
+			
+			// aapt resource value: 0x7F110041
+			public const int email_title = 2131820609;
+			
+			// aapt resource value: 0x7F110045
+			public const int error_cloud_email_pop3_port = 2131820613;
+			
+			// aapt resource value: 0x7F110046
+			public const int error_cloud_email_smtp_port = 2131820614;
+			
+			// aapt resource value: 0x7F110047
+			public const int error_connecting_pop3_cloud = 2131820615;
+			
+			// aapt resource value: 0x7F110048
+			public const int error_connecting_smtp_cloud = 2131820616;
+			
+			// aapt resource value: 0x7F110049
+			public const int error_duplicate_address_hardware = 2131820617;
+			
+			// aapt resource value: 0x7F11004A
+			public const int error_duplicate_email_user = 2131820618;
+			
+			// aapt resource value: 0x7F11004B
+			public const int error_duplicate_name_hardware = 2131820619;
+			
+			// aapt resource value: 0x7F11004C
+			public const int error_duplicate_name_user = 2131820620;
+			
+			// aapt resource value: 0x7F11004D
+			public const int error_duplicate_phone_user = 2131820621;
+			
+			// aapt resource value: 0x7F11004E
+			public const int error_duplicate_telegram_user = 2131820622;
+			
+			// aapt resource value: 0x7F11004F
+			public const int error_empty_address_hardware = 2131820623;
 			
 			// aapt resource value: 0x7F110050
-			public const int expand_button_title = 2131820624;
+			public const int error_empty_contacts_user = 2131820624;
 			
 			// aapt resource value: 0x7F110051
-			public const int fab_transformation_scrim_behavior = 2131820625;
+			public const int error_empty_name_hardware = 2131820625;
 			
 			// aapt resource value: 0x7F110052
-			public const int fab_transformation_sheet_behavior = 2131820626;
+			public const int error_empty_name_user = 2131820626;
 			
 			// aapt resource value: 0x7F110053
-			public const int fallback_menu_item_copy_link = 2131820627;
+			public const int error_empty_password_hardware = 2131820627;
+			
+			// aapt resource value: 0x7F110042
+			public const int err_empty_prop_any_cloud = 2131820610;
+			
+			// aapt resource value: 0x7F110043
+			public const int err_title_2 = 2131820611;
 			
 			// aapt resource value: 0x7F110054
-			public const int fallback_menu_item_open_in_browser = 2131820628;
+			public const int expand_button_title = 2131820628;
 			
 			// aapt resource value: 0x7F110055
-			public const int fallback_menu_item_share_link = 2131820629;
+			public const int fab_transformation_scrim_behavior = 2131820629;
 			
 			// aapt resource value: 0x7F110056
-			public const int footer_text_with_remove_hardware = 2131820630;
+			public const int fab_transformation_sheet_behavior = 2131820630;
 			
 			// aapt resource value: 0x7F110057
-			public const int footer_text_with_remove_user = 2131820631;
-			
-			// aapt resource value: 0x7F110059
-			public const int hardwares_title = 2131820633;
+			public const int fallback_menu_item_copy_link = 2131820631;
 			
 			// aapt resource value: 0x7F110058
-			public const int hardware_adding_subtitle = 2131820632;
+			public const int fallback_menu_item_open_in_browser = 2131820632;
+			
+			// aapt resource value: 0x7F110059
+			public const int fallback_menu_item_share_link = 2131820633;
 			
 			// aapt resource value: 0x7F11005A
-			public const int hide_bottom_view_on_scroll_behavior = 2131820634;
+			public const int finish_initializing_application = 2131820634;
 			
 			// aapt resource value: 0x7F11005B
-			public const int interpretation_alarm_for_hardware = 2131820635;
+			public const int footer_text_with_remove_hardware = 2131820635;
 			
 			// aapt resource value: 0x7F11005C
-			public const int interpretation_alarm_for_user = 2131820636;
-			
-			// aapt resource value: 0x7F11005D
-			public const int interpretation_command_for_hardware = 2131820637;
+			public const int footer_text_with_remove_user = 2131820636;
 			
 			// aapt resource value: 0x7F11005E
-			public const int interpretation_command_for_user = 2131820638;
+			public const int hardwares_title = 2131820638;
+			
+			// aapt resource value: 0x7F11005D
+			public const int hardware_adding_subtitle = 2131820637;
 			
 			// aapt resource value: 0x7F11005F
-			public const int lb_control_display_fast_forward_multiplier = 2131820639;
+			public const int hide_bottom_view_on_scroll_behavior = 2131820639;
 			
 			// aapt resource value: 0x7F110060
-			public const int lb_control_display_rewind_multiplier = 2131820640;
+			public const int initializing_db_demo_data = 2131820640;
 			
 			// aapt resource value: 0x7F110061
-			public const int lb_guidedaction_continue_title = 2131820641;
+			public const int interpretation_alarm_for_hardware = 2131820641;
 			
 			// aapt resource value: 0x7F110062
-			public const int lb_guidedaction_finish_title = 2131820642;
+			public const int interpretation_alarm_for_user = 2131820642;
 			
 			// aapt resource value: 0x7F110063
-			public const int lb_media_player_error = 2131820643;
+			public const int interpretation_command_for_hardware = 2131820643;
 			
 			// aapt resource value: 0x7F110064
-			public const int lb_navigation_menu_contentDescription = 2131820644;
+			public const int interpretation_command_for_user = 2131820644;
 			
 			// aapt resource value: 0x7F110065
-			public const int lb_onboarding_accessibility_next = 2131820645;
+			public const int lb_control_display_fast_forward_multiplier = 2131820645;
 			
 			// aapt resource value: 0x7F110066
-			public const int lb_onboarding_get_started = 2131820646;
+			public const int lb_control_display_rewind_multiplier = 2131820646;
 			
 			// aapt resource value: 0x7F110067
-			public const int lb_playback_controls_closed_captioning_disable = 2131820647;
+			public const int lb_guidedaction_continue_title = 2131820647;
 			
 			// aapt resource value: 0x7F110068
-			public const int lb_playback_controls_closed_captioning_enable = 2131820648;
+			public const int lb_guidedaction_finish_title = 2131820648;
 			
 			// aapt resource value: 0x7F110069
-			public const int lb_playback_controls_fast_forward = 2131820649;
+			public const int lb_media_player_error = 2131820649;
 			
 			// aapt resource value: 0x7F11006A
-			public const int lb_playback_controls_fast_forward_multiplier = 2131820650;
+			public const int lb_navigation_menu_contentDescription = 2131820650;
 			
 			// aapt resource value: 0x7F11006B
-			public const int lb_playback_controls_hidden = 2131820651;
+			public const int lb_onboarding_accessibility_next = 2131820651;
 			
 			// aapt resource value: 0x7F11006C
-			public const int lb_playback_controls_high_quality_disable = 2131820652;
+			public const int lb_onboarding_get_started = 2131820652;
 			
 			// aapt resource value: 0x7F11006D
-			public const int lb_playback_controls_high_quality_enable = 2131820653;
+			public const int lb_playback_controls_closed_captioning_disable = 2131820653;
 			
 			// aapt resource value: 0x7F11006E
-			public const int lb_playback_controls_more_actions = 2131820654;
+			public const int lb_playback_controls_closed_captioning_enable = 2131820654;
 			
 			// aapt resource value: 0x7F11006F
-			public const int lb_playback_controls_pause = 2131820655;
+			public const int lb_playback_controls_fast_forward = 2131820655;
 			
 			// aapt resource value: 0x7F110070
-			public const int lb_playback_controls_picture_in_picture = 2131820656;
+			public const int lb_playback_controls_fast_forward_multiplier = 2131820656;
 			
 			// aapt resource value: 0x7F110071
-			public const int lb_playback_controls_play = 2131820657;
+			public const int lb_playback_controls_hidden = 2131820657;
 			
 			// aapt resource value: 0x7F110072
-			public const int lb_playback_controls_repeat_all = 2131820658;
+			public const int lb_playback_controls_high_quality_disable = 2131820658;
 			
 			// aapt resource value: 0x7F110073
-			public const int lb_playback_controls_repeat_none = 2131820659;
+			public const int lb_playback_controls_high_quality_enable = 2131820659;
 			
 			// aapt resource value: 0x7F110074
-			public const int lb_playback_controls_repeat_one = 2131820660;
+			public const int lb_playback_controls_more_actions = 2131820660;
 			
 			// aapt resource value: 0x7F110075
-			public const int lb_playback_controls_rewind = 2131820661;
+			public const int lb_playback_controls_pause = 2131820661;
 			
 			// aapt resource value: 0x7F110076
-			public const int lb_playback_controls_rewind_multiplier = 2131820662;
+			public const int lb_playback_controls_picture_in_picture = 2131820662;
 			
 			// aapt resource value: 0x7F110077
-			public const int lb_playback_controls_shown = 2131820663;
+			public const int lb_playback_controls_play = 2131820663;
 			
 			// aapt resource value: 0x7F110078
-			public const int lb_playback_controls_shuffle_disable = 2131820664;
+			public const int lb_playback_controls_repeat_all = 2131820664;
 			
 			// aapt resource value: 0x7F110079
-			public const int lb_playback_controls_shuffle_enable = 2131820665;
+			public const int lb_playback_controls_repeat_none = 2131820665;
 			
 			// aapt resource value: 0x7F11007A
-			public const int lb_playback_controls_skip_next = 2131820666;
+			public const int lb_playback_controls_repeat_one = 2131820666;
 			
 			// aapt resource value: 0x7F11007B
-			public const int lb_playback_controls_skip_previous = 2131820667;
+			public const int lb_playback_controls_rewind = 2131820667;
 			
 			// aapt resource value: 0x7F11007C
-			public const int lb_playback_controls_thumb_down = 2131820668;
+			public const int lb_playback_controls_rewind_multiplier = 2131820668;
 			
 			// aapt resource value: 0x7F11007D
-			public const int lb_playback_controls_thumb_down_outline = 2131820669;
+			public const int lb_playback_controls_shown = 2131820669;
 			
 			// aapt resource value: 0x7F11007E
-			public const int lb_playback_controls_thumb_up = 2131820670;
+			public const int lb_playback_controls_shuffle_disable = 2131820670;
 			
 			// aapt resource value: 0x7F11007F
-			public const int lb_playback_controls_thumb_up_outline = 2131820671;
+			public const int lb_playback_controls_shuffle_enable = 2131820671;
 			
 			// aapt resource value: 0x7F110080
-			public const int lb_playback_time_separator = 2131820672;
+			public const int lb_playback_controls_skip_next = 2131820672;
 			
 			// aapt resource value: 0x7F110081
-			public const int lb_search_bar_hint = 2131820673;
+			public const int lb_playback_controls_skip_previous = 2131820673;
 			
 			// aapt resource value: 0x7F110082
-			public const int lb_search_bar_hint_speech = 2131820674;
+			public const int lb_playback_controls_thumb_down = 2131820674;
 			
 			// aapt resource value: 0x7F110083
-			public const int lb_search_bar_hint_with_title = 2131820675;
+			public const int lb_playback_controls_thumb_down_outline = 2131820675;
 			
 			// aapt resource value: 0x7F110084
-			public const int lb_search_bar_hint_with_title_speech = 2131820676;
+			public const int lb_playback_controls_thumb_up = 2131820676;
 			
 			// aapt resource value: 0x7F110085
-			public const int logs_title = 2131820677;
+			public const int lb_playback_controls_thumb_up_outline = 2131820677;
 			
 			// aapt resource value: 0x7F110086
-			public const int main_cloud_layout = 2131820678;
+			public const int lb_playback_time_separator = 2131820678;
 			
 			// aapt resource value: 0x7F110087
-			public const int megad_title = 2131820679;
+			public const int lb_search_bar_hint = 2131820679;
 			
 			// aapt resource value: 0x7F110088
-			public const int mtrl_chip_close_icon_content_description = 2131820680;
+			public const int lb_search_bar_hint_speech = 2131820680;
 			
 			// aapt resource value: 0x7F110089
-			public const int mute_marker_title = 2131820681;
+			public const int lb_search_bar_hint_with_title = 2131820681;
 			
 			// aapt resource value: 0x7F11008A
-			public const int name_title = 2131820682;
-			
-			// aapt resource value: 0x7F11008E
-			public const int navigation_drawer_close = 2131820686;
-			
-			// aapt resource value: 0x7F11008F
-			public const int navigation_drawer_open = 2131820687;
+			public const int lb_search_bar_hint_with_title_speech = 2131820682;
 			
 			// aapt resource value: 0x7F11008B
-			public const int nav_header_title = 2131820683;
+			public const int load_demo_hardwares = 2131820683;
 			
 			// aapt resource value: 0x7F11008C
-			public const int nav_sub_header = 2131820684;
+			public const int load_demo_users = 2131820684;
 			
 			// aapt resource value: 0x7F11008D
-			public const int nav_sub_header_title = 2131820685;
+			public const int logs_database_ensure_created = 2131820685;
+			
+			// aapt resource value: 0x7F11008E
+			public const int logs_title = 2131820686;
+			
+			// aapt resource value: 0x7F11008F
+			public const int main_cloud_layout = 2131820687;
 			
 			// aapt resource value: 0x7F110090
-			public const int new_user_title = 2131820688;
+			public const int megad_title = 2131820688;
 			
 			// aapt resource value: 0x7F110091
-			public const int not_set = 2131820689;
+			public const int mtrl_chip_close_icon_content_description = 2131820689;
 			
 			// aapt resource value: 0x7F110092
-			public const int ok_mute_button_with_remove_hardware = 2131820690;
+			public const int mute_marker_title = 2131820690;
 			
 			// aapt resource value: 0x7F110093
-			public const int ok_mute_button_with_remove_user = 2131820691;
-			
-			// aapt resource value: 0x7F110094
-			public const int ok_title = 2131820692;
-			
-			// aapt resource value: 0x7F110095
-			public const int orb_search_action = 2131820693;
-			
-			// aapt resource value: 0x7F110096
-			public const int password_title = 2131820694;
+			public const int name_title = 2131820691;
 			
 			// aapt resource value: 0x7F110097
-			public const int password_toggle_content_description = 2131820695;
+			public const int navigation_drawer_close = 2131820695;
 			
 			// aapt resource value: 0x7F110098
-			public const int path_password_eye = 2131820696;
+			public const int navigation_drawer_open = 2131820696;
+			
+			// aapt resource value: 0x7F110094
+			public const int nav_header_title = 2131820692;
+			
+			// aapt resource value: 0x7F110095
+			public const int nav_sub_header = 2131820693;
+			
+			// aapt resource value: 0x7F110096
+			public const int nav_sub_header_title = 2131820694;
 			
 			// aapt resource value: 0x7F110099
-			public const int path_password_eye_mask_strike_through = 2131820697;
+			public const int new_user_title = 2131820697;
 			
 			// aapt resource value: 0x7F11009A
-			public const int path_password_eye_mask_visible = 2131820698;
+			public const int not_set = 2131820698;
 			
 			// aapt resource value: 0x7F11009B
-			public const int path_password_strike_through = 2131820699;
+			public const int ok_mute_button_with_remove_hardware = 2131820699;
 			
 			// aapt resource value: 0x7F11009C
-			public const int phone_hint = 2131820700;
+			public const int ok_mute_button_with_remove_user = 2131820700;
 			
 			// aapt resource value: 0x7F11009D
-			public const int preference_cloud_email_pass_hint = 2131820701;
+			public const int ok_title = 2131820701;
 			
 			// aapt resource value: 0x7F11009E
-			public const int preference_cloud_email_pop3_hint = 2131820702;
+			public const int orb_search_action = 2131820702;
 			
 			// aapt resource value: 0x7F11009F
-			public const int preference_cloud_email_smtp_hint = 2131820703;
+			public const int password_title = 2131820703;
 			
 			// aapt resource value: 0x7F1100A0
-			public const int preference_cloud_first_email_address_hint = 2131820704;
+			public const int password_toggle_content_description = 2131820704;
 			
 			// aapt resource value: 0x7F1100A1
-			public const int preference_cloud_first_email_login_hint = 2131820705;
+			public const int path_password_eye = 2131820705;
 			
 			// aapt resource value: 0x7F1100A2
-			public const int preference_cloud_first_email_title = 2131820706;
+			public const int path_password_eye_mask_strike_through = 2131820706;
 			
 			// aapt resource value: 0x7F1100A3
-			public const int preference_cloud_second_email_address_hint = 2131820707;
+			public const int path_password_eye_mask_visible = 2131820707;
 			
 			// aapt resource value: 0x7F1100A4
-			public const int preference_cloud_second_email_login_hint = 2131820708;
+			public const int path_password_strike_through = 2131820708;
 			
 			// aapt resource value: 0x7F1100A5
-			public const int preference_cloud_second_email_title = 2131820709;
+			public const int phone_hint = 2131820709;
 			
 			// aapt resource value: 0x7F1100A6
-			public const int preference_copied = 2131820710;
+			public const int preference_cloud_email_pass_hint = 2131820710;
 			
 			// aapt resource value: 0x7F1100A7
-			public const int search_menu_title = 2131820711;
+			public const int preference_cloud_email_pop3_hint = 2131820711;
 			
 			// aapt resource value: 0x7F1100A8
-			public const int second_cloud_layout = 2131820712;
+			public const int preference_cloud_email_smtp_hint = 2131820712;
 			
 			// aapt resource value: 0x7F1100A9
-			public const int second_cloud_mode_prompt = 2131820713;
+			public const int preference_cloud_first_email_address_hint = 2131820713;
 			
 			// aapt resource value: 0x7F1100AA
-			public const int services_title = 2131820714;
+			public const int preference_cloud_first_email_login_hint = 2131820714;
 			
 			// aapt resource value: 0x7F1100AB
-			public const int source_github_title2 = 2131820715;
+			public const int preference_cloud_first_email_title = 2131820715;
 			
 			// aapt resource value: 0x7F1100AC
-			public const int status_bar_notification_info_overflow = 2131820716;
+			public const int preference_cloud_second_email_address_hint = 2131820716;
 			
 			// aapt resource value: 0x7F1100AD
-			public const int summary_collapsed_preference_list = 2131820717;
+			public const int preference_cloud_second_email_login_hint = 2131820717;
 			
 			// aapt resource value: 0x7F1100AE
-			public const int telegram_hint = 2131820718;
+			public const int preference_cloud_second_email_title = 2131820718;
 			
 			// aapt resource value: 0x7F1100AF
-			public const int users_title = 2131820719;
+			public const int preference_copied = 2131820719;
 			
 			// aapt resource value: 0x7F1100B0
-			public const int v7_preference_off = 2131820720;
+			public const int search_menu_title = 2131820720;
 			
 			// aapt resource value: 0x7F1100B1
-			public const int v7_preference_on = 2131820721;
+			public const int second_cloud_layout = 2131820721;
+			
+			// aapt resource value: 0x7F1100B2
+			public const int second_cloud_mode_prompt = 2131820722;
+			
+			// aapt resource value: 0x7F1100B3
+			public const int services_title = 2131820723;
+			
+			// aapt resource value: 0x7F1100B4
+			public const int source_github_title2 = 2131820724;
+			
+			// aapt resource value: 0x7F1100B5
+			public const int start_app_msg = 2131820725;
+			
+			// aapt resource value: 0x7F1100B6
+			public const int status_bar_notification_info_overflow = 2131820726;
+			
+			// aapt resource value: 0x7F1100B7
+			public const int summary_collapsed_preference_list = 2131820727;
+			
+			// aapt resource value: 0x7F1100B8
+			public const int telegram_hint = 2131820728;
+			
+			// aapt resource value: 0x7F1100B9
+			public const int users_title = 2131820729;
+			
+			// aapt resource value: 0x7F1100BA
+			public const int v7_preference_off = 2131820730;
+			
+			// aapt resource value: 0x7F1100BB
+			public const int v7_preference_on = 2131820731;
 			
 			static String()
 			{
