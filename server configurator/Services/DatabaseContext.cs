@@ -13,9 +13,6 @@ namespace ab.Services
         private string _databasePath;
         public static object DbLocker = new object();
 
-        public static List<HardwareModel> HardwaresCached { get; set; }
-        public static List<UserModel> UsersCached { get; internal set; }
-
         public DbSet<UserModel> Users { get; set; }
         public DbSet<HardwareModel> Hardwares { get; set; }
         public DbSet<CloudEmailMessage> Messages { get; set; }

@@ -28,42 +28,42 @@ namespace ab
 
             lock (DatabaseContext.DbLocker)
             {
-                //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                //{
-                if (gs.SelectedListPosition < 0 || DatabaseContext.UsersCached.Count() < gs.SelectedListPosition + 1)
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    string err_title = Resources.GetString(Resource.String.err_title_2);
-                    UserName.Text = err_title;
-                    UserName.Enabled = false;
+                    if (gs.SelectedListPosition < 0 || db.Users.Count() < gs.SelectedListPosition + 1)
+                    {
+                        string err_title = Resources.GetString(Resource.String.err_title_2);
+                        UserName.Text = err_title;
+                        UserName.Enabled = false;
 
-                    UserEmail.Text = err_title;
-                    UserEmail.Enabled = false;
+                        UserEmail.Text = err_title;
+                        UserEmail.Enabled = false;
 
-                    UserPhone.Text = err_title;
-                    UserPhone.Enabled = false;
+                        UserPhone.Text = err_title;
+                        UserPhone.Enabled = false;
 
-                    UserTelegram.Text = err_title;
-                    UserTelegram.Enabled = false;
+                        UserTelegram.Text = err_title;
+                        UserTelegram.Enabled = false;
 
-                    UserAlarmSubscribing.Enabled = false;
-                    UserCommandsAllowed.Enabled = false;
+                        UserAlarmSubscribing.Enabled = false;
+                        UserCommandsAllowed.Enabled = false;
 
-                    UserCardSubHeader.Text = err_title;
-                    UserCardSubHeader.Enabled = false;
+                        UserCardSubHeader.Text = err_title;
+                        UserCardSubHeader.Enabled = false;
 
-                    UserCardButtonOk.Enabled = false;
-                    return;
+                        UserCardButtonOk.Enabled = false;
+                        return;
+                    }
+
+                    UserModel user = db.Users.Skip(gs.SelectedListPosition).FirstOrDefault();
+                    userId = user?.Id ?? 0;
+                    UserName.Text = user?.Name;
+                    UserEmail.Text = user?.Email;
+                    UserPhone.Text = user?.Phone;
+                    UserTelegram.Text = user?.TelegramId;
+                    UserAlarmSubscribing.Checked = user.AlarmSubscriber;
+                    UserCommandsAllowed.Checked = user.CommandsAllowed;
                 }
-
-                UserModel user = DatabaseContext.UsersCached.Skip(gs.SelectedListPosition).FirstOrDefault();
-                userId = user?.Id ?? 0;
-                UserName.Text = user?.Name;
-                UserEmail.Text = user?.Email;
-                UserPhone.Text = user?.Phone;
-                UserTelegram.Text = user?.TelegramId;
-                UserAlarmSubscribing.Checked = user.AlarmSubscriber;
-                UserCommandsAllowed.Checked = user.CommandsAllowed;
-                //}
             }
 
             UserCardHeader.Text = Resources.GetString(Resource.String.edit_user_title);
@@ -109,7 +109,7 @@ namespace ab
                         UserModel user = db.Users.Find(userId);
                         db.Users.Remove(user);
                         db.SaveChanges();
-                        DatabaseContext.UsersCached.RemoveAt(gs.SelectedListPosition);
+
                         StartActivity(typeof(UsersActivity));
                     }
                 }
@@ -145,7 +145,6 @@ namespace ab
 
                     db.Users.Update(user);
                     db.SaveChanges();
-                    DatabaseContext.UsersCached[gs.SelectedListPosition] = user;
                 }
             }
             StartActivity(typeof(UsersActivity));

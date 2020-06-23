@@ -36,8 +36,9 @@ namespace ab.Services
         {
             LogRowModel logRow = new LogRowModel() { Status = logStatus, Name = Message };
             await Logs.AddAsync(logRow);
+            await SaveChangesAsync();
             return logRow;
-        }        
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

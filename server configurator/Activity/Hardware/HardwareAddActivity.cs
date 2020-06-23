@@ -126,9 +126,7 @@ namespace ab
                         Password = HardwarePassword.Text.Trim()
                     };
                     db.Hardwares.Add(hardware);
-
                     db.SaveChanges();
-                    DatabaseContext.HardwaresCached.Add(hardware);
                 }
             }
             StartActivity(typeof(HardwaresListActivity));

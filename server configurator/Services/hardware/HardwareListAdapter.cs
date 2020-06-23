@@ -17,7 +17,7 @@ namespace ab.Services
         public event EventHandler<int> ItemClick;
         Context mContext;
 
-        public override int ItemCount => DatabaseContext.HardwaresCached.Count();
+        public override int ItemCount { get { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.Hardwares.Count(); } } }
 
         public HardwareListAdapter(Context _mContext)
         {
@@ -35,22 +35,22 @@ namespace ab.Services
             HardwareViewHolder vh = holder as HardwareViewHolder;
             lock (DatabaseContext.DbLocker)
             {
-                //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                //{
-                HardwareModel hardware = DatabaseContext.HardwaresCached.Skip(position).FirstOrDefault();
-                vh.Name.Text = hardware.Name;
-                vh.Address.Text = hardware.Address;
-                if (!hardware.AlarmSubscriber)
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    vh.AlarmSubscriber.Text = mContext.Resources.GetString(Resource.String.mute_marker_title);
-                    vh.AlarmSubscriber.SetTextColor(Color.LightGray);
+                    HardwareModel hardware = db.Hardwares.Skip(position).FirstOrDefault();
+                    vh.Name.Text = hardware.Name;
+                    vh.Address.Text = hardware.Address;
+                    if (!hardware.AlarmSubscriber)
+                    {
+                        vh.AlarmSubscriber.Text = mContext.Resources.GetString(Resource.String.mute_marker_title);
+                        vh.AlarmSubscriber.SetTextColor(Color.LightGray);
+                    }
+                    if (!hardware.CommandsAllowed)
+                    {
+                        vh.CommandsAllowed.Text = mContext.Resources.GetString(Resource.String.deaf_marker_title);
+                        vh.CommandsAllowed.SetTextColor(Color.LightGray);
+                    }
                 }
-                if (!hardware.CommandsAllowed)
-                {
-                    vh.CommandsAllowed.Text = mContext.Resources.GetString(Resource.String.deaf_marker_title);
-                    vh.CommandsAllowed.SetTextColor(Color.LightGray);
-                }
-                //}
             }
         }
 

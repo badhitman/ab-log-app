@@ -10,7 +10,7 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/logs_app_bar"
+        layout="@layout/logs_list_app_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

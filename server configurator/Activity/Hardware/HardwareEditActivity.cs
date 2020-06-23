@@ -110,7 +110,7 @@ namespace ab
                         HardwareModel hardware = db.Hardwares.Find(hardwareId);
                         db.Hardwares.Remove(hardware);
                         db.SaveChanges();
-                        DatabaseContext.HardwaresCached.RemoveAt(gs.SelectedListPosition);
+
                         StartActivity(typeof(HardwaresListActivity));
                     }
                 }
@@ -144,7 +144,6 @@ namespace ab
 
                     db.Hardwares.Update(hw);
                     db.SaveChanges();
-                    DatabaseContext.HardwaresCached[gs.SelectedListPosition] = hw;
                 }
             }
             StartActivity(typeof(HardwaresListActivity));

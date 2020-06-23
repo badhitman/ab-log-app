@@ -94,6 +94,8 @@
     <Compile Include="Activity\MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\log\LogListAdapter.cs" />
+    <Compile Include="Services\log\LogViewHolder.cs" />
     <Compile Include="Services\user\UserListAdapter.cs" />
     <Compile Include="Services\user\UserViewHolder.cs" />
   </ItemGroup>
@@ -219,7 +221,7 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.6.0.847</Version>
+      <Version>4.7.0.968</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Google.Android.Material">
       <Version>1.0.0.1</Version>
@@ -370,19 +372,19 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\logs_activity.xml">
+    <AndroidResource Include="Resources\layout\logs_list_activity.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\logs_app_bar.xml">
+    <AndroidResource Include="Resources\layout\logs_list_app_bar.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\logs_content.xml">
+    <AndroidResource Include="Resources\layout\logs_list_content.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -480,6 +482,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values-ru\styles.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\log_list_item.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>

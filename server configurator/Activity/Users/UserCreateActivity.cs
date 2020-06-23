@@ -83,25 +83,25 @@ namespace ab
 
             lock (DatabaseContext.DbLocker)
             {
-                //using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                //{
-                if (!string.IsNullOrWhiteSpace(UserName.Text) && DatabaseContext.UsersCached.Where(x => x.Name.Trim().ToLower() == UserName.Text.ToLower() && x.Id != userId).Any())
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    errMsg = Resources.GetString(Resource.String.error_duplicate_name_user) + System.Environment.NewLine;
+                    if (!string.IsNullOrWhiteSpace(UserName.Text) && db.Users.Where(x => x.Name.Trim().ToLower() == UserName.Text.ToLower() && x.Id != userId).Any())
+                    {
+                        errMsg = Resources.GetString(Resource.String.error_duplicate_name_user) + System.Environment.NewLine;
+                    }
+                    if (!string.IsNullOrWhiteSpace(UserEmail.Text) && db.Users.Where(x => x.Email.Trim().ToLower() == UserEmail.Text.ToLower() && x.Id != userId).Any())
+                    {
+                        errMsg = Resources.GetString(Resource.String.error_duplicate_email_user) + System.Environment.NewLine;
+                    }
+                    if (!string.IsNullOrWhiteSpace(UserPhone.Text) && db.Users.Where(x => x.Phone.Trim().ToLower() == UserPhone.Text.ToLower() && x.Id != userId).Any())
+                    {
+                        errMsg = Resources.GetString(Resource.String.error_duplicate_phone_user) + System.Environment.NewLine;
+                    }
+                    if (!string.IsNullOrWhiteSpace(UserTelegram.Text) && db.Users.Where(x => x.TelegramId.Trim().ToLower() == UserTelegram.Text.ToLower() && x.Id != userId).Any())
+                    {
+                        errMsg = Resources.GetString(Resource.String.error_duplicate_telegram_user) + System.Environment.NewLine;
+                    }
                 }
-                if (!string.IsNullOrWhiteSpace(UserEmail.Text) && DatabaseContext.UsersCached.Where(x => x.Email.Trim().ToLower() == UserEmail.Text.ToLower() && x.Id != userId).Any())
-                {
-                    errMsg = Resources.GetString(Resource.String.error_duplicate_email_user) + System.Environment.NewLine;
-                }
-                if (!string.IsNullOrWhiteSpace(UserPhone.Text) && DatabaseContext.UsersCached.Where(x => x.Phone.Trim().ToLower() == UserPhone.Text.ToLower() && x.Id != userId).Any())
-                {
-                    errMsg = Resources.GetString(Resource.String.error_duplicate_phone_user) + System.Environment.NewLine;
-                }
-                if (!string.IsNullOrWhiteSpace(UserTelegram.Text) && DatabaseContext.UsersCached.Where(x => x.TelegramId.Trim().ToLower() == UserTelegram.Text.ToLower() && x.Id != userId).Any())
-                {
-                    errMsg = Resources.GetString(Resource.String.error_duplicate_telegram_user) + System.Environment.NewLine;
-                }
-                //}
             }
 
             return errMsg.Trim();
@@ -134,7 +134,6 @@ namespace ab
                     };
                     db.Users.Add(user);
                     db.SaveChanges();
-                    DatabaseContext.UsersCached.Add(user);
                 }
             }
             StartActivity(typeof(UsersActivity));
