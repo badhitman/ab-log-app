@@ -87,7 +87,7 @@ namespace ab
             }
 
             Bundle bundle = intent.Extras;
-            if (bundle != null && bundle.ContainsKey(Constants.SERVICE_STARTED_KEY))
+            if ((bundle != null && bundle.ContainsKey(Constants.SERVICE_STARTED_KEY)) || (MqttBrokerService.ForegroundServiceManager != null && MqttBrokerService.ForegroundServiceManager.isStartedMqtt))
             {
                 isStarted = true;
             }
@@ -201,7 +201,7 @@ namespace ab
         {
             Log.Debug(TAG, "Handler MqttBroker button start click");
             AppCompatButton button = sender as AppCompatButton;
-            
+
             switch (button.Id)
             {
                 case Resource.Id.mqtt_broker_start_button:

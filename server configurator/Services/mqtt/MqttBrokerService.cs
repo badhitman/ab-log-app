@@ -21,7 +21,7 @@ namespace ab.Services
         // This is any integer value unique to the application.
         public const int SERVICE_RUNNING_NOTIFICATION_ID = 10000;
 
-        IForegroundService ForegroundServiceManager;
+        public static IForegroundService ForegroundServiceManager;
 
         public IBinder Binder { get; private set; }
 
