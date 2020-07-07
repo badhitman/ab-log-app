@@ -152,12 +152,12 @@ namespace ab
 
         private void CloudPref_FocusChange(object sender, View.FocusChangeEventArgs e)
         {
-            EditText editText = (EditText)sender;
             if (!e.HasFocus)
             {
+                EditText editText = (EditText)sender;
                 Preferences.Set(Resources.GetResourceEntryName(editText.Id), editText.Text);
                 LinearLayout linearParent = editText.Parent as LinearLayout;
-                if (linearParent.Tag.ToString() == Resources.GetString(Resource.String.main_cloud_layout))
+                if (linearParent.Tag.ToString() == GetText(Resource.String.main_cloud_layout))
                 {
                     switch_enable_first_cloud.Checked = false;
                 }
@@ -186,7 +186,7 @@ namespace ab
                 if (string.IsNullOrWhiteSpace(email_address) || string.IsNullOrWhiteSpace(login_user) || string.IsNullOrWhiteSpace(pass_user) || string.IsNullOrWhiteSpace(pop3_server_address) || string.IsNullOrWhiteSpace(smtp_server_address))
                 {
                     togglerSwitch.Checked = false;
-                    Toast.MakeText(this, Resources.GetString(Resource.String.err_empty_prop_any_cloud), ToastLength.Short).Show();
+                    Toast.MakeText(this, GetText(Resource.String.err_empty_prop_any_cloud), ToastLength.Short).Show();
                     return;
                 }
 
@@ -208,7 +208,7 @@ namespace ab
                 RunOnUiThread(() =>
                 {
                     switchToggler.Checked = false;
-                    Toast.MakeText(this, Resources.GetString(Resource.String.error_cloud_email_smtp_port), ToastLength.Long).Show();
+                    Toast.MakeText(this, GetText(Resource.String.error_cloud_email_smtp_port), ToastLength.Long).Show();
                 });
                 goto Finish;
             }
@@ -222,7 +222,7 @@ namespace ab
                 RunOnUiThread(() =>
                 {
                     switchToggler.Checked = false;
-                    Toast.MakeText(this, Resources.GetString(Resource.String.error_cloud_email_pop3_port), ToastLength.Long).Show();
+                    Toast.MakeText(this, GetText(Resource.String.error_cloud_email_pop3_port), ToastLength.Long).Show();
                 });
                 goto Finish;
             }
@@ -250,7 +250,7 @@ namespace ab
                     await client.DisconnectAsync(true);
                     RunOnUiThread(() =>
                     {
-                        Toast.MakeText(this, Resources.GetString(Resource.String.cloud_connection_smtp_successfully), ToastLength.Short).Show();
+                        Toast.MakeText(this, GetText(Resource.String.cloud_connection_smtp_successfully), ToastLength.Short).Show();
                     });
                 }
                 catch (Exception e)
@@ -258,7 +258,7 @@ namespace ab
                     RunOnUiThread(() =>
                     {
                         switchToggler.Checked = false;
-                        Toast.MakeText(this, $"{Resources.GetString(Resource.String.error_connecting_smtp_cloud)}{System.Environment.NewLine}{e.Message}", ToastLength.Long).Show();
+                        Toast.MakeText(this, $"{GetText(Resource.String.error_connecting_smtp_cloud)}{System.Environment.NewLine}{e.Message}", ToastLength.Long).Show();
 
                         switchToggler.Enabled = true;
                         (switchToggler.Parent as LinearLayout).RemoveViewAt(1);
@@ -298,7 +298,7 @@ namespace ab
                     await client.DisconnectAsync(true);
                     RunOnUiThread(() =>
                     {
-                        Toast.MakeText(this, Resources.GetString(Resource.String.cloud_connection_pop3_successfully), ToastLength.Short).Show();
+                        Toast.MakeText(this, GetText(Resource.String.cloud_connection_pop3_successfully), ToastLength.Short).Show();
                     });
                 }
                 catch (Exception e)
@@ -306,7 +306,7 @@ namespace ab
                     RunOnUiThread(() =>
                     {
                         switchToggler.Checked = false;
-                        Toast.MakeText(this, $"{Resources.GetString(Resource.String.error_connecting_pop3_cloud)}{System.Environment.NewLine}{e.Message}", ToastLength.Long).Show();
+                        Toast.MakeText(this, $"{GetText(Resource.String.error_connecting_pop3_cloud)}{System.Environment.NewLine}{e.Message}", ToastLength.Long).Show();
 
                         switchToggler.Enabled = true;
                         (switchToggler.Parent as LinearLayout).RemoveViewAt(1);

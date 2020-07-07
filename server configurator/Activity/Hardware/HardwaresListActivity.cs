@@ -33,7 +33,7 @@ namespace ab
 
             mAdapter = new HardwareListAdapter(this);
 
-            mRecyclerView.SetAdapter(mAdapter);
+            mRecyclerView.SetAdapter(mAdapter);           
         }
 
         protected override void OnResume()

@@ -72,15 +72,15 @@ namespace ab
             string errMsg = string.Empty;
             if (string.IsNullOrWhiteSpace(HardwareName.Text))
             {
-                errMsg = Resources.GetString(Resource.String.error_empty_name_hardware) + System.Environment.NewLine;
+                errMsg = GetText(Resource.String.error_empty_name_hardware) + System.Environment.NewLine;
             }
             if (string.IsNullOrWhiteSpace(HardwareAddress.Text))
             {
-                errMsg = (errMsg + Resources.GetString(Resource.String.error_empty_address_hardware)).Trim() + System.Environment.NewLine;
+                errMsg = (errMsg + GetText(Resource.String.error_empty_address_hardware)).Trim() + System.Environment.NewLine;
             }
             if (string.IsNullOrWhiteSpace(HardwarePassword.Text))
             {
-                errMsg = (errMsg + Resources.GetString(Resource.String.error_empty_password_hardware)).Trim() + System.Environment.NewLine;
+                errMsg = (errMsg + GetText(Resource.String.error_empty_password_hardware)).Trim() + System.Environment.NewLine;
             }
 
             lock (DatabaseContext.DbLocker)
@@ -89,11 +89,11 @@ namespace ab
                 {
                     if (!string.IsNullOrWhiteSpace(HardwareName.Text) && db.Hardwares.Where(x => x.Name.Trim().ToLower() == HardwareName.Text.ToLower() && x.Id != userId).Any())
                     {
-                        errMsg = (errMsg + Resources.GetString(Resource.String.error_duplicate_name_hardware)).Trim() + System.Environment.NewLine;
+                        errMsg = (errMsg + GetText(Resource.String.error_duplicate_name_hardware)).Trim() + System.Environment.NewLine;
                     }
                     if (!string.IsNullOrWhiteSpace(HardwareAddress.Text) && db.Hardwares.Where(x => x.Address.Trim().ToLower() == HardwareAddress.Text.ToLower() && x.Id != userId).Any())
                     {
-                        errMsg = (errMsg + Resources.GetString(Resource.String.error_duplicate_address_hardware)).Trim() + System.Environment.NewLine;
+                        errMsg = (errMsg + GetText(Resource.String.error_duplicate_address_hardware)).Trim() + System.Environment.NewLine;
                     }
                 }
             }

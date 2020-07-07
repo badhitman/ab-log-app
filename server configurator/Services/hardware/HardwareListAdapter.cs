@@ -42,12 +42,12 @@ namespace ab.Services
                     vh.Address.Text = hardware.Address;
                     if (!hardware.AlarmSubscriber)
                     {
-                        vh.AlarmSubscriber.Text = mContext.Resources.GetString(Resource.String.mute_marker_title);
+                        vh.AlarmSubscriber.Text = mContext.GetText(Resource.String.mute_marker_title);
                         vh.AlarmSubscriber.SetTextColor(Color.LightGray);
                     }
                     if (!hardware.CommandsAllowed)
                     {
-                        vh.CommandsAllowed.Text = mContext.Resources.GetString(Resource.String.deaf_marker_title);
+                        vh.CommandsAllowed.Text = mContext.GetText(Resource.String.deaf_marker_title);
                         vh.CommandsAllowed.SetTextColor(Color.LightGray);
                     }
                 }

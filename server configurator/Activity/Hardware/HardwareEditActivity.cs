@@ -31,7 +31,7 @@ namespace ab
                 {
                     if (gs.SelectedListPosition < 0 || db.Hardwares.Count() < gs.SelectedListPosition + 1)
                     {
-                        string err_title = Resources.GetString(Resource.String.err_title_2);
+                        string err_title = GetText(Resource.String.err_title_2);
                         HardwareName.Text = err_title;
                         HardwareName.Enabled = false;
 
@@ -62,10 +62,10 @@ namespace ab
                 }
             }
 
-            HardwareCardHeader.Text = Resources.GetString(Resource.String.edit_hardware_title);
-            HardwareCardSubHeader.Text = Resources.GetString(Resource.String.edit_hardware_sub_title);
+            HardwareCardHeader.Text = GetText(Resource.String.edit_hardware_title);
+            HardwareCardSubHeader.Text = GetText(Resource.String.edit_hardware_sub_title);
 
-            AppCompatButton buttonDeleteHardware = new AppCompatButton(this) { Text = Resources.GetString(Resource.String.delete_title) };
+            AppCompatButton buttonDeleteHardware = new AppCompatButton(this) { Text = GetText(Resource.String.delete_title) };
             buttonDeleteHardware.SetTextColor(Color.DarkRed);
             buttonDeleteHardware.Click += ButtonDeleteHardware_Click;
             buttonDeleteHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
@@ -74,9 +74,9 @@ namespace ab
 
         private void ButtonDeleteHardware_Click(object sender, EventArgs e)
         {
-            HardwareCardHeader.Text = Resources.GetString(Resource.String.delete_hardware_card_title);
+            HardwareCardHeader.Text = GetText(Resource.String.delete_hardware_card_title);
 
-            HardwareCardSubHeader.Text = Resources.GetString(Resource.String.delete_hardware_card_sub_title);
+            HardwareCardSubHeader.Text = GetText(Resource.String.delete_hardware_card_sub_title);
             HardwareCardSubHeader.SetTextColor(Color.IndianRed);
 
             HardwareName.Enabled = false;
@@ -87,18 +87,18 @@ namespace ab
             HardwareCommandsAllowed.Enabled = false;
 
             HardwareCardButtonOk.Enabled = false;
-            HardwareCardButtonOk.Text = Resources.GetString(Resource.String.ok_mute_button_with_remove_hardware);
+            HardwareCardButtonOk.Text = GetText(Resource.String.ok_mute_button_with_remove_hardware);
 
             AppCompatButton ButtonDeletingHardware = sender as AppCompatButton;
             ButtonDeletingHardware.Enabled = false;
             ButtonDeletingHardware.SetTextColor(Color.Gray);
 
-            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = Resources.GetString(Resource.String.footer_text_with_remove_hardware), TextSize = 15 };
+            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = GetText(Resource.String.footer_text_with_remove_hardware), TextSize = 15 };
             appCompatTextView.SetTextColor(Color.Red);
             appCompatTextView.SetWidth(3);
             HardwareFooterLayout.AddView(appCompatTextView);
 
-            AppCompatButton ButtonConfirmDeleteHardware = new AppCompatButton(this) { Text = Resources.GetString(Resource.String.button_confirm_remove) };
+            AppCompatButton ButtonConfirmDeleteHardware = new AppCompatButton(this) { Text = GetText(Resource.String.button_confirm_remove) };
             ButtonConfirmDeleteHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             ButtonConfirmDeleteHardware.SetTextColor(Color.DarkRed);
             ButtonConfirmDeleteHardware.Click += new EventHandler((sender, eventArg) =>

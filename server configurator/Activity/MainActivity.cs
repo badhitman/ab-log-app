@@ -3,9 +3,12 @@
 ////////////////////////////////////////////////
 
 using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using ab.Model;
 using ab.Services;
 using Android.App;
@@ -28,19 +31,20 @@ namespace ab
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            ThreadPool.QueueUserWorkItem(o => SimulateStartup());
+
+            ThreadPool.QueueUserWorkItem(o => SimulateSplash());
         }
 
-        async void SimulateStartup()
+        async void SimulateSplash()
         {
             LogsContext logsDB = new LogsContext();
-            string log_msg = Resources.GetString(Resource.String.logs_database_ensure_created);
+            string log_msg = GetText(Resource.String.logs_database_ensure_created);
             RunOnUiThread(() =>
             {
                 Toast.MakeText(this, log_msg, ToastLength.Short).Show();
             });
             await logsDB.Database.EnsureCreatedAsync();
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, Resources.GetString(Resource.String.start_app_msg));
+            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, GetText(Resource.String.start_app_msg));
 
             RunOnUiThread(() =>
             {
@@ -48,11 +52,11 @@ namespace ab
                 main_splash = FindViewById<LinearLayout>(Resource.Id.main_splash);
             });
 #if DEBUG
-            log_msg = Resources.GetString(Resource.String.deleting_outdated_logs);
+            log_msg = GetText(Resource.String.deleting_outdated_logs);
             AddSplashText(log_msg);
             logsDB.Logs.RemoveRange(logsDB.Logs.Where(x => x.CreatedAt < DateTime.Now.AddDays(-7)).ToArray());
 
-            log_msg = Resources.GetString(Resource.String.deleting_main_database_file);
+            log_msg = GetText(Resource.String.deleting_main_database_file);
             if (reWriteDataBase)
             {
                 await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
@@ -60,7 +64,7 @@ namespace ab
                 File.Delete(gs.DatabasePathBase);
             }
 #endif
-            log_msg = Resources.GetString(Resource.String.initializing_db_demo_data);
+            log_msg = GetText(Resource.String.initializing_db_demo_data);
             DatabaseContext db = new DatabaseContext(gs.DatabasePathBase);
             AddSplashText(log_msg);
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
@@ -68,7 +72,7 @@ namespace ab
 
             if (await db.Users.CountAsync() == 0)
             {
-                log_msg = Resources.GetString(Resource.String.load_demo_users);
+                log_msg = GetText(Resource.String.load_demo_users);
                 await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
                 AddSplashText(log_msg);
                 await db.Users.AddAsync(new UserModel { Name = "Tom", Email = "tom@gmail.com", Phone = "+79995554422", TelegramId = "00000000000", AlarmSubscriber = true, CommandsAllowed = true });
@@ -77,22 +81,22 @@ namespace ab
             }
             if (db.Hardwares.Count() == 0)
             {
-                log_msg = Resources.GetString(Resource.String.load_demo_hardwares);
+                log_msg = GetText(Resource.String.load_demo_hardwares);
                 await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
                 AddSplashText(log_msg);
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Home", Address = "192.168.1.5", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Outdoor", Address = "192.168.1.6", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
                 await db.SaveChangesAsync();
             }
-            log_msg = Resources.GetString(Resource.String.caching_hardwares_list);
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
-            AddSplashText(log_msg);
+            //log_msg = GetText(Resource.String.caching_hardwares_list);
+            //await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
+            //AddSplashText(log_msg);
 
-            log_msg = Resources.GetString(Resource.String.caching_users_list);
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
-            AddSplashText(log_msg);
+            //log_msg = GetText(Resource.String.caching_users_list);
+            //await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
+            //AddSplashText(log_msg);
 
-            log_msg = Resources.GetString(Resource.String.finish_initializing_application);
+            log_msg = GetText(Resource.String.finish_initializing_application);
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
             AddSplashText(log_msg);
             StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));

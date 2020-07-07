@@ -32,7 +32,7 @@ namespace ab
                 {
                     if (gs.SelectedListPosition < 0 || db.Users.Count() < gs.SelectedListPosition + 1)
                     {
-                        string err_title = Resources.GetString(Resource.String.err_title_2);
+                        string err_title = GetText(Resource.String.err_title_2);
                         UserName.Text = err_title;
                         UserName.Enabled = false;
 
@@ -66,10 +66,10 @@ namespace ab
                 }
             }
 
-            UserCardHeader.Text = Resources.GetString(Resource.String.edit_user_title);
-            UserCardSubHeader.Text = Resources.GetString(Resource.String.edit_user_sub_title);
+            UserCardHeader.Text = GetText(Resource.String.edit_user_title);
+            UserCardSubHeader.Text = GetText(Resource.String.edit_user_sub_title);
 
-            AppCompatButton buttonDeleteUser = new AppCompatButton(this) { Text = Resources.GetString(Resource.String.delete_title) };
+            AppCompatButton buttonDeleteUser = new AppCompatButton(this) { Text = GetText(Resource.String.delete_title) };
             buttonDeleteUser.SetTextColor(Color.DarkRed);
             buttonDeleteUser.Click += ButtonDeleteUser_Click;
             buttonDeleteUser.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
@@ -81,24 +81,24 @@ namespace ab
             AppCompatButton buttonDeleteUser = sender as AppCompatButton;
             buttonDeleteUser.Enabled = false;
             UserCardButtonOk.Enabled = false;
-            UserCardButtonOk.Text = Resources.GetString(Resource.String.ok_mute_button_with_remove_user);
+            UserCardButtonOk.Text = GetText(Resource.String.ok_mute_button_with_remove_user);
             UserName.Enabled = false;
             UserEmail.Enabled = false;
             UserPhone.Enabled = false;
             UserTelegram.Enabled = false;
             UserAlarmSubscribing.Enabled = false;
             UserCommandsAllowed.Enabled = false;
-            UserCardSubHeader.Text = Resources.GetString(Resource.String.delete_user_card_sub_title);
-            UserCardHeader.Text = Resources.GetString(Resource.String.delete_user_card_header);
+            UserCardSubHeader.Text = GetText(Resource.String.delete_user_card_sub_title);
+            UserCardHeader.Text = GetText(Resource.String.delete_user_card_header);
             UserCardSubHeader.SetTextColor(Color.IndianRed);
             buttonDeleteUser.SetTextColor(Color.Gray);
 
-            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = Resources.GetString(Resource.String.footer_text_with_remove_user), TextSize = 15 };
+            AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = GetText(Resource.String.footer_text_with_remove_user), TextSize = 15 };
             appCompatTextView.SetTextColor(Color.Red);
             appCompatTextView.SetWidth(3);
             UserFooterLayout.AddView(appCompatTextView);
 
-            AppCompatButton buttonConfirmDeleteUser = new AppCompatButton(this) { Text = Resources.GetString(Resource.String.button_confirm_remove) };
+            AppCompatButton buttonConfirmDeleteUser = new AppCompatButton(this) { Text = GetText(Resource.String.button_confirm_remove) };
             buttonConfirmDeleteUser.SetTextColor(Color.DarkRed);
             buttonConfirmDeleteUser.Click += new EventHandler((sender, eventArg) =>
             {

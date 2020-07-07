@@ -11,6 +11,7 @@
   <string name="logs_title">Логи</string>
   <string name="about_title">О программе</string>
   <string name="users_title">Пользователи</string>
+  
   <string name="cloud_title">Облако</string>
   <string name="email_title">Email</string>
   <string name="delete_title">Удалить</string>
@@ -109,4 +110,14 @@
   <string name="load_demo_users">Загрузка пользователей (DEMO) ...</string>
   <string name="load_demo_hardwares">Загрузка устройств (DEMO) ...</string>
   <string name="finish_initializing_application">Запуск интерфейса ...</string>
+
+  <string name="mqtt_broker_port_title">MQTT брокер на порту:</string>
+  <string name="mqtt_broker_port_hint_default">стандартный: 1883</string>
+  <string name="is_running_title">запущен (работает)</string>
+  <string name="start_title">Старт</string>
+  <string name="restart_title">Рестарт</string>
+  <string name="stop_title">Стоп</string>
+
+  <string name="notification_mqtt_broker_text">MQTT брокер запущен</string>
+  <string name="authorization_is_required_in_the_mqtt_broker_title">Authorization the MQTT broker</string>
 </resources>

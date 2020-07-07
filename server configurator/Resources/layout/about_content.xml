@@ -33,6 +33,6 @@
             android:text="@string/about_app_information"
             android:autoLink="all"
             android:layout_gravity="start" />
-
+        
     </LinearLayout>
 </androidx.cardview.widget.CardView>

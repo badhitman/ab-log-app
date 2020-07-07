@@ -114,4 +114,17 @@
   <string name="caching_hardwares_list">caching hardwares list ...</string>
   <string name="caching_users_list">caching users list ...</string>
   <string name="finish_initializing_application">Launching the interface ...</string>
+
+  <string name="mqtt_broker_port_title">MQTT broker on port:</string>
+  <string name="mqtt_broker_port_hint_default">default: 1883</string>
+  <string name="is_running_title">started (running)</string>
+  <string name="start_title">Start</string>
+  <string name="restart_title">Restart</string>
+  <string name="stop_title">Stop</string>
+
+  <string name="notification_mqtt_broker_text">The MQTT broker is running</string>
+  <string name="authorization_is_required_in_the_mqtt_broker_title">Authorization the MQTT broker</string>
+  <string name="mqtt_user_name_title">MQTT user</string>
+  <string name="mqtt_user_passwd_title">MQTT pswd</string>
+  <string name="mqtt_topic_title">MQTT topic</string>
 </resources>
