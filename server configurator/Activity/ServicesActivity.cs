@@ -9,7 +9,6 @@ using Android.OS;
 using Android.Util;
 using Android.Widget;
 using AndroidX.AppCompat.Widget;
-using MQTTnet.Server;
 using System;
 using Xamarin.Essentials;
 

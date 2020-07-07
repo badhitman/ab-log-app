@@ -6,7 +6,6 @@ using ab.Model;
 using Android.Util;
 using MQTTnet;
 using MQTTnet.Server;
-using System;
 using System.Net;
 using System.Text;
 
@@ -45,6 +44,7 @@ namespace ab.Services
                 .WithDefaultEndpointBoundIPAddress(ipAddress)
                 .WithDefaultEndpointBoundIPV6Address(IPAddress.None)
                 .WithConnectionValidator(MqttConnectionValidator)
+                .WithSubscriptionInterceptor(MqttSubscriptionInterceptor)
                 .WithApplicationMessageInterceptor(MqttMessageInterceptor);
 
             await mqttServer.StartAsync(optionsBuilder.Build());
@@ -84,5 +84,12 @@ namespace ab.Services
             //    }
             //});
         }
+
+        private async void MqttSubscriptionInterceptor(MqttSubscriptionInterceptorContext subscription_context)
+        {
+            Log.Debug(TAG, "MqttSubscriptionInterceptor"); 
+             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, $"MqttSubscriptionInterceptor - ClientId={subscription_context.ClientId} Topic={subscription_context.TopicFilter.Topic}");
+        }
+
     }
 }

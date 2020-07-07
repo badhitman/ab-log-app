@@ -7,8 +7,6 @@ using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
-using MQTTnet.Server;
-using System;
 using System.Net;
 using Xamarin.Essentials;
 
