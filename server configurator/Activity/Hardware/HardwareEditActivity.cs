@@ -2,10 +2,10 @@
 // © https://github.com/badhitman 
 ////////////////////////////////////////////////
 
-using System;
-using System.Linq;
 using ab.Model;
 using ab.Services;
+using System;
+using System.Linq;
 using Android.App;
 using Android.Graphics;
 using Android.OS;
@@ -19,6 +19,8 @@ namespace ab
     public class HardwareEditActivity : HardwareAddActivity
     {
         protected int hardwareId;
+        AppCompatButton buttonDeleteHardware;
+        AppCompatButton ButtonConfigPortsHardware;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -65,11 +67,33 @@ namespace ab
             HardwareCardHeader.Text = GetText(Resource.String.edit_hardware_title);
             HardwareCardSubHeader.Text = GetText(Resource.String.edit_hardware_sub_title);
 
-            AppCompatButton buttonDeleteHardware = new AppCompatButton(this) { Text = GetText(Resource.String.delete_title) };
+            buttonDeleteHardware = new AppCompatButton(this) { Text = GetText(Resource.String.delete_title) };
             buttonDeleteHardware.SetTextColor(Color.DarkRed);
-            buttonDeleteHardware.Click += ButtonDeleteHardware_Click;
             buttonDeleteHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             HardwareFooterLayout.AddView(buttonDeleteHardware);
+
+            ButtonConfigPortsHardware = new AppCompatButton(this) { Text = GetText(Resource.String.port_setting_title) };
+            ButtonConfigPortsHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            HardwareFooterLayout.AddView(ButtonConfigPortsHardware);
+        }
+
+        private void ButtonConfigPortsHardware_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            buttonDeleteHardware.Click += ButtonDeleteHardware_Click;
+            ButtonConfigPortsHardware.Click += ButtonConfigPortsHardware_Click;
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            buttonDeleteHardware.Click -= ButtonDeleteHardware_Click;
+            ButtonConfigPortsHardware.Click -= ButtonConfigPortsHardware_Click;
         }
 
         private void ButtonDeleteHardware_Click(object sender, EventArgs e)
@@ -89,9 +113,13 @@ namespace ab
             HardwareCardButtonOk.Enabled = false;
             HardwareCardButtonOk.Text = GetText(Resource.String.ok_mute_button_with_remove_hardware);
 
-            AppCompatButton ButtonDeletingHardware = sender as AppCompatButton;
-            ButtonDeletingHardware.Enabled = false;
-            ButtonDeletingHardware.SetTextColor(Color.Gray);
+            buttonDeleteHardware.Enabled = false;
+            buttonDeleteHardware.SetTextColor(Color.Gray);
+            buttonDeleteHardware.Click -= ButtonDeleteHardware_Click;
+
+            ButtonConfigPortsHardware.Enabled = false;
+            ButtonConfigPortsHardware.SetTextColor(Color.Gray);
+            ButtonConfigPortsHardware.Click -= ButtonConfigPortsHardware_Click;
 
             AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = GetText(Resource.String.footer_text_with_remove_hardware), TextSize = 15 };
             appCompatTextView.SetTextColor(Color.Red);

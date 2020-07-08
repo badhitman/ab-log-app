@@ -3,12 +3,10 @@
 ////////////////////////////////////////////////
 
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using ab.Model;
 using ab.Services;
 using Android.App;
@@ -28,11 +26,35 @@ namespace ab
         public override void OnBackPressed() { }
         private LinearLayout main_splash;
 
+        static bool isRunning = false;
+        static List<string> LoadingTracert = new List<string>();
+        static bool isCompleted = false;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            
+            SetContentView(Resource.Layout.main_activity);
+            main_splash = FindViewById<LinearLayout>(Resource.Id.main_splash);
 
-            ThreadPool.QueueUserWorkItem(o => SimulateSplash());
+            lock (LoadingTracert)
+            {
+                if (!isCompleted && !isRunning)
+                {
+                    isRunning = true;
+                    ThreadPool.QueueUserWorkItem(o => SimulateSplash());
+                }
+                else if (isRunning)
+                {
+                    foreach (string s in LoadingTracert)
+                    {
+                        main_splash.AddView(new AppCompatTextView(this)
+                        {
+                            Text = s
+                        });
+                    }
+                }
+            }
         }
 
         async void SimulateSplash()
@@ -45,12 +67,7 @@ namespace ab
             });
             await logsDB.Database.EnsureCreatedAsync();
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, GetText(Resource.String.start_app_msg));
-
-            RunOnUiThread(() =>
-            {
-                SetContentView(Resource.Layout.main_activity);
-                main_splash = FindViewById<LinearLayout>(Resource.Id.main_splash);
-            });
+                        
 #if DEBUG
             log_msg = GetText(Resource.String.deleting_outdated_logs);
             AddSplashText(log_msg);
@@ -84,7 +101,7 @@ namespace ab
                 log_msg = GetText(Resource.String.load_demo_hardwares);
                 await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
                 AddSplashText(log_msg);
-                await db.Hardwares.AddAsync(new HardwareModel { Name = "Home", Address = "192.168.1.5", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
+                await db.Hardwares.AddAsync(new HardwareModel { Name = "Home", Address = "192.168.2.114", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Outdoor", Address = "192.168.1.6", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
                 await db.SaveChangesAsync();
             }
@@ -99,6 +116,7 @@ namespace ab
             log_msg = GetText(Resource.String.finish_initializing_application);
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg);
             AddSplashText(log_msg);
+            isCompleted = true;
             StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));
             await db.DisposeAsync();
             await logsDB.DisposeAsync();
@@ -106,14 +124,14 @@ namespace ab
 
         private void AddSplashText(string log_msg)
         {
-            RunOnUiThread(() =>
+            lock (LoadingTracert)
             {
-                AppCompatTextView appCompatTextView = new AppCompatTextView(this)
+                LoadingTracert.Add(log_msg);
+                RunOnUiThread(() =>
                 {
-                    Text = log_msg
-                };
-                main_splash.AddView(appCompatTextView);
-            });
+                    main_splash.AddView(new AppCompatTextView(this) { Text = log_msg });
+                });
+            }
         }
     }
 }
