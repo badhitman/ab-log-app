@@ -1,0 +1,30 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="3dp"
+    android:id="@+id/hardware_system_settings_card_view"
+    app:contentPadding="5dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/hardware_system_settings_app_bar">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="@string/system_settings_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hardware_system_settings_card_header"
+            android:foregroundGravity="center"
+            android:gravity="center_horizontal"
+            android:typeface="serif"
+            android:layout_marginBottom="10dp" />        
+        
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

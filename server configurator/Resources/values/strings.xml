@@ -127,5 +127,6 @@
   <string name="mqtt_user_name_title">MQTT user</string>
   <string name="mqtt_user_passwd_title">MQTT pswd</string>
   <string name="mqtt_topic_title">MQTT topic</string>
-  <string name="port_setting_title">Port setting</string>
+  <string name="port_setting_title">Ports settings</string>
+  <string name="system_settings_title">System settings</string>
 </resources>

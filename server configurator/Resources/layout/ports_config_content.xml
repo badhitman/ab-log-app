@@ -1,3 +1,4 @@
+
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -36,9 +37,102 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"/>
-            
 
-            
+            <TabHost
+                android:id="@+id/tabHost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TabWidget
+                        android:id="@android:id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TabWidget>
+
+                    <FrameLayout
+                        android:id="@android:id/tabcontent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout_ports_config_xp1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:text="P0-P13 (&amp; P14)"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minWidth="25px"
+                                android:minHeight="25px"
+                                android:gravity="center" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout_ports_config_xp2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:text="P15-P28 (&amp; P29)"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minWidth="25px"
+                                android:minHeight="25px"
+                                android:gravity="center" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout_ports_config_xt2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:text="P30-P35"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minWidth="25px"
+                                android:minHeight="25px"
+                                android:gravity="center" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout_ports_config_xp56"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:text="P36-P37"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minWidth="25px"
+                                android:minHeight="25px"
+                                android:gravity="center" />
+
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+            </TabHost>
 
         </LinearLayout>
 

@@ -120,5 +120,6 @@
 
   <string name="notification_mqtt_broker_text">MQTT брокер запущен</string>
   <string name="authorization_is_required_in_the_mqtt_broker_title">Authorization the MQTT broker</string>
-  <string name="port_setting_title">Настройка портов</string>
+  <string name="port_setting_title">Настройки портов</string>
+  <string name="system_settings_title">Системные настройки</string>
 </resources>

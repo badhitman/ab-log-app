@@ -21,6 +21,7 @@ namespace ab
         protected int hardwareId;
         AppCompatButton buttonDeleteHardware;
         AppCompatButton ButtonConfigPortsHardware;
+        AppCompatButton SystemSettingsHardware;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -72,14 +73,13 @@ namespace ab
             buttonDeleteHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             HardwareFooterLayout.AddView(buttonDeleteHardware);
 
+            SystemSettingsHardware = new AppCompatButton(this) { Text = GetText(Resource.String.system_settings_title) };
+            SystemSettingsHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            HardwareFooterLayout.AddView(SystemSettingsHardware);
+
             ButtonConfigPortsHardware = new AppCompatButton(this) { Text = GetText(Resource.String.port_setting_title) };
             ButtonConfigPortsHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             HardwareFooterLayout.AddView(ButtonConfigPortsHardware);
-        }
-
-        private void ButtonConfigPortsHardware_Click(object sender, EventArgs e)
-        {
-
         }
 
         protected override void OnResume()
@@ -87,6 +87,7 @@ namespace ab
             base.OnResume();
             buttonDeleteHardware.Click += ButtonDeleteHardware_Click;
             ButtonConfigPortsHardware.Click += ButtonConfigPortsHardware_Click;
+            SystemSettingsHardware.Click += SystemSettingsHardware_Click;
         }
 
         protected override void OnPause()
@@ -94,6 +95,17 @@ namespace ab
             base.OnPause();
             buttonDeleteHardware.Click -= ButtonDeleteHardware_Click;
             ButtonConfigPortsHardware.Click -= ButtonConfigPortsHardware_Click;
+            SystemSettingsHardware.Click -= SystemSettingsHardware_Click;
+        }
+
+        private void ButtonConfigPortsHardware_Click(object sender, EventArgs e)
+        {
+            StartActivity(typeof(PortsConfigActivity));
+        }
+
+        private void SystemSettingsHardware_Click(object sender, EventArgs e)
+        {
+            StartActivity(typeof(HardwareSystemSettingsActivity));
         }
 
         private void ButtonDeleteHardware_Click(object sender, EventArgs e)
@@ -116,6 +128,10 @@ namespace ab
             buttonDeleteHardware.Enabled = false;
             buttonDeleteHardware.SetTextColor(Color.Gray);
             buttonDeleteHardware.Click -= ButtonDeleteHardware_Click;
+
+            SystemSettingsHardware.Enabled = false;
+            SystemSettingsHardware.SetTextColor(Color.Gray);
+            SystemSettingsHardware.Click -= SystemSettingsHardware_Click;
 
             ButtonConfigPortsHardware.Enabled = false;
             ButtonConfigPortsHardware.SetTextColor(Color.Gray);
