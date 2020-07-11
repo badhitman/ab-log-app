@@ -123,4 +123,6 @@
   <string name="port_setting_title">Настройки портов</string>
   <string name="system_settings_title">Системные настройки</string>
   <string name="saving_is_required">Сначала требуется сохранить объект</string>
+  <string name="hardware_ip_are_saved_title">IP адрес оборудования сохранен</string>
+  <string name="hardware_password_are_saved_title">Пароль оборудования сохранен</string>
 </resources>

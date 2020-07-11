@@ -7,6 +7,7 @@ using ab.Services;
 using Android.App;
 using Android.OS;
 using Android.Webkit;
+using Android.Widget;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,14 +42,24 @@ namespace ab
             int id = Intent.Extras.GetInt(nameof(HardwareModel.Id), 0);
             string address = Intent.Extras.GetString(nameof(HardwareModel.Address), string.Empty);
             string password = Intent.Extras.GetString(nameof(HardwareModel.Password), string.Empty);
-
             webView = (WebView)FindViewById(Resource.Id.webViewSystemSettings);
-            webView.SetWebViewClient(new MyWebViewClient(id, address));
-
+            MyWebViewClient myWebViewClient = new MyWebViewClient(id, address);
+            myWebViewClient.ToastNotify += delegate (int[] resource_id)
+            {
+                if (resource_id.Length == 0)
+                    return;
+                string msg = string.Empty;
+                foreach (int i in resource_id)
+                {
+                    msg += $"• {GetString(i)}{System.Environment.NewLine}";
+                }
+                Toast.MakeText(this, msg.Trim(), ToastLength.Short).Show();
+            };
+            webView.SetWebViewClient(myWebViewClient);
             //Task.Run(()=> { webView.LoadUrl($"http://{address}/{password}/"); });
             webView.LoadUrl($"http://{address}/{password}/");
 
-            
+
 
             //TabHost tabHost = (TabHost)FindViewById(Resource.Id.tabHost);
 
@@ -76,6 +87,11 @@ namespace ab
 
             //tabHost.CurrentTab = 0;
         }
+
+        //private void MyWebViewClient_ToastNotify(string message)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
 
         protected override void OnResume()
         {

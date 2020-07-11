@@ -2,6 +2,7 @@
 // © https://github.com/badhitman 
 ////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using ab.Model;
@@ -14,6 +15,9 @@ namespace ab.Services
     {
         private int object_id;
         private string hardware_ip_address;
+
+        public delegate void ToastNotifyHandler(int[] resource_id);
+        public event ToastNotifyHandler ToastNotify;
 
         public MyWebViewClient(int id, string ip)
         {
@@ -48,16 +52,24 @@ namespace ab.Services
                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                     {
                         HardwareModel hardware = db.Hardwares.Find(this.object_id);
-                        if (Regex.IsMatch(eip, @"\d+\.\d+\.\d+\.\d+"))
+                        List<int> messages = new List<int>();
+                        if (!string.IsNullOrWhiteSpace(eip) && Regex.IsMatch(eip, @"\d+\.\d+\.\d+\.\d+") && hardware.Address != eip)
                         {
                             hardware.Address = hardware_ip_address = eip;
+                            messages.Add(Resource.String.hardware_ip_are_saved_title);
                         }
-                        if (!string.IsNullOrWhiteSpace(pwd) && pwd.Length <= 3)
+                        if (!string.IsNullOrWhiteSpace(pwd) && pwd.Length <= 3 && hardware.Password != pwd)
                         {
                             hardware.Password = pwd;
+                            messages.Add(Resource.String.hardware_password_are_saved_title);
                         }
-                        db.Hardwares.Update(hardware);
-                        db.SaveChanges();
+                        if (messages.Count > 0)
+                        {
+                            db.Hardwares.Update(hardware);
+                            db.SaveChanges();
+
+                            ToastNotify?.Invoke(messages.ToArray());
+                        }
                     }
                 }
             }
@@ -69,7 +81,7 @@ namespace ab.Services
             else
             {
                 HttpClient httpClient = new HttpClient();
-                HttpResponseMessage v = httpClient.GetAsync(request.Url.ToString()).Result;
+                HttpResponseMessage httpResponseMessage = httpClient.GetAsync(request.Url.ToString()).Result;
 
                 view.LoadUrl($"http://{hardware_ip_address}/{pwd}/?cf={cf}");
             }

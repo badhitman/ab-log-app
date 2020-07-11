@@ -130,4 +130,6 @@
   <string name="port_setting_title">Ports settings</string>
   <string name="system_settings_title">System settings</string>
   <string name="saving_is_required">First you need to save the object</string>
+  <string name="hardware_ip_are_saved_title">The IP address of the hardware is saved</string>
+  <string name="hardware_password_are_saved_title">The hardware password is saved</string>
 </resources>
