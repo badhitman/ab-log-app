@@ -104,6 +104,7 @@
     <Compile Include="Services\logg\LogListAdapter.cs" />
     <Compile Include="Services\logg\LogViewHolder.cs" />
     <Compile Include="Services\mqtt\MqttBrokerService.cs" />
+    <Compile Include="Services\MyWebViewClient.cs" />
     <Compile Include="Services\user\UserListAdapter.cs" />
     <Compile Include="Services\user\UserViewHolder.cs" />
   </ItemGroup>

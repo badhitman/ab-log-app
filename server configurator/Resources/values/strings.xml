@@ -129,4 +129,5 @@
   <string name="mqtt_topic_title">MQTT topic</string>
   <string name="port_setting_title">Ports settings</string>
   <string name="system_settings_title">System settings</string>
+  <string name="saving_is_required">First you need to save the object</string>
 </resources>

@@ -12,6 +12,7 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.Widget;
+using Android.Content;
 
 namespace ab
 {
@@ -20,8 +21,9 @@ namespace ab
     {
         protected int hardwareId;
         AppCompatButton buttonDeleteHardware;
-        AppCompatButton ButtonConfigPortsHardware;
+        //AppCompatButton ButtonConfigPortsHardware;
         AppCompatButton SystemSettingsHardware;
+        HardwareModel hardware;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -54,7 +56,7 @@ namespace ab
                         return;
                     }
 
-                    HardwareModel hardware = db.Hardwares.OrderBy(x => x.Id).Skip(gs.SelectedListPosition).FirstOrDefault();
+                    hardware = db.Hardwares.OrderBy(x => x.Id).Skip(gs.SelectedListPosition).FirstOrDefault();
                     hardwareId = hardware?.Id ?? 0;
                     HardwareName.Text = hardware?.Name;
                     HardwareAddress.Text = hardware?.Address;
@@ -75,18 +77,37 @@ namespace ab
 
             SystemSettingsHardware = new AppCompatButton(this) { Text = GetText(Resource.String.system_settings_title) };
             SystemSettingsHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            HardwareFooterLayout.AddView(SystemSettingsHardware);
+            HardwareTopLayout.AddView(SystemSettingsHardware);
 
-            ButtonConfigPortsHardware = new AppCompatButton(this) { Text = GetText(Resource.String.port_setting_title) };
-            ButtonConfigPortsHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            HardwareFooterLayout.AddView(ButtonConfigPortsHardware);
+            //ButtonConfigPortsHardware = new AppCompatButton(this) { Text = GetText(Resource.String.port_setting_title) };
+            //ButtonConfigPortsHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            //HardwareFooterLayout.AddView(ButtonConfigPortsHardware);
+        }
+
+        private void SystemSettingsHardware_Click(object sender, EventArgs e)
+        {
+            if(hardware.Address != HardwareAddress.Text || 
+                hardware.Password != HardwarePassword.Text || 
+                hardware.Name != HardwareName.Text ||
+                hardware.AlarmSubscriber != HardwareAlarmSubscribing.Checked ||
+                hardware.CommandsAllowed != HardwareCommandsAllowed.Checked)
+            {
+                Toast.MakeText(this, Resource.String.saving_is_required, ToastLength.Short).Show();
+                return;
+            }
+
+            Intent intent = new Intent(this, typeof(HardwareSystemSettingsActivity));
+            intent.PutExtra(nameof(hardware.Id), hardware.Id);
+            intent.PutExtra(nameof(hardware.Address), hardware.Address);
+            intent.PutExtra(nameof(hardware.Password), hardware.Password);
+            StartActivity(intent);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
             buttonDeleteHardware.Click += ButtonDeleteHardware_Click;
-            ButtonConfigPortsHardware.Click += ButtonConfigPortsHardware_Click;
+            //ButtonConfigPortsHardware.Click += ButtonConfigPortsHardware_Click;
             SystemSettingsHardware.Click += SystemSettingsHardware_Click;
         }
 
@@ -94,18 +115,8 @@ namespace ab
         {
             base.OnPause();
             buttonDeleteHardware.Click -= ButtonDeleteHardware_Click;
-            ButtonConfigPortsHardware.Click -= ButtonConfigPortsHardware_Click;
+            //ButtonConfigPortsHardware.Click -= ButtonConfigPortsHardware_Click;
             SystemSettingsHardware.Click -= SystemSettingsHardware_Click;
-        }
-
-        private void ButtonConfigPortsHardware_Click(object sender, EventArgs e)
-        {
-            StartActivity(typeof(PortsConfigActivity));
-        }
-
-        private void SystemSettingsHardware_Click(object sender, EventArgs e)
-        {
-            StartActivity(typeof(HardwareSystemSettingsActivity));
         }
 
         private void ButtonDeleteHardware_Click(object sender, EventArgs e)
@@ -133,9 +144,9 @@ namespace ab
             SystemSettingsHardware.SetTextColor(Color.Gray);
             SystemSettingsHardware.Click -= SystemSettingsHardware_Click;
 
-            ButtonConfigPortsHardware.Enabled = false;
-            ButtonConfigPortsHardware.SetTextColor(Color.Gray);
-            ButtonConfigPortsHardware.Click -= ButtonConfigPortsHardware_Click;
+            //ButtonConfigPortsHardware.Enabled = false;
+            //ButtonConfigPortsHardware.SetTextColor(Color.Gray);
+            //ButtonConfigPortsHardware.Click -= ButtonConfigPortsHardware_Click;
 
             AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = GetText(Resource.String.footer_text_with_remove_hardware), TextSize = 15 };
             appCompatTextView.SetTextColor(Color.Red);
@@ -177,16 +188,14 @@ namespace ab
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    HardwareModel hw = db.Hardwares.Find(hardwareId);
+                    hardware.Name = HardwareName.Text.Trim();
+                    hardware.Address = HardwareAddress.Text.Trim();
+                    hardware.Password = HardwarePassword.Text.Trim();
 
-                    hw.Name = HardwareName.Text.Trim();
-                    hw.Address = HardwareAddress.Text.Trim();
-                    hw.Password = HardwarePassword.Text.Trim();
+                    hardware.AlarmSubscriber = HardwareAlarmSubscribing.Checked;
+                    hardware.CommandsAllowed = HardwareCommandsAllowed.Checked;
 
-                    hw.AlarmSubscriber = HardwareAlarmSubscribing.Checked;
-                    hw.CommandsAllowed = HardwareCommandsAllowed.Checked;
-
-                    db.Hardwares.Update(hw);
+                    db.Hardwares.Update(hardware);
                     db.SaveChanges();
                 }
             }

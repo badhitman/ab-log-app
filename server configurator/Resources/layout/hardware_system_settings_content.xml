@@ -24,7 +24,12 @@
             android:foregroundGravity="center"
             android:gravity="center_horizontal"
             android:typeface="serif"
-            android:layout_marginBottom="10dp" />        
-        
+            android:layout_marginBottom="10dp" />
+
+        <android.webkit.WebView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/webViewSystemSettings" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

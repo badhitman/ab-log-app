@@ -59,6 +59,14 @@
                 android:autoLink="web"
                 android:layout_marginBottom="10dp"/>
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/hardware_top_layout">
+
+            </LinearLayout>
+
             <EditText
                 android:hint="@string/name_title"
                 android:inputType="text"
@@ -143,7 +151,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/hardware_button_ok" />
-        
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"

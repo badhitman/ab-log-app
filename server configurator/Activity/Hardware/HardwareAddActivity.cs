@@ -25,6 +25,8 @@ namespace ab
         protected AppCompatTextView HardwareCardHeader;
         protected AppCompatTextView HardwareCardSubHeader;
 
+        protected LinearLayout HardwareTopLayout;
+
         protected AppCompatEditText HardwareName;
         protected AppCompatEditText HardwareAddress;
         protected AppCompatEditText HardwarePassword;
@@ -42,6 +44,8 @@ namespace ab
 
             HardwareCardHeader = FindViewById<AppCompatTextView>(Resource.Id.hardware_card_title);
             HardwareCardSubHeader = FindViewById<AppCompatTextView>(Resource.Id.hardware_card_subtitle);
+
+            HardwareTopLayout = FindViewById<LinearLayout>(Resource.Id.hardware_top_layout);
 
             HardwareName = FindViewById<AppCompatEditText>(Resource.Id.hardware_name);
             HardwareAddress = FindViewById<AppCompatEditText>(Resource.Id.hardware_address);
@@ -67,7 +71,7 @@ namespace ab
             HardwareCardButtonOk.Click -= HandlerHardwareButtonOk_Click;
         }
 
-        protected string ReadView(int userId = 0)
+        protected string ReadView(int objectId = 0)
         {
             string errMsg = string.Empty;
             if (string.IsNullOrWhiteSpace(HardwareName.Text))
@@ -87,11 +91,11 @@ namespace ab
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    if (!string.IsNullOrWhiteSpace(HardwareName.Text) && db.Hardwares.Where(x => x.Name.Trim().ToLower() == HardwareName.Text.ToLower() && x.Id != userId).Any())
+                    if (!string.IsNullOrWhiteSpace(HardwareName.Text) && db.Hardwares.Where(x => x.Name.Trim().ToLower() == HardwareName.Text.ToLower() && x.Id != objectId).Any())
                     {
                         errMsg = (errMsg + GetText(Resource.String.error_duplicate_name_hardware)).Trim() + System.Environment.NewLine;
                     }
-                    if (!string.IsNullOrWhiteSpace(HardwareAddress.Text) && db.Hardwares.Where(x => x.Address.Trim().ToLower() == HardwareAddress.Text.ToLower() && x.Id != userId).Any())
+                    if (!string.IsNullOrWhiteSpace(HardwareAddress.Text) && db.Hardwares.Where(x => x.Address.Trim().ToLower() == HardwareAddress.Text.ToLower() && x.Id != objectId).Any())
                     {
                         errMsg = (errMsg + GetText(Resource.String.error_duplicate_address_hardware)).Trim() + System.Environment.NewLine;
                     }

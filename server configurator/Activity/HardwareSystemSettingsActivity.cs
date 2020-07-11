@@ -2,8 +2,13 @@
 // © https://github.com/badhitman 
 ////////////////////////////////////////////////
 
+using ab.Model;
+using ab.Services;
 using Android.App;
 using Android.OS;
+using Android.Webkit;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ab
 {
@@ -15,9 +20,35 @@ namespace ab
         protected override int DrawerLayoutId => Resource.Id.hardware_system_settings_app_drawer_layout;
         protected override int NavId => Resource.Id.hardware_system_settings_app_nav_view;
 
+        WebView webView;
+
+        public override void OnBackPressed()
+        {
+            if (webView?.CanGoBack() ?? false)
+            {
+                webView.GoBack();
+            }
+            else
+            {
+                base.OnBackPressed();
+            }
+        }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            int id = Intent.Extras.GetInt(nameof(HardwareModel.Id), 0);
+            string address = Intent.Extras.GetString(nameof(HardwareModel.Address), string.Empty);
+            string password = Intent.Extras.GetString(nameof(HardwareModel.Password), string.Empty);
+
+            webView = (WebView)FindViewById(Resource.Id.webViewSystemSettings);
+            webView.SetWebViewClient(new MyWebViewClient(id, address));
+
+            //Task.Run(()=> { webView.LoadUrl($"http://{address}/{password}/"); });
+            webView.LoadUrl($"http://{address}/{password}/");
+
+            
 
             //TabHost tabHost = (TabHost)FindViewById(Resource.Id.tabHost);
 

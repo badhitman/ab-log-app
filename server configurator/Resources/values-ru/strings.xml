@@ -122,4 +122,5 @@
   <string name="authorization_is_required_in_the_mqtt_broker_title">Authorization the MQTT broker</string>
   <string name="port_setting_title">Настройки портов</string>
   <string name="system_settings_title">Системные настройки</string>
+  <string name="saving_is_required">Сначала требуется сохранить объект</string>
 </resources>
