@@ -8,8 +8,6 @@ using Android.App;
 using Android.OS;
 using Android.Webkit;
 using Android.Widget;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ab
 {
@@ -22,6 +20,7 @@ namespace ab
         protected override int NavId => Resource.Id.hardware_system_settings_app_nav_view;
 
         WebView webView;
+        TextView hardwareCardSubHeader;
 
         public override void OnBackPressed()
         {
@@ -42,12 +41,24 @@ namespace ab
             int id = Intent.Extras.GetInt(nameof(HardwareModel.Id), 0);
             string address = Intent.Extras.GetString(nameof(HardwareModel.Address), string.Empty);
             string password = Intent.Extras.GetString(nameof(HardwareModel.Password), string.Empty);
-            webView = (WebView)FindViewById(Resource.Id.webViewSystemSettings);
+            
+            hardwareCardSubHeader = FindViewById<TextView>(Resource.Id.hardware_system_settings_card_sub_header);
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+                    hardwareCardSubHeader.Text = db.Hardwares.Find(id).Name;
+                }
+            }
+
+            webView = FindViewById<WebView>(Resource.Id.webViewSystemSettings);
             MyWebViewClient myWebViewClient = new MyWebViewClient(id, address);
+
             myWebViewClient.ToastNotify += delegate (int[] resource_id)
             {
                 if (resource_id.Length == 0)
                     return;
+
                 string msg = string.Empty;
                 foreach (int i in resource_id)
                 {
@@ -55,43 +66,10 @@ namespace ab
                 }
                 Toast.MakeText(this, msg.Trim(), ToastLength.Short).Show();
             };
+
             webView.SetWebViewClient(myWebViewClient);
-            //Task.Run(()=> { webView.LoadUrl($"http://{address}/{password}/"); });
             webView.LoadUrl($"http://{address}/{password}/");
-
-
-
-            //TabHost tabHost = (TabHost)FindViewById(Resource.Id.tabHost);
-
-            //tabHost.Setup();
-
-            //TabHost.TabSpec tabSpec = tabHost.NewTabSpec("xp1");
-            //tabSpec.SetContent(Resource.Id.linear_layout_ports_config_xp1);
-            //tabSpec.SetIndicator("XP1");
-            //tabHost.AddTab(tabSpec);
-
-            //tabSpec = tabHost.NewTabSpec("xp2");
-            //tabSpec.SetContent(Resource.Id.linear_layout_ports_config_xp2);
-            //tabSpec.SetIndicator("XP2");
-            //tabHost.AddTab(tabSpec);
-
-            //tabSpec = tabHost.NewTabSpec("xt2");
-            //tabSpec.SetContent(Resource.Id.linear_layout_ports_config_xt2);
-            //tabSpec.SetIndicator("XT2");
-            //tabHost.AddTab(tabSpec);
-
-            //tabSpec = tabHost.NewTabSpec("xp56");
-            //tabSpec.SetContent(Resource.Id.linear_layout_ports_config_xp56);
-            //tabSpec.SetIndicator("XP5/6");
-            //tabHost.AddTab(tabSpec);
-
-            //tabHost.CurrentTab = 0;
         }
-
-        //private void MyWebViewClient_ToastNotify(string message)
-        //{
-        //    throw new System.NotImplementedException();
-        //}
 
         protected override void OnResume()
         {

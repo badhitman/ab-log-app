@@ -21,10 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/hardware_system_settings_card_header"
-            android:foregroundGravity="center"
             android:gravity="center_horizontal"
             android:typeface="serif"
             android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:text="Name hardware"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:id="@+id/hardware_system_settings_card_sub_header" />
 
         <android.webkit.WebView
             android:layout_width="match_parent"
