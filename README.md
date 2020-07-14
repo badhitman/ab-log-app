@@ -23,3 +23,10 @@
 ![удалённые пользователи](./screenshots/users.png)
 
 ![облачное хранилище](./screenshots/cloud.png)
+
+Ввиду отсутвия у оборудования программного api, подкреплённого [вполне целенаправленным нежелением производителя контроллеров вести диалог на эту тему](https://ab-log.ru/forum/viewtopic.php?f=5&t=1740) пришлось изобрести костыли для "облагораживания web интерфеса".
+Изобретая велосипед использовался подход, при которым оригинальный web/html не столько изменялся, сколько дополнялся. К нему были добавлены скрипты jQuery, Bootstrap и иже с ними.
+![поддержка bootstrap](./screenshots/web-bootstrap-supported.png)
+
+Поддержка "продвинутого web интерфейса" доступна толко для проверенных версий прошивки. Для нерповеренных прошивок данное расширение [отключено по умолчанию ~ bool external_web_mode = false;](https://github.com/badhitman/ab-log-app/blob/master/server%20configurator/Activity/HardwareSystemSettingsActivity.cs#L43).
+![без поддержки bootstrap](./screenshots/web-bootstrap-not-supported.png)

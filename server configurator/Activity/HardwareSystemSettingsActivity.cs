@@ -8,13 +8,11 @@ using Android.App;
 using Android.OS;
 using Android.Webkit;
 using Android.Widget;
-using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Xamarin.Forms.Internals;
 
 namespace ab
 {
