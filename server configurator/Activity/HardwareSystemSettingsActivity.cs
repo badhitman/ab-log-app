@@ -5,10 +5,13 @@
 using ab.Model;
 using ab.Services;
 using Android.App;
+using Android.Content;
 using Android.OS;
+using Android.Util;
 using Android.Webkit;
 using Android.Widget;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -23,7 +26,7 @@ namespace ab
         protected override int ToolbarId => Resource.Id.hardware_system_settings_toolbar;
         protected override int DrawerLayoutId => Resource.Id.hardware_system_settings_app_drawer_layout;
         protected override int NavId => Resource.Id.hardware_system_settings_app_nav_view;
-
+        static string TAG = nameof(HardwareSystemSettingsActivity);
         string[] supported_firmwares = new string[] { "(fw: 4.45b5)" };
 
         WebView webView;
@@ -40,26 +43,10 @@ namespace ab
 
         bool external_web_mode = false;
 
-        //public override void OnBackPressed()
-        //{
-        //    if (webView?.CanGoBack() ?? false)
-        //    {
-        //        webView.GoBack();
-        //    }
-        //    else
-        //    {
-        //        base.OnBackPressed();
-        //    }
-        //}
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
             int id = Intent.Extras.GetInt(nameof(HardwareModel.Id), 0);
-            //string address = Intent.Extras.GetString(nameof(HardwareModel.Address), string.Empty);
-            //string password = Intent.Extras.GetString(nameof(HardwareModel.Password), string.Empty);
-
             hardwareCardSubHeader = FindViewById<TextView>(Resource.Id.hardware_system_settings_card_sub_header);
             lock (DatabaseContext.DbLocker)
             {
@@ -72,24 +59,6 @@ namespace ab
             HardwareSystemSettingsLayout = FindViewById<LinearLayout>(Resource.Id.hardware_system_settings_layout);
 
             GetHttp($"http://{hardware.Address}/{hardware.Password}/");
-
-            //webView = FindViewById<WebView>(Resource.Id.webViewSystemSettings);
-            //MyWebViewClient myWebViewClient = new MyWebViewClient(id, address);
-
-            //myWebViewClient.ToastNotify += delegate (int[] resource_id)
-            //{
-            //    if (resource_id.Length == 0)
-            //        return;
-
-            //    string msg = string.Empty;
-            //    foreach (int i in resource_id)
-            //    {
-            //        msg += $"• {GetString(i)}{System.Environment.NewLine}";
-            //    }
-            //    Toast.MakeText(this, msg.Trim(), ToastLength.Short).Show();
-            //};
-
-            //webView.LoadUrl($"http://{address}/{password}/");
         }
 
         public async void GetHttp(string url)
@@ -119,23 +88,73 @@ namespace ab
             myWebViewClient.ShouldUrlLoading += delegate (string new_url) { GetHttp(new_url); };
 
             webView.SetWebViewClient(myWebViewClient);
-            string html_raw;
+            string html_raw = string.Empty;
 
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage httpResponseMessage = await client.GetAsync(url);
-                html_raw = await httpResponseMessage.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage httpResponseMessage = await client.GetAsync(url);
+                    html_raw = await httpResponseMessage.Content.ReadAsStringAsync();
+                }
+                catch (Exception ex)
+                {
+                    Toast.MakeText(this, ex.Message, ToastLength.Short).Show();
+                    StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));
+                }
             }
+
+            string cf = uri.GetQueryParameter("cf") ?? string.Empty;
+            string pt = uri.GetQueryParameter("pt") ?? string.Empty;
+            string eip = uri.GetQueryParameter("eip") ?? string.Empty;
+            string pwd = uri.GetQueryParameter("pwd") ?? string.Empty;
+
             await Task.Run(() =>
             {
                 html_raw = html_raw.Replace("<br>", $"<br>{System.Environment.NewLine}");
-                string cf = uri.GetQueryParameter("cf") ?? string.Empty;
-                string pt = uri.GetQueryParameter("pt") ?? string.Empty;
 
                 string onload_js;
 
                 if (cf == "1")
                 {
+                    bool set_ip_address = !string.IsNullOrWhiteSpace(eip);
+                    bool set_password = !string.IsNullOrWhiteSpace(pwd);
+
+                    if (set_ip_address || set_password)
+                    {
+                        Log.Debug(TAG, "save data to DB");
+                        lock (DatabaseContext.DbLocker)
+                        {
+                            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                            {
+                                List<int> messages = new List<int>();
+                                if (set_ip_address && hardware.Address != eip)
+                                {
+                                    hardware.Address = eip;
+                                    messages.Add(Resource.String.hardware_ip_are_saved_title);
+                                }
+                                if (set_password && hardware.Password != pwd)
+                                {
+                                    hardware.Password = pwd;
+                                    messages.Add(Resource.String.hardware_password_are_saved_title);
+                                }
+                                if (messages.Count > 0)
+                                {
+                                    db.Hardwares.Update(hardware);
+                                    db.SaveChanges();
+                                    RunOnUiThread(() =>
+                                    {
+                                        foreach (int i in messages)
+                                        {
+                                            Toast.MakeText(this, i, ToastLength.Short).Show();
+                                        }
+                                    });
+                                    StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));
+                                }
+                            }
+                        }
+                    }
+
                     onload_js = MyWebViewClient.onload_cf1_js;
 
                     if (external_web_mode)
@@ -329,26 +348,8 @@ namespace ab
             });
             webView.LoadDataWithBaseURL(url, html_raw, "text/html", "utf-8", null);
 
-            //await Task.Run(() =>
-            //{
-
-            //});
-
-
-            //RunOnUiThread(() =>
-            //{
-            //    HardwareSystemSettingsLayout.RemoveAllViews();
-            //    HardwareSystemSettingsLayout.AddView(new ProgressBar(this));
-            //});
-
-            //RunOnUiThread(() =>
-            //{
-
-            //webView.LoadUrl(url);
-
             HardwareSystemSettingsLayout.RemoveAllViews();
             HardwareSystemSettingsLayout.AddView(webView);
-            //});
         }
 
         protected override void OnResume()
