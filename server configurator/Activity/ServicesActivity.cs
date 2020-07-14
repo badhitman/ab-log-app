@@ -206,7 +206,7 @@ namespace ab
                 case Resource.Id.mqtt_broker_start_button:
                     Log.Info(TAG, "User requested that the service be started.");
                     UpdateUiForStartService();
-
+                    
                     if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
                     {
                         StartForegroundService(startServiceIntent);

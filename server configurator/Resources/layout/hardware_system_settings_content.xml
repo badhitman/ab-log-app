@@ -33,10 +33,19 @@
             android:gravity="center_horizontal"
             android:id="@+id/hardware_system_settings_card_sub_header" />
 
-        <android.webkit.WebView
+        <LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/webViewSystemSettings" />
+            android:layout_height="wrap_content"
+            android:id="@+id/hardware_system_settings_layout">
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

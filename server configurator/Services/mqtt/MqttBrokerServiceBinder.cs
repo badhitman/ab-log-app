@@ -4,8 +4,6 @@
 
 using Android.OS;
 using Android.Util;
-using MQTTnet.Server;
-using System;
 
 namespace ab.Services
 {

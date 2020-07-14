@@ -10,5 +10,6 @@ namespace ab.Model
     {
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public LogStatusesEnum Status { get; set; }
+        public string TAG { get; set; }
     }
 }

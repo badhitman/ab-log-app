@@ -132,4 +132,10 @@
   <string name="saving_is_required">First you need to save the object</string>
   <string name="hardware_ip_are_saved_title">The IP address of the hardware is saved</string>
   <string name="hardware_password_are_saved_title">The hardware password is saved</string>
+  <string name="delete_the_log_database_file">The log database has been deleted</string>
+
+  <string name="the_service_is_already_running_title">The service is already running</string>
+  <string name="the_service_is_being_started_title">The service is being started</string>
+  <string name="the_service_is_stopped_title">The service is stopped</string>
+  <string name="restarting_the_service_title">Перезапуск службы</string>
 </resources>

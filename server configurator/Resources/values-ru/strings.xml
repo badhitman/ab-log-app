@@ -125,4 +125,10 @@
   <string name="saving_is_required">Сначала требуется сохранить объект</string>
   <string name="hardware_ip_are_saved_title">IP адрес оборудования сохранен</string>
   <string name="hardware_password_are_saved_title">Пароль оборудования сохранен</string>
+  <string name="delete_the_log_database_file">База данных логов удлена</string>
+
+  <string name="the_service_is_already_running_title">Служба уже запущена</string>
+  <string name="the_service_is_being_started_title">Служба запускается</string>
+  <string name="the_service_is_stopped_title">Служба останавливается</string>
+  <string name="restarting_the_service_title">Перезапуск службы</string>
 </resources>

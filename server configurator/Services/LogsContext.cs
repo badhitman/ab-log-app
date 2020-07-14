@@ -4,7 +4,6 @@
 
 using ab.Model;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -32,9 +31,9 @@ namespace ab.Services
 
         public DbSet<LogRowModel> Logs { get; set; }
 
-        public async Task<LogRowModel> AddLogRowAsync(LogStatusesEnum logStatus, string Message)
+        public async Task<LogRowModel> AddLogRowAsync(LogStatusesEnum logStatus, string Message, string tag)
         {
-            LogRowModel logRow = new LogRowModel() { Status = logStatus, Name = Message };
+            LogRowModel logRow = new LogRowModel() { Status = logStatus, Name = Message, TAG = tag };
             await Logs.AddAsync(logRow);
             await SaveChangesAsync();
             return logRow;

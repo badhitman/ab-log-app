@@ -59,7 +59,7 @@ namespace ab.Services
         public async void MqttConnectionValidator(MqttConnectionValidatorContext connection_context)
         {
             Log.Debug(TAG, "MqttConnectionValidator");
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, $"MqttConnectionValidator - ClientId={connection_context.ClientId} Username={connection_context.Username}");
+            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, $"MqttConnectionValidator - ClientId={connection_context.ClientId} Username={connection_context.Username}", TAG);
             //.WithConnectionValidator(context => 
             //{
             //    if(context.Password == "")
@@ -73,7 +73,7 @@ namespace ab.Services
         public async void MqttMessageInterceptor(MqttApplicationMessageInterceptorContext message_context)
         {
             Log.Debug(TAG, "MqttMessageInterceptor");
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={Encoding.UTF8.GetString(message_context.ApplicationMessage.Payload)}");
+            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={Encoding.UTF8.GetString(message_context.ApplicationMessage.Payload)}", TAG);
             //.WithApplicationMessageInterceptor(context =>
             //{
             //    if (context.ApplicationMessage.Topic != mqtt_broker_topic)
@@ -87,8 +87,8 @@ namespace ab.Services
 
         private async void MqttSubscriptionInterceptor(MqttSubscriptionInterceptorContext subscription_context)
         {
-            Log.Debug(TAG, "MqttSubscriptionInterceptor"); 
-             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, $"MqttSubscriptionInterceptor - ClientId={subscription_context.ClientId} Topic={subscription_context.TopicFilter.Topic}");
+            Log.Debug(TAG, "MqttSubscriptionInterceptor");
+            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, $"MqttSubscriptionInterceptor - ClientId={subscription_context.ClientId} Topic={subscription_context.TopicFilter.Topic}", TAG);
         }
 
     }
