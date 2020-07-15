@@ -127,16 +127,16 @@ namespace ab
                         {
                             using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                             {
-                                List<int> messages = new List<int>();
+                                List<string> messages = new List<string>();
                                 if (set_ip_address && hardware.Address != eip)
                                 {
                                     hardware.Address = eip;
-                                    messages.Add(Resource.String.hardware_ip_are_saved_title);
+                                    messages.Add(GetText(Resource.String.hardware_ip_are_saved_title));
                                 }
                                 if (set_password && hardware.Password != pwd)
                                 {
                                     hardware.Password = pwd;
-                                    messages.Add(Resource.String.hardware_password_are_saved_title);
+                                    messages.Add(GetText(Resource.String.hardware_password_are_saved_title));
                                 }
                                 if (messages.Count > 0)
                                 {
@@ -144,10 +144,7 @@ namespace ab
                                     db.SaveChanges();
                                     RunOnUiThread(() =>
                                     {
-                                        foreach (int i in messages)
-                                        {
-                                            Toast.MakeText(this, i, ToastLength.Short).Show();
-                                        }
+                                        Toast.MakeText(this, $" • {string.Join($"{System.Environment.NewLine} • ", messages)}", ToastLength.Short).Show();
                                     });
                                     StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));
                                 }
@@ -255,21 +252,28 @@ namespace ab
                     if (external_web_mode)
                     {
                         html_raw = html_raw
-                        .Replace("Megad-ID:", $"<label>Megad-ID:</label>")
-                        .Replace("srv loop:", $"{System.Environment.NewLine}<label>srv loop:</label>")
-                        .Replace("<input type=hidden name=cf value=2>", $"<input type=\"hidden\" name=\"cf\" value=\"2\">");
-
-                        html_raw = form_regex.Replace(html_raw, (Match match) => { return $"<form action=\"{match.Groups[1].Value}\">{System.Environment.NewLine}"; });
-
-                        html_raw = html_raw
+                        .Replace("Megad-ID:", $"{System.Environment.NewLine}<label>Megad-ID:</label>{System.Environment.NewLine}")
+                        //.Replace("srv loop:", $"<label>srv loop:</label>{System.Environment.NewLine}")
+                        .Replace("<input type=hidden name=cf value=2>", $"<input type=\"hidden\" name=\"cf\" value=\"2\">")
                         .Replace("<form", $"<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form")
                         .Replace("</form>", $"{System.Environment.NewLine}</form>{System.Environment.NewLine}</div>{System.Environment.NewLine}</div>")
-                        .Replace("</style>", $"</style>{System.Environment.NewLine}");
+                        .Replace("</style>", $"</style>{System.Environment.NewLine}")
+                        .Replace("<input type=submit value=Save>", "<input class=\"btn btn-outline-primary btn-block\" type=\"submit\" value=\"Save\">")
+                        .Replace("<input name=mdid", "<input class=\"form-control\" name=\"mdid\" placeholder=\"Идентификатор\"");
 
-                        html_raw = a_href_regex.Replace(html_raw, (Match match) =>
+                        html_raw = Regex.Replace(html_raw, @"srv loop:\s+(<input[^>]+>)", (Match match) =>
                         {
-                            return $"<a href=\"{match.Groups[1].Value}\" class=\"btn btn-primary btn-sm\" role=\"button\">{match.Groups[2].Value}</a>";
+                            string input_raw = match.Groups[1].Value
+                            .Replace("type=checkbox", "type=\"checkbox\"")
+                            .Replace(">", " />")
+                            .Replace("<input", "<input id=\"srv-loop\" class=\"custom-control-input\"");
+                            return $"<div class=\"custom-control custom-checkbox\">{System.Environment.NewLine}{input_raw}{System.Environment.NewLine}<label for=\"srv-loop\" class=\"custom-control-label\">srv loop</label>{System.Environment.NewLine}</div>{System.Environment.NewLine}";
                         });
+
+                        html_raw = form_regex.Replace(html_raw, (Match match) => { return $"<form action=\"{match.Groups[1].Value}\">{System.Environment.NewLine}"; });
+                        html_raw = a_href_regex.Replace(html_raw, (Match match) => { return $"<a href=\"{match.Groups[1].Value}\" class=\"btn btn-primary btn-sm\" role=\"button\">{match.Groups[2].Value}</a>"; });
+
+                        html_raw += "<div class=\"alert alert-info mt-3\" role=\"alert\"><h4>Информация</h4><p><strong>Megad-ID</strong> используется в MQTT для формирования подписки <code>Topic</code>, а тк же <code>ClientId</code>. Например, если назначить это значение <u>droid</u>, то упрвляющий блок подпишется в MQTT брокере на топик <u>droid/cmd</u> с идентификатором клиента <u>megad-droid</u>. В то же время: состояние портов управляющий блок будет публиковать в топиках с именами подстать номерам портов. Например для порта №30(P30) сообщения от блока будут в топике <u>droid/30</u>. Информация о всех событиях MQTT подписок/сообщений в брокере доступна в логах приложения.</p><p><strong>srv loop</strong> включает режим регулярной отправки (раз в минуту) на сервер состояние всех портов</p></div>";
                     }
                 }
                 else if (cf == "3")
