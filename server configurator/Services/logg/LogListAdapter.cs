@@ -24,6 +24,7 @@ namespace ab.Services
                     vh.LogMessageTextMessage.Text = row.Name;
                     vh.LogMessageDateTimeStamp.Text = row.CreatedAt.ToString();
                     vh.LogMessageStatus.Text = row.Status.ToString();
+                    vh.LogMessageTag.Text = row.TAG.ToString();
                 }
             }
         }

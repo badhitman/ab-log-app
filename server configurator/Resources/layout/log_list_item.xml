@@ -44,6 +44,14 @@
                 android:id="@+id/log_list_item_message_status"
                 android:paddingLeft="12dp" />
 
+            <TextView
+                android:text="tag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/log_list_item_message_tag"
+                android:gravity="right"
+                android:textColor="#ff827717" />
+
         </LinearLayout>
 
     </LinearLayout>

@@ -13,7 +13,7 @@ namespace ab.Services
 {
     public class MqttBrokerManager : IForegroundService
     {
-        static readonly string TAG = typeof(MqttBrokerManager).Name;
+        static readonly string TAG = "mqtt-broker";
         private readonly IMqttServer mqttServer;
         LogsContext logsDB = new LogsContext();
         public IPAddress ipAddress => Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];

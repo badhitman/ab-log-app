@@ -27,7 +27,7 @@ namespace ab
         public override void OnBackPressed() { }
         private LinearLayout main_splash;
 
-        static string TAG = nameof(SplashActivity);
+        static string TAG = "start-splash";
 
         static bool isRunning = false;
         static List<string> LoadingTracert = new List<string>();
