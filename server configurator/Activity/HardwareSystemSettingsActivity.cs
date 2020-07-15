@@ -115,8 +115,12 @@ namespace ab
 
                 string onload_js;
 
+                /////////////////////////////////////////////////////////////
+                /// настройки: основные (ip,gw и т.п.)
                 if (cf == "1")
                 {
+                    onload_js = MyWebViewClient.onload_cf1_js;
+
                     bool set_ip_address = !string.IsNullOrWhiteSpace(eip);
                     bool set_password = !string.IsNullOrWhiteSpace(pwd);
 
@@ -151,8 +155,6 @@ namespace ab
                             }
                         }
                     }
-
-                    onload_js = MyWebViewClient.onload_cf1_js;
 
                     if (external_web_mode)
                     {
@@ -245,6 +247,8 @@ namespace ab
                         }
                     }
                 }
+                /////////////////////////////////////////////////////////////
+                /// настройки: Megad-ID
                 else if (cf == "2")
                 {
                     onload_js = MyWebViewClient.onload_cf2_js;
@@ -253,8 +257,7 @@ namespace ab
                     {
                         html_raw = html_raw
                         .Replace("Megad-ID:", $"{System.Environment.NewLine}<label>Megad-ID:</label>{System.Environment.NewLine}")
-                        //.Replace("srv loop:", $"<label>srv loop:</label>{System.Environment.NewLine}")
-                        .Replace("<input type=hidden name=cf value=2>", $"<input type=\"hidden\" name=\"cf\" value=\"2\">")
+                        .Replace("<input type=hidden name=cf value=2>", $"<input type=\"hidden\" name=\"cf\" value=\"2\"/>")
                         .Replace("<form", $"<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form")
                         .Replace("</form>", $"{System.Environment.NewLine}</form>{System.Environment.NewLine}</div>{System.Environment.NewLine}</div>")
                         .Replace("</style>", $"</style>{System.Environment.NewLine}")
@@ -284,9 +287,48 @@ namespace ab
                 {
                     onload_js = MyWebViewClient.onload_cf4_js;
                 }
+                /////////////////////////////////////////////////////////////
+                /// настройки: cron
                 else if (cf == "7")
                 {
                     onload_js = MyWebViewClient.onload_cf7_js;
+
+                    if (external_web_mode)
+                    {
+                        html_raw = html_raw
+                        .Replace("<input type=hidden name=cf value=7>", $"<input type=\"hidden\" name=\"cf\" value=\"7\"/>")
+                        .Replace("<form", $"<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form")
+                        .Replace("</form>", $"{System.Environment.NewLine}</form>{System.Environment.NewLine}</div>{System.Environment.NewLine}</div>")
+                        .Replace("</style>", $"</style>{System.Environment.NewLine}")
+                        .Replace("<input type=submit value=Save>", "<button type=\"submit\" class=\"btn btn-outline-primary btn-block\">Save</button>");
+
+                        html_raw = Regex.Replace(html_raw, @"<input name=([\w\d]+)", (Match match) =>
+                         {
+                             return $"<input class=\"form-control\" name=\"{match.Groups[1].Value}\"";
+                         });
+
+                        html_raw = form_regex.Replace(html_raw, (Match match) => { return $"<form action=\"{match.Groups[1].Value}\">{System.Environment.NewLine}"; });
+                        html_raw = a_href_regex.Replace(html_raw, (Match match) => { return $"<a href=\"{match.Groups[1].Value}\" class=\"btn btn-primary btn-sm\" role=\"button\">{match.Groups[2].Value}</a>"; });
+
+                        html_raw += "<div class=\"alert alert-info mt-3\" role=\"alert\"><h4>Информация</h4>" +
+                        "<p><strong>Cur time:</strong> текущее время. В квадратных скобках указан день недели (1-7). Например [5] - пятница.</p>" +
+                        "<p><strong>Set time:</strong> здесь можно задать время. Формат ЧЧ:ММ:СС:ДН, то есть 15:30:00:5 - последняя цифра - день недели</p>" +
+                        "<p><strong>SCL/SDA:</strong> порты микроконтроллера, к которым подключены часы. Здесь указывается не номер порта (как обычно), а его индекс (можно посмотреть в документации). Это сделано для того, чтобы имелась возможность подключить часы не только к разъему XT2 (зеленые клеммники внизу) и исполнительным модулям MegaD-14-IOR, но и к внутреннему 16-пиновому разъему XP4.</p>" +
+                        "<div class=\"shadow p-3 mb-4 bg-white rounded\">В случае использования контроллера в исполнении MegaD-2561-RTC можно оставить эти поля пустыми. Контроллер сам определит наличие платы часов, подключенных к служебному разъему XP4 и синхронизируется с ними.</div>" +
+                        "<p><strong>T/Act:</strong>  Сами задания. Их может быть 5 шт.</p>" +
+                        "<p><strong>T:</strong> Расписание в формате ЧЧ:ММ:ДН</p>" +
+                        "<div class=\"shadow p-3 mb-4 bg-white rounded\"><code>14:30:0</code> - выполнять в 14:30 каждый день (последний 0 - означает каждый день)<br/>" +
+                        "<code>08:00:3</code> - выполнить в 8:00 в среду(3 - среда)<br/>" +
+                        "<code>03:15:3-7</code> - выполнять в 03:15 со среды по воскресенье включительно(3-7)<br/>" +
+                        "<code>*:/03:0</code> - выполняется каждые 3 минуты.Вместо значения \"час\" необходимо задать '*'.Последний ':0' - дни недели. 0 - каждый день.День недели учитывается.Можно задать выполнение циклической операции в определенные дни недели.<br/>" +
+                        "<code>/02:15:0</code> - выполняется каждые 2 часа в 15 минут.То есть в 2:15; 4:15; 6:15 и т.д.</div>" +
+                        "<p><strong>Act:</strong> стандартное поле сценария. Важно, что здесь работают паузы (команды p). То есть, если необходимо включить, например, автополив на 30 минут, то не обязательно разносить это на два задания. Можно ограничится одним.</p>" +
+                        "<div class=\"shadow p-3 mb-4 bg-white rounded\">"+
+                        "<code>7:1;P10;7:0</code> - включить седьмой порт, далее следует пауза 10 секунд, после чего порт будет выключен.<br/>" +
+                        "<code>10:1;P600;10:0</code> - включить десятый порт, далее следует пауза 600 секунд, после чего порт будет выключен.<br/>" +
+                        "<code>8:1;9:0;12:2</code> - включить восьмой порт и выключить девятый, а двендцтый переключить в противоположное состояние.</div>" +
+                        "</div>";
+                    }
                 }
                 else if (cf == "9")
                 {
@@ -296,6 +338,8 @@ namespace ab
                 {
                     onload_js = MyWebViewClient.onload_pt_js;
                 }
+                /////////////////////////////////////////////////////////////
+                /// настройки: начальное навигационное окно
                 else
                 {
                     onload_js = MyWebViewClient.onload_root_js;
@@ -336,7 +380,7 @@ namespace ab
                 {
                     html_raw +=
                     "<div style=\"color: #856404; background-color: #fff3cd; border-color: #ffeeba; margin-top: 1rem; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; box-sizing: border-box; font-size: 1rem; font-weight: 400; line-height: 1.5;\">" +
-                    $"Расширенный режим WEB интерфейса отключён. Версия вашей прошивки не поддерживается.<br>Поддерживаются прошивки: <span class=\"badge badge-primary\">{String.Join("</span><span class=\"badge badge-primary\">", supported_firmwares)}</span></div>";
+                    $"Режим модифицированого WEB интерфейса отключён. Версия вашей прошивки не поддерживается.<hr/>Поддерживаются прошивки: <span style=\"color: #fff;background-color: #007bff;display: inline-block;padding: .25em .4em;font-size: 75%;font-weight: 700;line-height: 1;text-align: center;white-space: nowrap;vertical-align: baseline;border-radius: .25rem;box-sizing: border-box;\">{String.Join("</span><span style=\"color: #fff;background-color: #007bff;display: inline-block;padding: .25em .4em;font-size: 75%;font-weight: 700;line-height: 1;text-align: center;white-space: nowrap;vertical-align: baseline;border-radius: .25rem;box-sizing: border-box;\">", supported_firmwares)}</span></div>";
                 }
                 else
                 {
@@ -347,8 +391,6 @@ namespace ab
                     $"<script src=\"file:///{MyWebViewClient.bootstrap_min_js}\"></script>" + System.Environment.NewLine +
                     $"<script src=\"file:///{onload_js}\"></script>" + System.Environment.NewLine + html_raw;
                 }
-
-
             });
             webView.LoadDataWithBaseURL(url, html_raw, "text/html", "utf-8", null);
 

@@ -29,8 +29,8 @@
 ![поддержка bootstrap](./screenshots/web-bootstrap-supported.png)
 
 Поддержка "продвинутого web интерфейса" доступна толко для проверенных версий прошивки. Для нерповеренных прошивок данное расширение [отключено по умолчанию ~ bool external_web_mode = false;](https://github.com/badhitman/ab-log-app/blob/master/server%20configurator/Activity/HardwareSystemSettingsActivity.cs).
-Для прошивок без поддержки расширения интерфейс будет полностью оригинальным от оборудования.
+Для прошивок без поддержки расширения интерфейс будет оригинальным от производителя. К исходному HTML управляещего блока будет добавлено только уведомление (native html)
 ![без поддержки bootstrap](./screenshots/web-bootstrap-not-supported.png)
 
-Служба MQTT исполняется в "Запущеной службе переднего плана".
+MQTT брокер исполняется в "Запущеной службе переднего плана".
 ![фоновая служба и логи](./screenshots/foreground-service.png)
