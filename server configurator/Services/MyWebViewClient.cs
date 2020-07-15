@@ -41,6 +41,7 @@ namespace ab.Services
         public static string onload_cf4_js => Path.Combine(WebPathBase, "onload.cf4.js");
         public static string onload_cf7_js => Path.Combine(WebPathBase, "onload.cf7.js");
         public static string onload_cf9_js => Path.Combine(WebPathBase, "onload.cf9.js");
+        public static string onload_cf10_js => Path.Combine(WebPathBase, "onload.cf10.js");
 
         [System.Obsolete]
         public override bool ShouldOverrideUrlLoading(WebView view, string url)

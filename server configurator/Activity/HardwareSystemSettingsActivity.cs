@@ -279,13 +279,45 @@ namespace ab
                         html_raw += "<div class=\"alert alert-info mt-3\" role=\"alert\"><h4>Информация</h4><p><strong>Megad-ID</strong> используется в MQTT для формирования подписки <code>Topic</code>, а тк же <code>ClientId</code>. Например, если назначить это значение <u>droid</u>, то упрвляющий блок подпишется в MQTT брокере на топик <u>droid/cmd</u> с идентификатором клиента <u>megad-droid</u>. В то же время: состояние портов управляющий блок будет публиковать в топиках с именами подстать номерам портов. Например для порта №30(P30) сообщения от блока будут в топике <u>droid/30</u>. Информация о всех событиях MQTT подписок/сообщений в брокере доступна в логах приложения.</p><p><strong>srv loop</strong> включает режим регулярной отправки (раз в минуту) на сервер состояние всех портов</p></div>";
                     }
                 }
+                /////////////////////////////////////////////////////////////
+                /// настройки: XT1
                 else if (cf == "3")
                 {
                     onload_js = MyWebViewClient.onload_cf3_js;
+
+                    if (external_web_mode)
+                    {
+                        html_raw = a_href_regex.Replace(html_raw, (Match m) =>
+                        {
+                            switch (m.Groups[2].Value.ToLower())
+                            {
+                                case "back":
+                                    return $"<a href=\"{m.Groups[1].Value}\" class=\"btn btn-primary btn-sm\" role=\"button\">{m.Groups[2].Value}</a>";
+                                default:
+                                    return $"<a href=\"{m.Groups[1].Value}\" class=\"btn btn-outline-info btn-block\" role=\"button\">{m.Groups[2].Value}</a>";
+                            }
+                        });
+                    }
                 }
+                /////////////////////////////////////////////////////////////
+                /// настройки: XT2
                 else if (cf == "4")
                 {
                     onload_js = MyWebViewClient.onload_cf4_js;
+
+                    if (external_web_mode)
+                    {
+                        html_raw = a_href_regex.Replace(html_raw, (Match m) =>
+                        {
+                            switch (m.Groups[2].Value.ToLower())
+                            {
+                                case "back":
+                                    return $"<a href=\"{m.Groups[1].Value}\" class=\"btn btn-primary btn-sm\" role=\"button\">{m.Groups[2].Value}</a>";
+                                default:
+                                    return $"<a href=\"{m.Groups[1].Value}\" class=\"btn btn-outline-info btn-block\" role=\"button\">{m.Groups[2].Value}</a>";
+                            }
+                        });
+                    }
                 }
                 /////////////////////////////////////////////////////////////
                 /// настройки: cron
@@ -300,7 +332,7 @@ namespace ab
                         .Replace("<form", $"<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form")
                         .Replace("</form>", $"{System.Environment.NewLine}</form>{System.Environment.NewLine}</div>{System.Environment.NewLine}</div>")
                         .Replace("</style>", $"</style>{System.Environment.NewLine}")
-                        .Replace("<input type=submit value=Save>", "<button type=\"submit\" class=\"btn btn-outline-primary btn-block\">Save</button>");
+                        .Replace("<input type=submit value=Save>", "<input class=\"btn btn-outline-primary btn-block\" type=\"submit\" value=\"Save\"/>");
 
                         html_raw = Regex.Replace(html_raw, @"<input name=([\w\d]+)", (Match match) =>
                          {
@@ -323,20 +355,131 @@ namespace ab
                         "<code>*:/03:0</code> - выполняется каждые 3 минуты.Вместо значения \"час\" необходимо задать '*'.Последний ':0' - дни недели. 0 - каждый день.День недели учитывается.Можно задать выполнение циклической операции в определенные дни недели.<br/>" +
                         "<code>/02:15:0</code> - выполняется каждые 2 часа в 15 минут.То есть в 2:15; 4:15; 6:15 и т.д.</div>" +
                         "<p><strong>Act:</strong> стандартное поле сценария. Важно, что здесь работают паузы (команды p). То есть, если необходимо включить, например, автополив на 30 минут, то не обязательно разносить это на два задания. Можно ограничится одним.</p>" +
-                        "<div class=\"shadow p-3 mb-4 bg-white rounded\">"+
+                        "<div class=\"shadow p-3 mb-4 bg-white rounded\">" +
                         "<code>7:1;P10;7:0</code> - включить седьмой порт, далее следует пауза 10 секунд, после чего порт будет выключен.<br/>" +
                         "<code>10:1;P600;10:0</code> - включить десятый порт, далее следует пауза 600 секунд, после чего порт будет выключен.<br/>" +
                         "<code>8:1;9:0;12:2</code> - включить восьмой порт и выключить девятый, а двендцтый переключить в противоположное состояние.</div>" +
                         "</div>";
                     }
                 }
+                /////////////////////////////////////////////////////////////
+                /// настройки: rogram
                 else if (cf == "9")
                 {
                     onload_js = MyWebViewClient.onload_cf9_js;
+
+                    if (external_web_mode)
+                    {
+                        html_raw = html_raw
+                        .Replace("<input type=hidden name=cf value=9>", $"<input type=\"hidden\" name=\"cf\" value=\"9\"/>")
+                        .Replace("<form", $"<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form")
+                        .Replace("</style>", $"</style>{System.Environment.NewLine}") +
+                        $"{System.Environment.NewLine}</form>{System.Environment.NewLine}</div>{System.Environment.NewLine}</div>";
+
+                        html_raw = a_href_regex.Replace(html_raw, (Match match) =>
+                        {
+                            if (match.Groups[2].Value.ToLower() == "back")
+                            {
+                                return $"<a href=\"{match.Groups[1].Value}\" class=\"btn btn-primary btn-sm\" role=\"button\">{match.Groups[2].Value}</a>";
+                            }
+                            else
+                            {
+                                return $"<a href=\"{match.Groups[1].Value}\" class=\"badge badge-info mt-2\" role=\"button\">{match.Groups[2].Value}</a>";
+                            }
+                        });
+
+                        html_raw += "<div class=\"alert alert-info mt-3\" role=\"alert\"><h6>Программирование условий для выполнения сценариев</h6>" +
+                        "<p>Контроллер MegaD-2561 может выполнять заданные команды (сценарии) в случае возникновения какого-то события: нажата кнопка, температура выросла выше определенного значения и т.д. Для этого в настройках соответствующих портов присутствует поле \"Act\". Но у этого штатного механизма есть ряд ограничений: он работает для входов (IN, ADC, DSen/1W), но не работает для выходов (OUT); нельзя задать дополнительное условие для выполнение сценария (например: нажата кнопка -> включить свет, но только в том случае, если датчик освещенности не выше определенного заданного значения).</p><p>Для решения подобных задач предназначен данный раздел <strong>Program</strong>, который позволяет задавать сценарии в том числе для выходов и строить цепочки подчиненных условий. Таким образом, в каких-то не очень сложных задачах можно обойтись только средствами контроллера без использования сервера.</p>" +
+                        "</div>";
+                    }
+                }
+                /////////////////////////////////////////////////////////////
+                /// конфигурация непосредственного условия/сценария в разделе rogram
+                else if (cf == "10")
+                {
+                    onload_js = MyWebViewClient.onload_cf10_js;
+                    string prn = uri.GetQueryParameter("prn") ?? string.Empty;
+                    if (external_web_mode)
+                    {
+                        html_raw = html_raw
+                        .Replace("<a href=/sec/?cf=9>Back</a><br>", "<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/sec/?cf=9\">Back</a><br>")
+                        .Replace("<input type=hidden name=cf value=10>", $"<input type=\"hidden\" name=\"cf\" value=\"10\"/>")
+                        //.Replace("<input name=", "<input class=\"form-control\" name=")
+                        .Replace("<input type=submit name=pcl value=clear><br>", "<input type=submit name=pcl value=clear>")
+                        .Replace("<form", $"<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form")
+                        .Replace("<select", "<label>тип сравнения: </label><select class=\"custom-select\"")
+                        .Replace("</form>", $"{System.Environment.NewLine}</form>")
+                        .Replace(" name=prp ", " name=prp type=\"number\"")
+                        .Replace("</style>", $"</style>{System.Environment.NewLine}") +
+                        $"{System.Environment.NewLine}</div>{System.Environment.NewLine}</div>";
+
+                        html_raw = form_regex.Replace(html_raw, (Match match) => { return $"<form action=\"{match.Groups[1].Value}\">{System.Environment.NewLine}"; });
+
+                        html_raw = input_regex.Replace(html_raw, (Match match) =>
+                        {
+                            string input_raw = match.Groups[0].Value;
+                            bool input_with_out_type = true;
+                            input_raw = input_type_regex.Replace(input_raw, (Match sub_match) =>
+                            {
+                                input_with_out_type = false;
+                                string input_type_raw = sub_match.Groups[0].Value;
+                                switch (sub_match.Groups[1].Value.ToLower())
+                                {
+                                    case "checkbox":
+                                        return $" class=\"form-check-input pb-4 mb-4 ml-1\" {input_type_raw}";
+                                    case "submit":
+                                        return $" class=\"btn btn-outline-primary btn-block my-2\" {input_type_raw}";
+                                    case "hidden":
+                                        return input_type_raw;
+                                    default:
+                                        return $" class=\"form-control\" {input_type_raw}";
+                                }
+                            });
+
+                            if (input_with_out_type)
+                            {
+                                input_raw = input_raw.Replace("<input", "<input class=\"form-control\"");
+                            }
+
+                            //input_raw = input_name_regex.Replace(input_raw, (Match sub_match) =>
+                            //{
+                            //    string input_name_raw = sub_match.Groups[1].Value;
+                            //    switch (input_name_raw.ToLower())
+                            //    {
+                            //        case "eip":
+                            //            return $" placeholder=\"IP адрес устройства\" name=\"{input_name_raw}\"";
+                            //        case "pwd":
+                            //            return $" placeholder=\"Пароль\" name=\"{input_name_raw}\"";
+                            //        case "gw":
+                            //            return $" placeholder=\"Шлюз\" name=\"{input_name_raw}\"";
+                            //        case "sip":
+                            //            return $" placeholder=\"IP-адрес главного сервера\" name=\"{input_name_raw}\"";
+                            //        case "auth":
+                            //            return $" placeholder=\"MQTT пароль\" name=\"{input_name_raw}\"";
+                            //        case "sct":
+                            //            return $" placeholder=\"Скрипт обработки сообщений\" name=\"{input_name_raw}\"";
+                            //        //case "rtf":
+                            //        //    return $"{sub_match.Groups[0].Value} <small class=\"form-text text-muted\">Принудительная доставка MQTT</small>";
+                            //        case "pr":
+                            //            return $" placeholder=\"Сторожевой сценарий\" name=\"{input_name_raw}\"";
+                            //        default:
+                            //            return $" name=\"{input_name_raw}\"";
+                            //    }
+                            //});
+
+                            return input_raw;
+                        });
+
+                        html_raw += $"{System.Environment.NewLine}<div class=\"alert alert-info mt-3\" role=\"alert\"><h6>Программирование условий для выполнения сценариев</h6>" +
+                        "<p>Задается номер порта, тип сравнения (больше / меньше / равно), значение, сценарий, тип условия (основное / подчиненное).</p>" +
+                        "</div>";
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(pt))
                 {
                     onload_js = MyWebViewClient.onload_pt_js;
+
+
                 }
                 /////////////////////////////////////////////////////////////
                 /// настройки: начальное навигационное окно

@@ -558,6 +558,9 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\onload.pt.js" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\onload.cf10.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

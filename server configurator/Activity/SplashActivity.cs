@@ -210,6 +210,13 @@ namespace ab
                     await sw.WriteAsync(await sr.ReadToEndAsync());
                 }
             }
+            using (StreamReader sr = new StreamReader(Assets.Open("onload.cf10.js")))
+            {
+                using (StreamWriter sw = new StreamWriter(MyWebViewClient.onload_cf10_js, false))
+                {
+                    await sw.WriteAsync(await sr.ReadToEndAsync());
+                }
+            }
             using (StreamReader sr = new StreamReader(Assets.Open("onload.pt.js")))
             {
                 using (StreamWriter sw = new StreamWriter(MyWebViewClient.onload_pt_js, false))
