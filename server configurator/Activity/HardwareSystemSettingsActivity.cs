@@ -471,11 +471,11 @@ namespace ab
                             if (html_raw.Contains($"P{pt}/ON<br>"))
                             {
                                 html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:1>ON</a>", $"<nav class=\"nav nav-pills nav-fill\"><a class=\"nav-item nav-link active\" href=\"/sec/?pt={pt}&cmd={pt}:1\">ON</a>");
-                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:0>OFF</a>", $"<a class=\"nav-item nav-link\" href=\"/sec/?pt={pt}&cmd={pt}:0\">OFF</a></nav>");
+                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:0>OFF</a>", $"<a class=\"nav-item nav-link btn btn-outline-secondary\" href=\"/sec/?pt={pt}&cmd={pt}:0\">OFF</a></nav>");
                             }
                             else
                             {
-                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:1>ON</a>", $"<nav class=\"nav nav-pills nav-fill\"><a class=\"nav-item nav-link\" href=\"/sec/?pt={pt}&cmd={pt}:1\">ON</a>");
+                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:1>ON</a>", $"<nav class=\"nav nav-pills nav-fill\"><a class=\"nav-item nav-link btn btn-outline-secondary\" href=\"/sec/?pt={pt}&cmd={pt}:1\">ON</a>");
                                 html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:0>OFF</a>", $"<a class=\"nav-item nav-link active\" href=\"/sec/?pt={pt}&cmd={pt}:0\">OFF</a></nav>");
                             }
                         }

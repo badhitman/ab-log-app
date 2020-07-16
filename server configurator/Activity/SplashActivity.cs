@@ -23,7 +23,7 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/MyTheme.Splash", MainLauncher = true)]
     public class SplashActivity : AppCompatActivity
     {
-        public static bool reWriteDataBase { get; } = true;
+        public static bool reWriteDataBase { get; } = false;
         public override void OnBackPressed() { }
         private LinearLayout main_splash;
 
@@ -105,10 +105,11 @@ namespace ab
             log_msg = GetText(Resource.String.deleting_outdated_logs);
             AddSplashText(log_msg);
             logsDB.Logs.RemoveRange(logsDB.Logs.Where(x => x.CreatedAt < DateTime.Now.AddDays(-7)).ToArray());
-
-            log_msg = GetText(Resource.String.deleting_main_database_file);
+            
             if (reWriteDataBase)
             {
+                log_msg = GetText(Resource.String.deleting_main_database_file);
+
                 await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);
                 AddSplashText(log_msg);
                 File.Delete(gs.DatabasePathBase);
