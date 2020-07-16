@@ -402,7 +402,7 @@ namespace ab
                     if (external_web_mode)
                     {
                         html_raw = html_raw
-                        .Replace("<a href=/sec/?cf=9>Back</a><br>", "<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/sec/?cf=9\">Back</a><br>")
+                        .Replace($"<a href=/{hardware.Password}/?cf=9>Back</a><br>", $"<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/{hardware.Password}/?cf=9\">Back</a><br>")
                         .Replace("<input type=hidden name=cf value=10>", $"<input type=\"hidden\" name=\"cf\" value=\"10\"/>")
                         //.Replace("<input name=", "<input class=\"form-control\" name=")
                         .Replace("<input type=submit name=pcl value=clear><br>", "<input type=submit name=pcl value=clear>")
@@ -454,43 +454,36 @@ namespace ab
                 else if (!string.IsNullOrWhiteSpace(pt))
                 {
                     onload_js = MyWebViewClient.onload_pt_js;
-
+                    
                     if (external_web_mode)
                     {
                         if (html_raw.Contains("selected>Out<option"))
                         {
-                            /*<nav class="nav nav-pills nav-fill">
-                              <a class="nav-item nav-link active" href="#">Active</a>
-                              <a class="nav-item nav-link" href="#">Much longer nav link</a>
-                              <a class="nav-item nav-link" href="#">Link</a>
-                              <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                            </nav>*/
-
-                            /*P31/ON<br>
-                            <a href=/sec/?pt=31&cmd=31:1>ON</a> <a href=/sec/?pt=31&cmd=31:0>OFF</a><br>*/
                             if (html_raw.Contains($"P{pt}/ON<br>"))
                             {
-                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:1>ON</a>", $"<nav class=\"nav nav-pills nav-fill\"><a class=\"nav-item nav-link active\" href=\"/sec/?pt={pt}&cmd={pt}:1\">ON</a>");
-                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:0>OFF</a>", $"<a class=\"nav-item nav-link btn btn-outline-secondary\" href=\"/sec/?pt={pt}&cmd={pt}:0\">OFF</a></nav>");
+                                html_raw = html_raw.Replace($"<a href=/{hardware.Password}/?pt={pt}&cmd={pt}:1>ON</a>", $"<nav class=\"nav nav-pills nav-fill\"><a class=\"nav-item nav-link active\" href=\"/{hardware.Password}/?pt={pt}&cmd={pt}:1\">ON</a>");
+                                html_raw = html_raw.Replace($"<a href=/{hardware.Password}/?pt={pt}&cmd={pt}:0>OFF</a>", $"<a class=\"nav-item nav-link btn btn-outline-secondary ml-2\" href=\"/{hardware.Password}/?pt={pt}&cmd={pt}:0\">OFF</a></nav>");
                             }
                             else
                             {
-                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:1>ON</a>", $"<nav class=\"nav nav-pills nav-fill\"><a class=\"nav-item nav-link btn btn-outline-secondary\" href=\"/sec/?pt={pt}&cmd={pt}:1\">ON</a>");
-                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:0>OFF</a>", $"<a class=\"nav-item nav-link active\" href=\"/sec/?pt={pt}&cmd={pt}:0\">OFF</a></nav>");
+                                html_raw = html_raw.Replace($"<a href=/{hardware.Password}/?pt={pt}&cmd={pt}:1>ON</a>", $"<nav class=\"nav nav-pills nav-fill\"><a class=\"nav-item nav-link btn btn-outline-secondary mr-2\" href=\"/{hardware.Password}/?pt={pt}&cmd={pt}:1\">ON</a>");
+                                html_raw = html_raw.Replace($"<a href=/{hardware.Password}/?pt={pt}&cmd={pt}:0>OFF</a>", $"<a class=\"nav-item nav-link active\" href=\"/{hardware.Password}/?pt={pt}&cmd={pt}:0\">OFF</a></nav>");
                             }
                         }
 
                         html_raw = html_raw
-                        .Replace("<a href=/sec>Back</a>", "<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/sec\">Back</a>")
+                        .Replace($"<a href=/{hardware.Password}>Back</a>", $"<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/{hardware.Password}\">Back</a>")
                         .Replace("<style>input,select{margin:1px}</style>", string.Empty)
-                        .Replace("<form action=/sec/>", $"{System.Environment.NewLine}<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form action=\"/sec/\">{System.Environment.NewLine}")
+                        .Replace($"<form action=/{hardware.Password}/>", $"{System.Environment.NewLine}<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form action=\"/{hardware.Password}/\">{System.Environment.NewLine}")
                         .Replace("<input type=submit value=Save>", "<input class=\"btn btn-outline-primary btn-block\" type=\"submit\" value=\"Save\"/>")
                         .Replace("</form>", $"{System.Environment.NewLine}</form>{System.Environment.NewLine}</div>{System.Environment.NewLine}</div>")
                         .Replace("Type <select", "Type <select class=\"form-control\"")
                         .Replace("Val <input", "Val <input type=\"number\" class=\"form-control\"")
                         .Replace("Hst <input", "Hst <input type=\"number\" class=\"form-control\"")
                         .Replace("Sen <select name=d>", "Sen <select class=\"form-control\" name=d>")
+                        .Replace("<input name=misc", "<input name=\"misc\" class=\"form-control\"")
                         .Replace("Group <input", "Group <input class=\"form-control\"")
+                        .Replace($"<a href=/{hardware.Password}/?pt={pt}&cmd=list>Device List</a>", $"<a class=\"btn btn-info btn-block\" href=\"/{hardware.Password}/?pt={pt}&cmd=list\" role=\"button\">Device List</a>")
                         .Replace($"<input type=hidden name=pn value={pt}>", $"<input type=\"hidden\" name=\"pn\" value=\"{pt}\"/>{System.Environment.NewLine}");
 
                         //
@@ -535,10 +528,6 @@ namespace ab
 
                         html_raw = html_raw.Replace("Mode <select name=m>", "Mode <select class=\"form-control\" name=m>")
                         .Replace("Default: <select name=d", "Default: <select class=\"form-control\" name=d");
-
-
-
-
                     }
                 }
                 /////////////////////////////////////////////////////////////
@@ -578,8 +567,8 @@ namespace ab
                         });
                     }
                 }
-
-                if (!external_web_mode)
+                                
+                if (!external_web_mode && html_raw.Length > 12 && html_raw != "Unauthorized")
                 {
                     html_raw +=
                     "<div style=\"color: #856404; background-color: #fff3cd; border-color: #ffeeba; margin-top: 1rem; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; box-sizing: border-box; font-size: 1rem; font-weight: 400; line-height: 1.5;\">" +

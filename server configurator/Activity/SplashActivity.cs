@@ -114,7 +114,7 @@ namespace ab
                 AddSplashText(log_msg);
                 File.Delete(gs.DatabasePathBase);
             }
-#endif
+
             log_msg = GetText(Resource.String.initializing_db_demo_data);
             DatabaseContext db = new DatabaseContext(gs.DatabasePathBase);
             AddSplashText(log_msg);
@@ -139,7 +139,7 @@ namespace ab
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Outdoor", Address = "192.168.1.6", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
                 await db.SaveChangesAsync();
             }
-
+#endif
 
             using (StreamReader sr = new StreamReader(Assets.Open("bootstrap.min.css")))
             {
