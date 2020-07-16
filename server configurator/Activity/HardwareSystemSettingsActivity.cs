@@ -441,32 +441,6 @@ namespace ab
                                 input_raw = input_raw.Replace("<input", "<input class=\"form-control\"");
                             }
 
-                            //input_raw = input_name_regex.Replace(input_raw, (Match sub_match) =>
-                            //{
-                            //    string input_name_raw = sub_match.Groups[1].Value;
-                            //    switch (input_name_raw.ToLower())
-                            //    {
-                            //        case "eip":
-                            //            return $" placeholder=\"IP адрес устройства\" name=\"{input_name_raw}\"";
-                            //        case "pwd":
-                            //            return $" placeholder=\"Пароль\" name=\"{input_name_raw}\"";
-                            //        case "gw":
-                            //            return $" placeholder=\"Шлюз\" name=\"{input_name_raw}\"";
-                            //        case "sip":
-                            //            return $" placeholder=\"IP-адрес главного сервера\" name=\"{input_name_raw}\"";
-                            //        case "auth":
-                            //            return $" placeholder=\"MQTT пароль\" name=\"{input_name_raw}\"";
-                            //        case "sct":
-                            //            return $" placeholder=\"Скрипт обработки сообщений\" name=\"{input_name_raw}\"";
-                            //        //case "rtf":
-                            //        //    return $"{sub_match.Groups[0].Value} <small class=\"form-text text-muted\">Принудительная доставка MQTT</small>";
-                            //        case "pr":
-                            //            return $" placeholder=\"Сторожевой сценарий\" name=\"{input_name_raw}\"";
-                            //        default:
-                            //            return $" name=\"{input_name_raw}\"";
-                            //    }
-                            //});
-
                             return input_raw;
                         });
 
@@ -475,11 +449,97 @@ namespace ab
                         "</div>";
                     }
                 }
+                /////////////////////////////////////////////////////////////
+                /// настройка порта
                 else if (!string.IsNullOrWhiteSpace(pt))
                 {
                     onload_js = MyWebViewClient.onload_pt_js;
 
+                    if (external_web_mode)
+                    {
+                        if (html_raw.Contains("selected>Out<option"))
+                        {
+                            /*<nav class="nav nav-pills nav-fill">
+                              <a class="nav-item nav-link active" href="#">Active</a>
+                              <a class="nav-item nav-link" href="#">Much longer nav link</a>
+                              <a class="nav-item nav-link" href="#">Link</a>
+                              <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                            </nav>*/
 
+                            /*P31/ON<br>
+                            <a href=/sec/?pt=31&cmd=31:1>ON</a> <a href=/sec/?pt=31&cmd=31:0>OFF</a><br>*/
+                            if (html_raw.Contains($"P{pt}/ON<br>"))
+                            {
+                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:1>ON</a>", $"<nav class=\"nav nav-pills nav-fill\"><a class=\"nav-item nav-link active\" href=\"/sec/?pt={pt}&cmd={pt}:1\">ON</a>");
+                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:0>OFF</a>", $"<a class=\"nav-item nav-link\" href=\"/sec/?pt={pt}&cmd={pt}:0\">OFF</a></nav>");
+                            }
+                            else
+                            {
+                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:1>ON</a>", $"<nav class=\"nav nav-pills nav-fill\"><a class=\"nav-item nav-link\" href=\"/sec/?pt={pt}&cmd={pt}:1\">ON</a>");
+                                html_raw = html_raw.Replace($"<a href=/sec/?pt={pt}&cmd={pt}:0>OFF</a>", $"<a class=\"nav-item nav-link active\" href=\"/sec/?pt={pt}&cmd={pt}:0\">OFF</a></nav>");
+                            }
+                        }
+
+                        html_raw = html_raw
+                        .Replace("<a href=/sec>Back</a>", "<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/sec\">Back</a>")
+                        .Replace("<style>input,select{margin:1px}</style>", string.Empty)
+                        .Replace("<form action=/sec/>", $"{System.Environment.NewLine}<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form action=\"/sec/\">{System.Environment.NewLine}")
+                        .Replace("<input type=submit value=Save>", "<input class=\"btn btn-outline-primary btn-block\" type=\"submit\" value=\"Save\"/>")
+                        .Replace("</form>", $"{System.Environment.NewLine}</form>{System.Environment.NewLine}</div>{System.Environment.NewLine}</div>")
+                        .Replace("Type <select", "Type <select class=\"form-control\"")
+                        .Replace("Val <input", "Val <input type=\"number\" class=\"form-control\"")
+                        .Replace("Hst <input", "Hst <input type=\"number\" class=\"form-control\"")
+                        .Replace("Sen <select name=d>", "Sen <select class=\"form-control\" name=d>")
+                        .Replace("Group <input", "Group <input class=\"form-control\"")
+                        .Replace($"<input type=hidden name=pn value={pt}>", $"<input type=\"hidden\" name=\"pn\" value=\"{pt}\"/>{System.Environment.NewLine}");
+
+                        //
+                        html_raw = Regex.Replace(html_raw, @"Act\s+(<input[^>]+>)\s+(<input[^>]+>)<br>", (Match match) =>
+                        {
+                            return "<div class=\"input-group mb-3\">" +
+                            "<div class=\"input-group-prepend\">" +
+                            "<span class=\"input-group-text\">Act</span>" +
+                            "</div>" +
+                            match.Groups[1].Value.Replace("<input", "<input type=\"text\" class=\"form-control\"") +
+                            "<div class=\"input-group-append\">" +
+                            "<div class=\"input-group-text\">" +
+                            match.Groups[2].Value +
+                            "</div></div></div>";
+                        });
+                        //
+                        html_raw = Regex.Replace(html_raw, @"Net\s+(<input[^>]+>)\s+(<input[^>]+>)<br>", (Match match) =>
+                        {
+                            return "<div class=\"input-group mb-3\">" +
+                            "<div class=\"input-group-prepend\">" +
+                            "<span class=\"input-group-text\">Net</span>" +
+                            "</div>" +
+                            match.Groups[1].Value.Replace("<input", "<input type=\"text\" class=\"form-control\"") +
+                            "<div class=\"input-group-append\">" +
+                            "<div class=\"input-group-text\">" +
+                            match.Groups[2].Value +
+                            "</div></div></div>";
+                        });
+                        //
+                        html_raw = Regex.Replace(html_raw, @"Mode\s+(<select name=m.+</select>)\s+(<input[^>]+>)<br>", (Match match) =>
+                        {
+                            return "<div class=\"input-group mb-3\">" +
+                            "<div class=\"input-group-prepend\">" +
+                            "<span class=\"input-group-text\">Mode</span>" +
+                            "</div>" +
+                            match.Groups[1].Value.Replace("<select", "<select class=\"custom-select\"") +
+                            "<div class=\"input-group-append\">" +
+                            "<div class=\"input-group-text\">" +
+                            match.Groups[2].Value +
+                            "</div></div></div>";
+                        });
+
+                        html_raw = html_raw.Replace("Mode <select name=m>", "Mode <select class=\"form-control\" name=m>")
+                        .Replace("Default: <select name=d", "Default: <select class=\"form-control\" name=d");
+
+
+
+
+                    }
                 }
                 /////////////////////////////////////////////////////////////
                 /// настройки: начальное навигационное окно

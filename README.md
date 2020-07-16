@@ -28,6 +28,9 @@
 Изобретая велосипед использовался подход, при которым оригинальный web/html не столько изменялся, сколько дополнялся. К нему были добавлены скрипты jQuery, Bootstrap и иже с ними. Таким образом надёжность такого расширения имеет минимальные перспективы к серъёзному сбою.
 ![поддержка bootstrap](./screenshots/web-bootstrap-supported.png)
 
+Конфигурирование портов
+![конфигурация портов: In,Out,Dsen](./screenshots/ports-conf-in-out-dsen.png)
+
 Поддержка "продвинутого web интерфейса" доступна толко для проверенных версий прошивки. Для нерповеренных прошивок данное расширение [отключено по умолчанию ~ bool external_web_mode = false;](https://github.com/badhitman/ab-log-app/blob/master/server%20configurator/Activity/HardwareSystemSettingsActivity.cs).
 Для прошивок без поддержки расширения интерфейс будет оригинальным от производителя. К исходному HTML управляещего блока будет добавлено только уведомление (native html)
 ![без поддержки bootstrap](./screenshots/web-bootstrap-not-supported.png)
