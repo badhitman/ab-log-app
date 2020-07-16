@@ -151,6 +151,7 @@ namespace ab
                                         Toast.MakeText(this, $" • {string.Join($"{System.Environment.NewLine} • ", messages)}", ToastLength.Short).Show();
                                     });
                                     StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));
+                                    return;
                                 }
                             }
                         }
@@ -245,6 +246,18 @@ namespace ab
                                 html_raw = $"{html_raw.Substring(0, connected_status)}<div class=\"d-flex justify-content-end pt-3\"><span class=\"badge badge-success\">Connected</span></div>{html_raw.Substring(connected_status + 9)}";
                             }
                         }
+
+                        html_raw += $"{System.Environment.NewLine}<div class=\"alert alert-info mt-3\" role=\"alert\"><h6>Информация</h6>" +
+                        "<p><strong>IP:</strong> адрес устройства (MAC-адрес устройства генерируется динамически на основе IP-адреса)</p>" +
+                        "<p><strong>Pwd:</strong> пароль для доступа к устройству (максимально 3 символа)</p>" +
+                        "<p><strong>GW:</strong> шлюз. Имеет смысл указывать только если сервер находится за пределами текущей IP-сети. Если не указан, то в поле отображается значение 255.255.255.255</p>" +
+                        "<p><strong>SRV:</strong> IP-адрес главного сервера (HTTP/MQTT), на который MegaD-2561 будет отправлять сообщения о сработавших входах. После IP-адреса возможно указать порт. По умолчанию 80.</p>" +
+                        "<p><strong>Script:</strong> <mark>(в случае использования HTTP)</mark> скрипт на сервере, который обрабатывает сообщения от устройства и формирует ответы (максимально 15 символов).</p>" +
+                        "<p><strong>Wdog:</strong> функция слежения за сервером. Если используется сервер (указан его IP-адрес и скрипт), то устройство примерно раз в 2 минуты проверяет его доступность и в случае, если сервер не отвечает выполняет сценарий порта, который указывается в поле Wdog. Подробнее о сценариях описано ниже.</p>" +
+                        "<p><strong>UART:</strong> выбор режима UART-портов (P32/P33) - работа с GSM-модулем типа SIM800L; работа в режиме RS485-Modbus RTU.</p>" +
+                        "<p><strong>Uptime:</strong> время работы устройства после старта</p>" +
+                        "<p><strong>Temp:</strong> температура микросхемы часов реального времени DS3231, температура внутри корпуса (только для версии MegaD-2561-RTC)</p>" +
+                        "</div>";
                     }
                 }
                 /////////////////////////////////////////////////////////////
