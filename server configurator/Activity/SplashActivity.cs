@@ -129,7 +129,7 @@ namespace ab
                 await db.Users.AddAsync(new UserModel { Name = "Alice", Email = "alice@gmail.com", Phone = "+75556664411", TelegramId = "159357456258", AlarmSubscriber = false, CommandsAllowed = true });
                 await db.SaveChangesAsync();
             }
-            if (db.Hardwares.Count() == 0)
+            if (await db.Hardwares.CountAsync() == 0)
             {
                 log_msg = GetText(Resource.String.load_demo_hardwares);
                 await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);

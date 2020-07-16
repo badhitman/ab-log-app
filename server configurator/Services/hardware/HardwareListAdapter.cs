@@ -17,7 +17,7 @@ namespace ab.Services
         public event EventHandler<int> ItemClick;
         Context mContext;
 
-        public override int ItemCount { get { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.Hardwares.Count(); } } }
+        public override int ItemCount { get { lock (DatabaseContext.DbLocker) { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.Hardwares.Count(); } } } }
 
         public HardwareListAdapter(Context _mContext)
         {
