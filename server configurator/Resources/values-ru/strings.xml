@@ -111,7 +111,7 @@
   <string name="load_demo_hardwares">Загрузка устройств (DEMO) ...</string>
   <string name="finish_initializing_application">Запуск интерфейса ...</string>
 
-  <string name="mqtt_broker_port_title">MQTT брокер на порту:</string>
+  <string name="server_port_title">Используемый порт:</string>
   <string name="mqtt_broker_port_hint_default">стандартный: 1883</string>
   <string name="is_running_title">запущен (работает)</string>
   <string name="start_title">Старт</string>
@@ -131,4 +131,5 @@
   <string name="the_service_is_being_started_title">Служба запускается</string>
   <string name="the_service_is_stopped_title">Служба останавливается</string>
   <string name="restarting_the_service_title">Перезапуск службы</string>
+  <string name="protocol_title">Протокол</string>
 </resources>

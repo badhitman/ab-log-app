@@ -13,17 +13,16 @@ namespace ab.Services
 {
     public class MqttBrokerManager : IForegroundService
     {
-        static readonly string TAG = "mqtt-broker";
+        static readonly string TAG = "mqtt-manager";
+
         private readonly IMqttServer mqttServer;
+
         LogsContext logsDB = new LogsContext();
         public IPAddress ipAddress => Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];
 
-        public bool isStartedMqtt { get { return mqttServer?.IsStarted ?? false; } }
+        public bool isStartedForegroundService { get { return mqttServer?.IsStarted ?? false; } }
 
         public int MqttBrokerPort { get; private set; }
-        public string MqttBrokerTopic { get; private set; }
-        public string MqttBrokerUsername { get; private set; }
-        public string MqttBrokerPassword { get; private set; }
 
         public MqttBrokerManager()
         {
@@ -31,16 +30,15 @@ namespace ab.Services
             mqttServer = new MqttFactory().CreateMqttServer();
         }
 
-        public async void StartMqttBroker(int mqtt_broker_port, string mqtt_broker_topic, string mqtt_broker_username = null, string mqtt_broker_passwd = null)
+        public async void StartForegroundService(int service_port)
         {
-            Log.Debug(TAG, $"StartMqttBroker(port={mqtt_broker_port}, topic={mqtt_broker_topic}, user={mqtt_broker_username}, passwd={mqtt_broker_passwd})");
-            MqttBrokerPort = mqtt_broker_port;
-            MqttBrokerTopic = mqtt_broker_topic;
-            MqttBrokerUsername = mqtt_broker_username;
-            MqttBrokerPassword = mqtt_broker_passwd;
+            string msg = $"StartForegroundService(port={service_port})";
+            Log.Debug(TAG, msg);
+            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, msg, TAG);
+            MqttBrokerPort = service_port;
 
             MqttServerOptionsBuilder optionsBuilder = new MqttServerOptionsBuilder()
-                .WithDefaultEndpointPort(mqtt_broker_port)
+                .WithDefaultEndpointPort(service_port)
                 .WithDefaultEndpointBoundIPAddress(ipAddress)
                 .WithDefaultEndpointBoundIPV6Address(IPAddress.None)
                 .WithConnectionValidator(MqttConnectionValidator)
@@ -50,9 +48,10 @@ namespace ab.Services
             await mqttServer.StartAsync(optionsBuilder.Build());
         }
 
-        public async void StopMqttBroker()
+        public async void StopForegroundService()
         {
-            Log.Debug(TAG, "StopMqttBroker()");
+            Log.Debug(TAG, "StopForegroundService()");
+            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, "StopForegroundService()", TAG);
             await mqttServer.StopAsync();
         }
 
@@ -90,6 +89,5 @@ namespace ab.Services
             Log.Debug(TAG, "MqttSubscriptionInterceptor");
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, $"MqttSubscriptionInterceptor - ClientId={subscription_context.ClientId} Topic={subscription_context.TopicFilter.Topic}", TAG);
         }
-
     }
 }

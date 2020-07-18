@@ -12,32 +12,20 @@ using Xamarin.Essentials;
 
 namespace ab.Services
 {
-    [Service(Exported = true, Name = "com.xamarin.ab.listener")]//, IsolatedProcess = true
-    public class MqttBrokerService : Service, IForegroundService
+    public abstract class aForegroundService : Service, IForegroundService
     {
-        static readonly string TAG = typeof(MqttBrokerService).Name;
-        // This is any integer value unique to the application.
+        readonly string TAG = "foreground-service";
         public const int SERVICE_RUNNING_NOTIFICATION_ID = 10000;
 
         public static IForegroundService ForegroundServiceManager;
 
-        public IBinder Binder { get; private set; }
+        public IBinder Binder { get; protected set; }
 
-        public bool isStartedMqtt => ForegroundServiceManager?.isStartedMqtt ?? false;
-
-        public override void OnCreate()
-        {
-            base.OnCreate();
-            Log.Info(TAG, "OnCreate");
-
-            ForegroundServiceManager = new MqttBrokerManager();
-        }
+        public bool isStartedForegroundService => ForegroundServiceManager?.isStartedForegroundService ?? false;
 
         public override IBinder OnBind(Intent intent)
         {
-            Log.Debug(TAG, "OnBind");
-            Binder = new MqttBrokerServiceBinder(this);
-            return Binder;
+            return null;
         }
 
         public override bool OnUnbind(Intent intent)
@@ -49,7 +37,7 @@ namespace ab.Services
         public override void OnDestroy()
         {
             Log.Debug(TAG, "OnDestroy");
-            StopMqttBroker();
+            StopForegroundService();
             Binder = null;
             ForegroundServiceManager = null;
             base.OnDestroy();
@@ -64,14 +52,11 @@ namespace ab.Services
             IPAddress ipAddress = ipHostInfo.AddressList[0];
 
             //return base.OnStartCommand(intent, flags, startId);
-            int listener_port = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.mqtt_broker_port), 1883);
-            string user = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.mqtt_auth_username), "");
-            string pass = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.mqtt_auth_passwd), "");
-            string topic = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.mqtt_topic), "");
+            int listener_port = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.service_port), 1883);
 
             if (intent.Action.Equals(Constants.ACTION_START_SERVICE))
             {
-                if (isStartedMqtt)
+                if (isStartedForegroundService)
                 {
                     Log.Info(TAG, $"OnStartCommand: {GetText(Resource.String.the_service_is_already_running_title)}");
                 }
@@ -79,21 +64,21 @@ namespace ab.Services
                 {
                     Log.Info(TAG, $"OnStartCommand: {GetText(Resource.String.the_service_is_being_started_title)}");
                     RegisterForegroundService(ipAddress + ":" + listener_port);
-                    StartMqttBroker(listener_port, topic, user, pass);
+                    StartForegroundService(listener_port);
                 }
             }
             else if (intent.Action.Equals(Constants.ACTION_STOP_SERVICE))
             {
                 Log.Info(TAG, $"OnStartCommand: {GetText(Resource.String.the_service_is_stopped_title)}");
-                StopMqttBroker();
+                StopForegroundService();
                 StopForeground(true);
                 StopSelf();
             }
             else if (intent.Action.Equals(Constants.ACTION_RESTART_SERVICE))
             {
                 Log.Info(TAG, $"OnStartCommand: {GetText(Resource.String.restarting_the_service_title)}");
-                StopMqttBroker();
-                StartMqttBroker(listener_port, topic, user, pass);
+                StopForegroundService();
+                StartForegroundService(listener_port);
             }
 
             return StartCommandResult.Sticky;
@@ -129,49 +114,23 @@ namespace ab.Services
             return pendingIntent;
         }
 
-        //private Notification.Action BuildRestartMqttBrokerServiceAction()
-        //{
-        //    Log.Debug(TAG, "BuildRestartMqttBrokerServiceAction()");
-
-        //    Intent restartMqttBrokerServiceIntent = new Intent(this, GetType());
-        //    restartMqttBrokerServiceIntent.SetAction(Constants.ACTION_RESTART_SERVICE);
-        //    PendingIntent restartMqttBrokerServicePendingIntent = PendingIntent.GetService(this, 0, restartMqttBrokerServiceIntent, 0);
-
-        //    Notification.Action.Builder builder = new Notification.Action.Builder(Resource.Drawable.ic_action_restart_mqtt_broker_service, GetText(Resource.String.restart_title), restartMqttBrokerServicePendingIntent);
-
-        //    return builder.Build();
-        //}
-
-        //private Notification.Action BuildStopServiceAction()
-        //{
-        //    Log.Debug(TAG, "BuildStopServiceAction()");
-
-        //    Intent stopServiceIntent = new Intent(this, GetType());
-        //    stopServiceIntent.SetAction(Constants.ACTION_STOP_SERVICE);
-        //    PendingIntent stopServicePendingIntent = PendingIntent.GetService(this, 0, stopServiceIntent, 0);
-
-        //    Notification.Action.Builder builder = new Notification.Action.Builder(Android.Resource.Drawable.IcMediaPause, GetText(Resource.String.stop_title), stopServicePendingIntent);
-        //    Notification.Action action = builder.Build();
-        //    return action;
-        //}
-
-        public void StartMqttBroker(int mqtt_broker_port, string mqtt_broker_topic, string mqtt_broker_user = null, string mqtt_broker_passwd = null)
+        public void StartForegroundService(int foreground_service_port)
         {
-            Log.Debug(TAG, $"StartMqttBroker(port={mqtt_broker_port}, topic={mqtt_broker_topic}, user={mqtt_broker_user}, passwd={mqtt_broker_passwd})");
+            Log.Debug(TAG, $"StartForegroundService(port={foreground_service_port})");
 
-            ForegroundServiceManager.StartMqttBroker(mqtt_broker_port, mqtt_broker_topic, mqtt_broker_user, mqtt_broker_passwd);
+            ForegroundServiceManager.StartForegroundService(foreground_service_port);
         }
 
-        public void StopMqttBroker()
+        public void StopForegroundService()
         {
             if (ForegroundServiceManager == null)
             {
-                Log.Error(TAG, "StopMqttBroker: ForegroundServiceManager == null");
+                Log.Error(TAG, "StopForegroundService: ForegroundServiceManager == null");
             }
             else
             {
-                Log.Debug(TAG, "StopMqttBroker()");
-                ForegroundServiceManager?.StopMqttBroker();
+                Log.Debug(TAG, "StopForegroundService()");
+                ForegroundServiceManager?.StopForegroundService();
             }
         }
     }

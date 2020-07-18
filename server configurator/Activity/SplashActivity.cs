@@ -105,7 +105,7 @@ namespace ab
             log_msg = GetText(Resource.String.deleting_outdated_logs);
             AddSplashText(log_msg);
             logsDB.Logs.RemoveRange(logsDB.Logs.Where(x => x.CreatedAt < DateTime.Now.AddDays(-7)).ToArray());
-            
+
             if (reWriteDataBase)
             {
                 log_msg = GetText(Resource.String.deleting_main_database_file);
@@ -231,7 +231,7 @@ namespace ab
                 {
                     await sw.WriteAsync(await sr.ReadToEndAsync());
                 }
-            }
+            }            
 
             log_msg = GetText(Resource.String.finish_initializing_application);
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);

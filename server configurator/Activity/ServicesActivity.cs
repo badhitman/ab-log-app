@@ -24,17 +24,14 @@ namespace ab
         protected override int DrawerLayoutId => Resource.Id.services_drawer_layout;
         protected override int NavId => Resource.Id.services_nav_view;
 
-        protected AppCompatEditText mqtt_broker_tcp_port;
-        protected AppCompatCheckBox mqtt_auth_check_box;
-        protected AppCompatEditText mqtt_auth_username;
-        protected AppCompatEditText mqtt_auth_passwd;
-        protected AppCompatEditText mqtt_topic;
+        protected AppCompatEditText service_tcp_port;
 
-        protected AppCompatButton mqtt_broker_start_button;
-        protected AppCompatButton mqtt_broker_stop_button;
+        protected AppCompatRadioButton use_http_radio_button;
+        protected AppCompatRadioButton use_mqtt_radio_button;
 
-        Intent startServiceIntent;
-        Intent stopServiceIntent;
+        protected AppCompatButton service_start_button;
+        protected AppCompatButton service_stop_button;
+
         bool isStarted = false;
 
         //public static MqttBrokerConnection serviceConnection;
@@ -50,32 +47,24 @@ namespace ab
             base.OnCreate(savedInstanceState);
             OnNewIntent(this.Intent);
 
-            mqtt_broker_start_button = FindViewById<AppCompatButton>(Resource.Id.mqtt_broker_start_button);
-            mqtt_broker_stop_button = FindViewById<AppCompatButton>(Resource.Id.mqtt_broker_stop_button);
+            use_http_radio_button = FindViewById<AppCompatRadioButton>(Resource.Id.radioButtonUseHtttpProtocol);
+            use_mqtt_radio_button = FindViewById<AppCompatRadioButton>(Resource.Id.radioButtonUseMqttProtocol);
 
-            startServiceIntent = new Intent(this, typeof(MqttBrokerService));
-            startServiceIntent.SetAction(Constants.ACTION_START_SERVICE);
-            //
-            stopServiceIntent = new Intent(this, typeof(MqttBrokerService));
-            stopServiceIntent.SetAction(Constants.ACTION_STOP_SERVICE);
+            string use_protocol = Preferences.Get("protocol", "http");
+            if (use_protocol == use_mqtt_radio_button.Text.ToLower())
+            {
+                use_mqtt_radio_button.Checked = true;
+            }
+            else
+            {
+                use_http_radio_button.Checked = true;
+            }
 
-            mqtt_broker_tcp_port = FindViewById<AppCompatEditText>(Resource.Id.mqtt_broker_port);
-            mqtt_broker_tcp_port.Text = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.mqtt_broker_port), 8080).ToString();
-            //
-            mqtt_auth_check_box = FindViewById<AppCompatCheckBox>(Resource.Id.mqtt_auth_check_box);
-            mqtt_auth_check_box.Checked = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.mqtt_auth_check_box), false);
+            service_tcp_port = FindViewById<AppCompatEditText>(Resource.Id.service_port);
+            service_tcp_port.Text = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.service_port), 8080).ToString();
 
-            mqtt_auth_username = FindViewById<AppCompatEditText>(Resource.Id.mqtt_auth_username);
-            mqtt_auth_username.Text = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.mqtt_auth_username), "");
-            mqtt_auth_passwd = FindViewById<AppCompatEditText>(Resource.Id.mqtt_auth_passwd);
-            mqtt_auth_passwd.Text = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.mqtt_auth_passwd), "");
-            mqtt_topic = FindViewById<AppCompatEditText>(Resource.Id.mqtt_topic);
-            mqtt_topic.Text = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.mqtt_topic), "");
-
-            //if (serviceConnection == null)
-            //{
-            //    serviceConnection = new MqttBrokerConnection(this);
-            //}
+            service_start_button = FindViewById<AppCompatButton>(Resource.Id.service_start_button);
+            service_stop_button = FindViewById<AppCompatButton>(Resource.Id.service_stop_button);
         }
 
         protected override void OnNewIntent(Intent intent)
@@ -86,9 +75,21 @@ namespace ab
             }
 
             Bundle bundle = intent.Extras;
-            if ((bundle != null && bundle.ContainsKey(Constants.SERVICE_STARTED_KEY)) || (MqttBrokerService.ForegroundServiceManager != null && MqttBrokerService.ForegroundServiceManager.isStartedMqtt))
+
+            string use_protocol = Preferences.Get("protocol", "http").ToLower();
+            if (use_protocol == "mqtt")
             {
-                isStarted = true;
+                if ((bundle != null && bundle.ContainsKey(Constants.SERVICE_STARTED_KEY)) || (ForegroundServiceMqtt.ForegroundServiceManager != null && ForegroundServiceMqtt.ForegroundServiceManager.isStartedForegroundService))
+                {
+                    isStarted = true;
+                }
+            }
+            else
+            {
+                if ((bundle != null && bundle.ContainsKey(Constants.SERVICE_STARTED_KEY)) || (ForegroundServiceHttp.ForegroundServiceManager != null && ForegroundServiceHttp.ForegroundServiceManager.isStartedForegroundService))
+                {
+                    isStarted = true;
+                }
             }
         }
 
@@ -105,31 +106,57 @@ namespace ab
 
             if (isStarted)
             {
-                mqtt_broker_stop_button.Click += HandlerMqttBrokerButton_Click;
-                mqtt_broker_stop_button.Enabled = true;
-                mqtt_broker_start_button.Enabled = false;
-                mqtt_broker_tcp_port.Enabled = false;
-                mqtt_auth_check_box.Enabled = false;
-                mqtt_auth_username.Enabled = false;
-                mqtt_auth_passwd.Enabled = false;
-                mqtt_topic.Enabled = false;
+                service_stop_button.Click += HandlerServiceStarterButton_Click;
+                service_stop_button.Enabled = true;
+
+                service_start_button.Enabled = false;
+                service_tcp_port.Enabled = false;
+                use_http_radio_button.Enabled = false;
+                use_http_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
+                use_mqtt_radio_button.Enabled = false;
+                use_mqtt_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
             }
             else
             {
-                mqtt_broker_start_button.Click += HandlerMqttBrokerButton_Click;
-                mqtt_broker_start_button.Enabled = true;
-                mqtt_broker_stop_button.Enabled = false;
+                service_start_button.Click += HandlerServiceStarterButton_Click;
+                service_start_button.Enabled = true;
 
-                mqtt_broker_tcp_port.TextChanged += MqttBroker_TextChanged;
-                mqtt_broker_tcp_port.Enabled = true;
-                mqtt_auth_check_box.CheckedChange += MqttBrokerAuthReq_CheckedChange;
-                mqtt_auth_check_box.Enabled = true;
-                mqtt_auth_username.Enabled = mqtt_auth_check_box.Checked;
-                mqtt_auth_username.TextChanged += MqttBroker_TextChanged;
-                mqtt_auth_passwd.Enabled = mqtt_auth_check_box.Checked;
-                mqtt_auth_passwd.TextChanged += MqttBroker_TextChanged;
-                mqtt_topic.Enabled = mqtt_auth_check_box.Checked;
-                mqtt_topic.TextChanged += MqttBroker_TextChanged;
+                service_stop_button.Enabled = false;
+
+                service_tcp_port.TextChanged += ServicePort_TextChanged;
+                service_tcp_port.Enabled = true;
+
+                use_http_radio_button.Enabled = true;
+                use_http_radio_button.CheckedChange += UseProtocolRadioButton_CheckedChange;
+                use_mqtt_radio_button.Enabled = true;
+                use_mqtt_radio_button.CheckedChange += UseProtocolRadioButton_CheckedChange;
+            }
+        }
+
+        private void UseProtocolRadioButton_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+        {
+            AppCompatRadioButton radioButton = (AppCompatRadioButton)sender;
+            Log.Debug(TAG, $"UseProtocolRadioButton_CheckedChange: { radioButton.Text} - {e.IsChecked}");
+
+            if (e.IsChecked)
+            {
+                Preferences.Set("protocol", radioButton.Text.ToLower());
+            }
+
+            switch (radioButton.Id)
+            {
+                case Resource.Id.radioButtonUseHtttpProtocol:
+                    if (use_mqtt_radio_button.Checked == e.IsChecked)
+                    {
+                        use_mqtt_radio_button.Checked = !e.IsChecked;
+                    }
+                    break;
+                case Resource.Id.radioButtonUseMqttProtocol:
+                    if (use_http_radio_button.Checked == e.IsChecked)
+                    {
+                        use_http_radio_button.Checked = !e.IsChecked;
+                    }
+                    break;
             }
         }
 
@@ -138,75 +165,81 @@ namespace ab
             base.OnPause();
             Log.Debug(TAG, "OnPause");
 
-            mqtt_broker_start_button.Click -= HandlerMqttBrokerButton_Click;
-            mqtt_broker_stop_button.Click -= HandlerMqttBrokerButton_Click;
-            mqtt_broker_tcp_port.TextChanged -= MqttBroker_TextChanged;
-            mqtt_auth_check_box.CheckedChange -= MqttBrokerAuthReq_CheckedChange;
-            mqtt_auth_username.TextChanged -= MqttBroker_TextChanged;
-            mqtt_auth_passwd.TextChanged -= MqttBroker_TextChanged;
-            mqtt_topic.TextChanged -= MqttBroker_TextChanged;
+            service_start_button.Click -= HandlerServiceStarterButton_Click;
+            service_stop_button.Click -= HandlerServiceStarterButton_Click;
+            service_tcp_port.TextChanged -= ServicePort_TextChanged;
+            use_http_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
+            use_mqtt_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
+
         }
 
         internal void UpdateUiForStartService()
         {
             Log.Debug(TAG, "Update ui for START service");
 
-            mqtt_broker_start_button.Click -= HandlerMqttBrokerButton_Click;
-            mqtt_broker_start_button.Enabled = false;
+            service_start_button.Click -= HandlerServiceStarterButton_Click;
+            service_start_button.Enabled = false;
 
-            mqtt_broker_stop_button.Click += HandlerMqttBrokerButton_Click;
-            mqtt_broker_stop_button.Enabled = true;
+            service_stop_button.Click += HandlerServiceStarterButton_Click;
+            service_stop_button.Enabled = true;
 
-            mqtt_broker_tcp_port.TextChanged -= MqttBroker_TextChanged;
-            mqtt_broker_tcp_port.Enabled = false;
+            service_tcp_port.TextChanged -= ServicePort_TextChanged;
+            service_tcp_port.Enabled = false;
 
-            mqtt_auth_check_box.CheckedChange -= MqttBrokerAuthReq_CheckedChange;
-            mqtt_auth_check_box.Enabled = false;
+            use_http_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
+            use_http_radio_button.Enabled = false;
 
-            mqtt_auth_username.TextChanged -= MqttBroker_TextChanged;
-            mqtt_auth_username.Enabled = false;
-            mqtt_auth_passwd.TextChanged -= MqttBroker_TextChanged;
-            mqtt_auth_passwd.Enabled = false;
-            mqtt_topic.TextChanged -= MqttBroker_TextChanged;
-            mqtt_topic.Enabled = false;
+            use_mqtt_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
+            use_mqtt_radio_button.Enabled = false;
         }
 
         internal void UpdateUiForStopService()
         {
             Log.Debug(TAG, "Update ui for STOP service");
 
-            mqtt_broker_start_button.Click += HandlerMqttBrokerButton_Click;
-            mqtt_broker_start_button.Enabled = true;
+            service_start_button.Click += HandlerServiceStarterButton_Click;
+            service_start_button.Enabled = true;
 
-            mqtt_broker_stop_button.Click -= HandlerMqttBrokerButton_Click;
-            mqtt_broker_stop_button.Enabled = false;
+            service_stop_button.Click -= HandlerServiceStarterButton_Click;
+            service_stop_button.Enabled = false;
 
-            mqtt_broker_tcp_port.TextChanged += MqttBroker_TextChanged;
-            mqtt_broker_tcp_port.Enabled = true;
+            service_tcp_port.TextChanged += ServicePort_TextChanged;
+            service_tcp_port.Enabled = true;
 
-            mqtt_auth_check_box.CheckedChange += MqttBrokerAuthReq_CheckedChange;
-            mqtt_auth_check_box.Enabled = true;
-
-            if (mqtt_auth_check_box.Checked)
-            {
-                mqtt_auth_username.Enabled = mqtt_auth_passwd.Enabled = mqtt_topic.Enabled = true;
-                mqtt_auth_username.TextChanged += MqttBroker_TextChanged;
-                mqtt_auth_passwd.TextChanged += MqttBroker_TextChanged;
-                mqtt_topic.TextChanged += MqttBroker_TextChanged;
-            }
+            use_http_radio_button.CheckedChange += UseProtocolRadioButton_CheckedChange;
+            use_http_radio_button.Enabled = true;
+            use_mqtt_radio_button.CheckedChange += UseProtocolRadioButton_CheckedChange;
+            use_mqtt_radio_button.Enabled = true;
         }
 
-        private void HandlerMqttBrokerButton_Click(object sender, EventArgs e)
+        private void HandlerServiceStarterButton_Click(object sender, EventArgs e)
         {
-            Log.Debug(TAG, "Handler MqttBroker button start click");
+            Log.Debug(TAG, "Handler Service button start click");
             AppCompatButton button = sender as AppCompatButton;
+
+            Intent startServiceIntent;
+            Intent stopServiceIntent;
+
+            if (use_mqtt_radio_button.Checked)
+            {
+                startServiceIntent = new Intent(this, typeof(ForegroundServiceMqtt));
+                stopServiceIntent = new Intent(this, typeof(ForegroundServiceMqtt));
+            }
+            else
+            {
+                startServiceIntent = new Intent(this, typeof(ForegroundServiceHttp));
+                stopServiceIntent = new Intent(this, typeof(ForegroundServiceHttp));
+            }
+
+            startServiceIntent.SetAction(Constants.ACTION_START_SERVICE);
+            stopServiceIntent.SetAction(Constants.ACTION_STOP_SERVICE);
 
             switch (button.Id)
             {
-                case Resource.Id.mqtt_broker_start_button:
+                case Resource.Id.service_start_button:
                     Log.Info(TAG, "User requested that the service be started.");
                     UpdateUiForStartService();
-                    
+
                     if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
                     {
                         StartForegroundService(startServiceIntent);
@@ -218,14 +251,14 @@ namespace ab
 
                     isStarted = true;
                     break;
-                case Resource.Id.mqtt_broker_stop_button:
+                case Resource.Id.service_stop_button:
                     Log.Info(TAG, "User requested that the service be stopped.");
                     UpdateUiForStopService();
                     StopService(stopServiceIntent);
                     isStarted = false;
                     break;
                 default:
-                    Log.Error(TAG, "HandlerMqttBrokerButton_Click() - id");
+                    Log.Error(TAG, "HandlerServiceStarterButton_Click() - id");
                     break;
             }
         }
@@ -234,10 +267,9 @@ namespace ab
         {
             AppCompatCheckBox auth_req = (AppCompatCheckBox)sender;
             Preferences.Set(Resources.GetResourceEntryName(auth_req.Id), auth_req.Checked);
-            mqtt_auth_username.Enabled = mqtt_auth_passwd.Enabled = mqtt_topic.Enabled = auth_req.Checked;
         }
 
-        private void MqttBroker_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
+        private void ServicePort_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
             AppCompatEditText text_field = (AppCompatEditText)sender;
             if (text_field.InputType == Android.Text.InputTypes.ClassNumber)

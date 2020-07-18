@@ -88,11 +88,15 @@
     <Compile Include="Activity\AboutPageActivity.cs" />
     <Compile Include="Activity\CloudActivity.cs" />
     <Compile Include="Services\abstract\aViewHolder.cs" />
-    <Compile Include="Services\mqtt\Constants.cs" />
-    <Compile Include="Services\mqtt\MqttBrokerConnection.cs" />
-    <Compile Include="Services\mqtt\MqttBrokerManager.cs" />
-    <Compile Include="Services\mqtt\MqttBrokerServiceBinder.cs" />
-    <Compile Include="Services\mqtt\IForegroundService.cs" />
+    <Compile Include="Services\foreground-service\ForegroundServiceBinder.cs" />
+    <Compile Include="Services\foreground-service\ForegroundServiceConnection.cs" />
+    <Compile Include="Services\foreground-service\Constants.cs" />
+    <Compile Include="Services\foreground-service\aForegroundService.cs" />
+    <Compile Include="Services\foreground-service\ForegroundServiceHttp.cs" />
+    <Compile Include="Services\foreground-service\ForegroundServiceMqtt.cs" />
+    <Compile Include="Services\foreground-service\HttpListenerManager.cs" />
+    <Compile Include="Services\foreground-service\MqttBrokerManager.cs" />
+    <Compile Include="Services\foreground-service\IForegroundService.cs" />
     <Compile Include="Services\LogsContext.cs" />
     <Compile Include="Services\DatabaseContext.cs" />
     <Compile Include="Services\hardware\HardwareListAdapter.cs" />
@@ -103,7 +107,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\logg\LogListAdapter.cs" />
     <Compile Include="Services\logg\LogViewHolder.cs" />
-    <Compile Include="Services\mqtt\MqttBrokerService.cs" />
     <Compile Include="Services\MyWebViewClient.cs" />
     <Compile Include="Services\user\UserListAdapter.cs" />
     <Compile Include="Services\user\UserViewHolder.cs" />
@@ -560,6 +563,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\onload.cf10.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\config-port-help.html" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <PropertyGroup>

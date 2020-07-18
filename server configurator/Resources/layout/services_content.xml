@@ -16,118 +16,78 @@
         android:gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <RadioGroup
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroup1">
+
+        <GridLayout
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:rowCount="1"
+            android:columnCount="3">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/protocol_title"/>
+
+            <RadioButton
+                
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HTTP"
+                android:id="@+id/radioButtonUseHtttpProtocol" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MQTT"
+                android:id="@+id/radioButtonUseMqttProtocol" />
+
+        </GridLayout>
+
+    </RadioGroup>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:text="@string/mqtt_broker_port_title"
+            android:text="@string/server_port_title"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <EditText
             android:inputType="number"
-            android:hint="@string/mqtt_broker_port_hint_default"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/mqtt_broker_port"/>
-
-    </LinearLayout>
-
-    <CheckBox
-        android:text="@string/authorization_is_required_in_the_mqtt_broker_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="false"
-        android:enabled="false"
-        android:id="@+id/mqtt_auth_check_box" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:text="@string/mqtt_user_name_title"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:inputType="text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mqtt_auth_username"
-            android:enabled="false"
-            android:hint="Megad-ID" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:text="@string/mqtt_user_passwd_title"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:inputType="text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mqtt_auth_passwd"
-            android:enabled="false"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:text="@string/mqtt_topic_title"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:inputType="text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mqtt_topic"
-            android:enabled="false"
-            android:hint="megad/14/cmd"/>
+            android:id="@+id/service_port"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
-        android:minWidth="25px"
-        android:minHeight="25px"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/linearLayout1"
-        android:gravity="fill_horizontal"
-        android:foregroundGravity="fill_horizontal"
-        android:layout_gravity="fill_horizontal">
+        android:layout_height="wrap_content">
 
         <Button
             android:text="@string/start_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/mqtt_broker_start_button" />
+            android:id="@+id/service_start_button" />
 
         <Button
             android:text="@string/stop_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/mqtt_broker_stop_button" />
+            android:id="@+id/service_stop_button" />
 
     </LinearLayout>
 

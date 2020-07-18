@@ -12,6 +12,7 @@ using Android.Webkit;
 using Android.Widget;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -407,7 +408,7 @@ namespace ab
                     }
                 }
                 /////////////////////////////////////////////////////////////
-                /// конфигурация непосредственного условия/сценария в разделе rogram
+                /// конфигурация условий/сценариев в разделе rogram
                 else if (cf == "10")
                 {
                     onload_js = MyWebViewClient.onload_cf10_js;
@@ -417,7 +418,6 @@ namespace ab
                         html_raw = html_raw
                         .Replace($"<a href=/{hardware.Password}/?cf=9>Back</a><br>", $"<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/{hardware.Password}/?cf=9\">Back</a><br>")
                         .Replace("<input type=hidden name=cf value=10>", $"<input type=\"hidden\" name=\"cf\" value=\"10\"/>")
-                        //.Replace("<input name=", "<input class=\"form-control\" name=")
                         .Replace("<input type=submit name=pcl value=clear><br>", "<input type=submit name=pcl value=clear>")
                         .Replace("<form", $"<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form")
                         .Replace("<select", "<label>тип сравнения: </label><select class=\"custom-select\"")
@@ -467,7 +467,7 @@ namespace ab
                 else if (!string.IsNullOrWhiteSpace(pt))
                 {
                     onload_js = MyWebViewClient.onload_pt_js;
-                    
+
                     if (external_web_mode)
                     {
                         if (html_raw.Contains("selected>Out<option"))
@@ -485,7 +485,7 @@ namespace ab
                         }
 
                         html_raw = html_raw
-                        .Replace($"<a href=/{hardware.Password}>Back</a>", $"<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/{hardware.Password}\">Back</a>")
+                        .Replace($"<a href=/{hardware.Password}>Back</a>", $"<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/{hardware.Password}\">Back</a> <a class=\"btn btn-info btn-sm\" role=\"button\" onclick=\"window.location.reload()\">Reload</a>")//window.location.href = this
                         .Replace("<style>input,select{margin:1px}</style>", string.Empty)
                         .Replace($"<form action=/{hardware.Password}/>", $"{System.Environment.NewLine}<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form action=\"/{hardware.Password}/\">{System.Environment.NewLine}")
                         .Replace("<input type=submit value=Save>", "<input class=\"btn btn-outline-primary btn-block\" type=\"submit\" value=\"Save\"/>")
@@ -541,6 +541,26 @@ namespace ab
 
                         html_raw = html_raw.Replace("Mode <select name=m>", "Mode <select class=\"form-control\" name=m>")
                         .Replace("Default: <select name=d", "Default: <select class=\"form-control\" name=d");
+
+                        string config_port_help_html;
+                        using (StreamReader sr = new StreamReader(Assets.Open("config-port-help.html")))
+                        {
+                            config_port_help_html = sr.ReadToEnd();
+                            //using (StreamWriter sw = new StreamWriter(MyWebViewClient.config_port_help_html, false))
+                            //{
+                            //    await sw.WriteAsync(await sr.ReadToEndAsync());
+                            //}
+                        }
+
+                        html_raw += $"{System.Environment.NewLine}<div class=\"alert alert-info mt-3\" role=\"alert\"><h6>Информация</h6>" +
+                        "<p>Поле <strong>Type</strong> может принимать следующие значения:<br/>" +
+                        "<code>IN</code> - Вход(например, \"сухой контакт, выключатели света\", U - Sensor, датчик протечки, охранные датчики и т.д.)<br/>" +
+                        "<code>OUT</code> - Выход(например, включение электроприборов)<br/>" +
+                        "<code>DSen</code> - Цифровой датчик(например, датчики температуры DS18B20, температуры - влажности DHT22, считыватели iButton, Wiegand - 26)<br/>" +
+                        "<code>I2C</code> - Датчики или иные устройств, подключаемые по шине I2C<br/>" +
+                        "<code>ADC</code> - АЦП, аналого - цифровой преобразователь(например, подключение аналоговых датчиков освещенности, давления, газа и т.д.) Доступен не для всех портов.</p>" +
+                        "</div>" + config_port_help_html;
+                        config_port_help_html = null;
                     }
                 }
                 /////////////////////////////////////////////////////////////
@@ -580,7 +600,7 @@ namespace ab
                         });
                     }
                 }
-                                
+
                 if (!external_web_mode && html_raw.Length > 12 && html_raw != "Unauthorized")
                 {
                     html_raw +=
@@ -597,7 +617,7 @@ namespace ab
                     $"<script src=\"file:///{onload_js}\"></script>" + System.Environment.NewLine + html_raw;
                 }
             });
-            webView.LoadDataWithBaseURL(url, html_raw, "text/html", "utf-8", null);
+            webView.LoadDataWithBaseURL(url, html_raw, "text/html", "utf-8", url);
 
             HardwareSystemSettingsLayout.RemoveAllViews();
             HardwareSystemSettingsLayout.AddView(webView);
