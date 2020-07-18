@@ -14,14 +14,10 @@ namespace ab.Services
     public class MqttBrokerManager : IForegroundService
     {
         static readonly string TAG = "mqtt-manager";
-
         private readonly IMqttServer mqttServer;
-
         LogsContext logsDB = new LogsContext();
         public IPAddress ipAddress => Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];
-
         public bool isStartedForegroundService { get { return mqttServer?.IsStarted ?? false; } }
-
         public int MqttBrokerPort { get; private set; }
 
         public MqttBrokerManager()

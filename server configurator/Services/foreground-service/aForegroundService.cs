@@ -2,6 +2,7 @@
 // © https://github.com/badhitman 
 ////////////////////////////////////////////////
 
+using ab.Model;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -14,9 +15,9 @@ namespace ab.Services
 {
     public abstract class aForegroundService : Service, IForegroundService
     {
-        readonly string TAG = "foreground-service";
+        readonly string TAG = string.Empty;
         public const int SERVICE_RUNNING_NOTIFICATION_ID = 10000;
-
+        LogsContext logsDB = new LogsContext();
         public static IForegroundService ForegroundServiceManager;
 
         public IBinder Binder { get; protected set; }
@@ -51,8 +52,7 @@ namespace ab.Services
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
 
-            //return base.OnStartCommand(intent, flags, startId);
-            int listener_port = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.service_port), 1883);
+            int listener_port = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.service_port), 8080);
 
             if (intent.Action.Equals(Constants.ACTION_START_SERVICE))
             {
@@ -93,11 +93,8 @@ namespace ab.Services
                 .SetSmallIcon(Resource.Drawable.ic_stat_name)
                 .SetContentIntent(BuildIntentToShowServicesActivity())
                 .SetOngoing(true)
-                //.AddAction(BuildRestartMqttBrokerServiceAction())
-                //.AddAction(BuildStopServiceAction())
                 .Build();
 
-            // Enlist this instance of the service as a foreground service
             StartForeground(Constants.SERVICE_RUNNING_NOTIFICATION_ID, notification);
         }
 
@@ -114,24 +111,34 @@ namespace ab.Services
             return pendingIntent;
         }
 
-        public void StartForegroundService(int foreground_service_port)
+        public async void StartForegroundService(int foreground_service_port)
         {
-            Log.Debug(TAG, $"StartForegroundService(port={foreground_service_port})");
+            string msg = $"StartForegroundService(port={foreground_service_port})";
+            Log.Debug(TAG, msg);
 
+            if (ForegroundServiceManager == null)
+            {
+                msg = "Error starting foreground service: ForegroundServiceManager == null";
+                Log.Error(TAG, msg);
+                await logsDB.AddLogRowAsync(LogStatusesEnum.Error, msg, TAG);
+                return;
+            }
             ForegroundServiceManager.StartForegroundService(foreground_service_port);
         }
 
-        public void StopForegroundService()
+        public async void StopForegroundService()
         {
+            string msg = "StopForegroundService()";
+            Log.Info(TAG, msg);
+
             if (ForegroundServiceManager == null)
             {
-                Log.Error(TAG, "StopForegroundService: ForegroundServiceManager == null");
+                msg = "Error stopping foreground service: ForegroundServiceManager == null";
+                Log.Error(TAG, msg);
+                await logsDB.AddLogRowAsync(LogStatusesEnum.Error, msg, TAG);
+                return;
             }
-            else
-            {
-                Log.Debug(TAG, "StopForegroundService()");
-                ForegroundServiceManager?.StopForegroundService();
-            }
+            ForegroundServiceManager.StopForegroundService();
         }
     }
 }

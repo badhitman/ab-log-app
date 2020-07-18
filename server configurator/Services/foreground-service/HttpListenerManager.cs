@@ -13,19 +13,16 @@ namespace ab.Services
     public class HttpListenerManager : IForegroundService
     {
         static readonly string TAG = "http-manager";
-
         private readonly HttpListener httpServer;
-
         LogsContext logsDB = new LogsContext();
         public IPAddress ipAddress => Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];
-
         public bool isStartedForegroundService { get { return httpServer?.IsListening ?? false; } }
-
         public int HttpListenerPort { get; private set; }
 
         public HttpListenerManager()
         {
             Log.Debug(TAG, "~ constructor");
+
             httpServer = new HttpListener();
         }
 
@@ -34,8 +31,8 @@ namespace ab.Services
             string msg = $"StartForegroundService(port={service_port})";
             Log.Debug(TAG, msg);
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, msg, TAG);
-            HttpListenerPort = service_port;
 
+            HttpListenerPort = service_port;
             httpServer.Prefixes.Add($"http://*:{service_port}/");
             httpServer.Start();
             IAsyncResult result = httpServer.BeginGetContext(new AsyncCallback(ListenerCallback), httpServer);
@@ -45,6 +42,7 @@ namespace ab.Services
         {
             Log.Debug(TAG, "StopForegroundService()");
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, "StopForegroundService()", TAG);
+
             httpServer.Stop();
             httpServer.Prefixes.Clear();
         }
@@ -52,7 +50,7 @@ namespace ab.Services
         public async void ListenerCallback(IAsyncResult result)
         {
             HttpListener listener = (HttpListener)result.AsyncState;
-            if(!listener.IsListening)
+            if (!listener.IsListening)
             {
                 return;
             }
