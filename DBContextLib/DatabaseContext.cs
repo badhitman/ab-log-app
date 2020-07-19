@@ -4,6 +4,7 @@
 
 using ab.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace ab.Services
 {
@@ -14,9 +15,8 @@ namespace ab.Services
 
         public DbSet<UserModel> Users { get; set; }
         public DbSet<HardwareModel> Hardwares { get; set; }
-        public DbSet<CloudEmailMessageModel> CloudMessages { get; set; }
-        public DbSet<TelegramMessageModel> TelegramMessages { get; set; }
-        public DbSet<PortsHardwaresModel> PortsHardwares { get; set; }
+        public DbSet<CloudEmailMessageModel> Messages { get; set; }
+        //public DbSet<CloudEmailMessage> TelegramMessages { get; set; }
 
         public DatabaseContext(string databasePath)
         {

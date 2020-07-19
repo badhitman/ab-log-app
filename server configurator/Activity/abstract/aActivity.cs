@@ -98,6 +98,11 @@ namespace ab
                 StartActivity(typeof(AboutPageActivity));
                 return true;
             }
+            else if(id == Resource.Id.action_telegram_bot)
+            {
+                StartActivity(typeof(TelegramBotActivity));
+                return true;
+            }
 
             return base.OnOptionsItemSelected(item);
         }

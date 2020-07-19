@@ -8,6 +8,7 @@
 
   <string name="ok_title">Ok</string>
   <string name="name_title">Name</string>
+  <string name="telegram_bot_title">Telegram Bot</string>
   <string name="logs_title">Logs</string>
   <string name="about_title">About</string>
   <string name="users_title">Users</string>
@@ -133,10 +134,14 @@
   <string name="hardware_ip_are_saved_title">The IP address of the hardware is saved</string>
   <string name="hardware_password_are_saved_title">The hardware password is saved</string>
   <string name="delete_the_log_database_file">The log database has been deleted</string>
-
+  <string name="delete_the_context_database_file">The main database was deleted</string>
+  
   <string name="the_service_is_already_running_title">The service is already running</string>
   <string name="the_service_is_being_started_title">The service is being started</string>
   <string name="the_service_is_stopped_title">The service is stopped</string>
   <string name="restarting_the_service_title">Restarting the service</string>
   <string name="protocol_title">Protocol</string>
+  <string name="telegram_bot_private_token_title">Telegram bot private token</string>
+  <string name="telegram_bot_private_token_info">The secret authorization key that you received from @BotFather</string>
+  <string name="check_token_title">Check the token</string>
 </resources>

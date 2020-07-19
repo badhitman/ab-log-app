@@ -11,7 +11,6 @@ using ab.Model;
 using ab.Services;
 using Android.App;
 using Android.Content;
-using Android.Content.Res;
 using Android.OS;
 using Android.Widget;
 using AndroidX.AppCompat.App;
@@ -75,7 +74,7 @@ namespace ab
             {
                 Toast.MakeText(this, log_msg, ToastLength.Short).Show();
             });
-            await logsDB.Database.EnsureCreatedAsync();
+            //await logsDB.Database.EnsureCreatedAsync();
             try
             {
                 await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, GetText(Resource.String.start_app_msg), TAG);
@@ -90,11 +89,11 @@ namespace ab
                         GetText(Resource.String.delete_the_log_database_file) + System.Environment.NewLine +
                         LogsContext.DatabasePathLogs;
 
-                    File.Delete(LogsContext.DatabasePathLogs);
-                    logsDB = new LogsContext();
-                    await logsDB.Database.EnsureCreatedAsync();
-                    await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, GetText(Resource.String.start_app_msg), TAG);
                 }
+                await logsDB.Database.EnsureDeletedAsync();
+                await logsDB.Database.EnsureCreatedAsync();
+                await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, GetText(Resource.String.start_app_msg), TAG);
+
                 RunOnUiThread(() =>
                 {
                     Toast.MakeText(this, err_message, ToastLength.Long).Show();
@@ -120,6 +119,35 @@ namespace ab
             AddSplashText(log_msg);
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);
             await db.Database.EnsureCreatedAsync();
+
+            try
+            {
+                _ = db.TelegramMessages.FirstOrDefault();
+                _ = db.Users.FirstOrDefault();
+                _ = db.Hardwares.FirstOrDefault();
+                _ = db.CloudMessages.FirstOrDefault();
+                _ = db.TelegramMessages.FirstOrDefault();
+                _ = db.PortsHardwares.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                string err_message = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    err_message += System.Environment.NewLine +
+                        ex.InnerException.Message + System.Environment.NewLine + System.Environment.NewLine +
+                        GetText(Resource.String.delete_the_context_database_file) + System.Environment.NewLine +
+                        gs.DatabasePathBase;
+
+                }
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+
+                RunOnUiThread(() =>
+                {
+                    Toast.MakeText(this, err_message, ToastLength.Long).Show();
+                });
+            }
 
             if (await db.Users.CountAsync() == 0)
             {
@@ -231,7 +259,7 @@ namespace ab
                 {
                     await sw.WriteAsync(await sr.ReadToEndAsync());
                 }
-            }            
+            }
 
             log_msg = GetText(Resource.String.finish_initializing_application);
             await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);

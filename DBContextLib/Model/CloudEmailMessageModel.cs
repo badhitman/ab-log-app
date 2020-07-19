@@ -4,7 +4,7 @@
 
 namespace ab.Model
 {
-    public class CloudEmailMessage : abstractEF
+    public class CloudEmailMessageModel : abstractEF
     {
         public string UIDL { get; set; }
         public string Subject { get; set; }
