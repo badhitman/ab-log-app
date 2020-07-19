@@ -567,6 +567,12 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\config-port-help.html" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TelegramBot-API-min\TelegramBot-API-min.csproj">
+      <Project>{821f1033-6726-43c4-ac59-7f16640ffc33}</Project>
+      <Name>TelegramBot-API-min</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
