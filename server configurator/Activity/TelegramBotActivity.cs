@@ -36,7 +36,7 @@ namespace ab
             buttonCheckTelegramBotToken = FindViewById<Button>(Resource.Id.button_check_telegram_bot_token);
             linearLayoutStatusCheckTelegramBotToken = FindViewById<LinearLayout>(Resource.Id.linearLayoutCheckTelegramBotToken);
             recyclerViewUsersList = FindViewById<RecyclerView>(Resource.Id.recyclerViewTelegramUsersList);
-            string token = Preferences.Get(base.Resources.GetResourceEntryName(editTextToken.Id), string.Empty);
+            string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);
             editTextToken.Text = token;
             buttonCheckTelegramBotToken.Enabled = !string.IsNullOrEmpty(token);
 
@@ -66,7 +66,7 @@ namespace ab
         private void EditTextToken_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
             EditText editText = sender as EditText;
-            Preferences.Set(base.Resources.GetResourceEntryName(editText.Id), editText.Text);
+            Preferences.Set(Constants.TELEGRAM_TOKEN, editText.Text);
             buttonCheckTelegramBotToken.Enabled = !string.IsNullOrEmpty(editText.Text);
             Preferences.Set(Constants.TELEGRAM_BOT_ID, (long)0);
         }
@@ -84,7 +84,7 @@ namespace ab
 
             linearLayoutStatusCheckTelegramBotToken.RemoveAllViews();
             linearLayoutStatusCheckTelegramBotToken.AddView(new ProgressBar(this) { Indeterminate = true });
-            string token = Preferences.Get(base.Resources.GetResourceEntryName(editTextToken.Id), string.Empty);
+            string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);
 
             TelegramClientCore telegramClient = null;
             await Task.Run(() =>

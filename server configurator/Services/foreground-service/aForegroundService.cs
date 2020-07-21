@@ -42,7 +42,7 @@ namespace ab.Services
             {
                 log_msg = "TelegramBotClientAction()";
                 Log.Debug(TelegramBotTAG, log_msg);
-                log.AddLogRow(LogStatusesEnum.Tracert, log_msg, TAG);
+                log.AddLogRow(LogStatusesEnum.Trac, log_msg, TAG);
             }
             if (TelegramBotSurveyInterval < 1 || string.IsNullOrWhiteSpace(TelegramBotToken))
             {
@@ -86,7 +86,7 @@ namespace ab.Services
                     Log.Info(TelegramBotTAG, log_msg);
                     using (LogsContext log = new LogsContext())
                     {
-                        log.AddLogRow(LogStatusesEnum.Information, log_msg, TAG);
+                        log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
                     }
                     lock (DatabaseContext.DbLocker)
                     {
@@ -99,7 +99,7 @@ namespace ab.Services
                                 Log.Info(TelegramBotTAG, log_msg);
                                 using (LogsContext log = new LogsContext())
                                 {
-                                    log.AddLogRow(LogStatusesEnum.Information, log_msg, TAG);
+                                    log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
                                 }
                                 db.TelegramMessages.Add(new TelegramMessageModel()
                                 {
@@ -131,7 +131,7 @@ namespace ab.Services
                                     Log.Info(TelegramBotTAG, log_msg);
                                     using (LogsContext log = new LogsContext())
                                     {
-                                        log.AddLogRow(LogStatusesEnum.Information, log_msg, TAG);
+                                        log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
                                     }
                                 }
                                 else
@@ -151,7 +151,7 @@ namespace ab.Services
                                         Log.Info(TelegramBotTAG, log_msg);
                                         using (LogsContext log = new LogsContext())
                                         {
-                                            log.AddLogRow(LogStatusesEnum.Information, log_msg, TAG);
+                                            log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
                                         }
                                     }
                                 }

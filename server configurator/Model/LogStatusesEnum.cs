@@ -6,9 +6,9 @@ namespace ab.Model
 {
     public enum LogStatusesEnum
     {
-        Tracert,
-        Information,
-        Warning,
+        Trac,
+        Info,
+        Warn,
         Error
     }
 }

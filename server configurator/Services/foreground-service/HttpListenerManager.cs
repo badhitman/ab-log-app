@@ -4,9 +4,13 @@
 
 using ab.Model;
 using Android.Util;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Net;
 using System.Text;
+using TelegramBotMin;
+using Xamarin.Essentials;
 
 namespace ab.Services
 {
@@ -30,7 +34,7 @@ namespace ab.Services
         {
             string msg = $"StartForegroundService(port={service_port})";
             Log.Debug(TAG, msg);
-            logsDB.AddLogRow(LogStatusesEnum.Tracert, msg, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Trac, msg, TAG);
 
             HttpListenerPort = service_port;
             httpServer.Prefixes.Add($"http://*:{service_port}/");
@@ -41,7 +45,7 @@ namespace ab.Services
         public void StopForegroundService()
         {
             Log.Debug(TAG, "StopForegroundService()");
-            logsDB.AddLogRow(LogStatusesEnum.Tracert, "StopForegroundService()", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Trac, "StopForegroundService()", TAG);
 
             httpServer.Stop();
             httpServer.Prefixes.Clear();
@@ -60,20 +64,54 @@ namespace ab.Services
 
             string s_request = $"ListenerCallback() - request: {request.Url}";
             Log.Debug(TAG, s_request);
-            logsDB.AddLogRow(LogStatusesEnum.Tracert, s_request, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Trac, s_request, TAG);
 
             // Obtain a response object.
             HttpListenerResponse response = context.Response;
             // Construct a response.
             string responseString = "Hello world!";
-            byte[] buffer = Encoding.UTF8.GetBytes(responseString);
-            // Get a response stream and write the response to it.
-            response.ContentLength64 = buffer.Length;
-            System.IO.Stream output = response.OutputStream;
-            await output.WriteAsync(buffer, 0, buffer.Length);
-            // You must close the output stream.
-            output.Close();
-            result = httpServer.BeginGetContext(new AsyncCallback(ListenerCallback), httpServer);
+
+            string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                string log_msg = $"incoming http request: {request.Url}";
+                TelegramClientCore telegramClient = new TelegramClientCore(token);
+                if (telegramClient?.Me == null)
+                {
+                    log_msg = "telegramClient?.Me == null";
+                    Log.Info(TAG, log_msg);
+                    using (LogsContext log = new LogsContext())
+                    {
+                        log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
+                    }
+                    goto without_telegram;
+                }
+                else
+                {
+                    lock (DatabaseContext.DbLocker)
+                    {
+                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                        {
+                            foreach (UserModel user in db.Users.Include(x => x.TelegramUsers).Where(x => x.AlarmSubscriber))
+                            {
+                                foreach (TelegramUserModel telegramUser in user.TelegramUsers)
+                                {
+                                    telegramClient.sendMessage(telegramUser.TelegramId.ToString(), log_msg);
+                                }
+                            }
+                        }
+                    }
+                }
+            without_telegram:
+                byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+                // Get a response stream and write the response to it.
+                response.ContentLength64 = buffer.Length;
+                System.IO.Stream output = response.OutputStream;
+                await output.WriteAsync(buffer, 0, buffer.Length);
+                // You must close the output stream.
+                output.Close();
+                result = httpServer.BeginGetContext(new AsyncCallback(ListenerCallback), httpServer);
+            }
         }
     }
 }

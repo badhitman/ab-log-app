@@ -30,7 +30,7 @@ namespace ab.Services
         {
             string msg = $"StartForegroundService(port={service_port})";
             Log.Debug(TAG, msg);
-            logsDB.AddLogRow(LogStatusesEnum.Tracert, msg, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Trac, msg, TAG);
             MqttBrokerPort = service_port;
 
             MqttServerOptionsBuilder optionsBuilder = new MqttServerOptionsBuilder()
@@ -47,14 +47,14 @@ namespace ab.Services
         public async void StopForegroundService()
         {
             Log.Debug(TAG, "StopForegroundService()");
-            logsDB.AddLogRow(LogStatusesEnum.Tracert, "StopForegroundService()", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Trac, "StopForegroundService()", TAG);
             await mqttServer.StopAsync();
         }
 
         public void MqttConnectionValidator(MqttConnectionValidatorContext connection_context)
         {
             Log.Debug(TAG, "MqttConnectionValidator");
-            logsDB.AddLogRow(LogStatusesEnum.Tracert, $"MqttConnectionValidator - ClientId={connection_context.ClientId} Username={connection_context.Username}", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttConnectionValidator - ClientId={connection_context.ClientId} Username={connection_context.Username}", TAG);
             //.WithConnectionValidator(context => 
             //{
             //    if(context.Password == "")
@@ -68,7 +68,7 @@ namespace ab.Services
         public void MqttMessageInterceptor(MqttApplicationMessageInterceptorContext message_context)
         {
             Log.Debug(TAG, "MqttMessageInterceptor");
-            logsDB.AddLogRow(LogStatusesEnum.Tracert, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={Encoding.UTF8.GetString(message_context.ApplicationMessage.Payload)}", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={Encoding.UTF8.GetString(message_context.ApplicationMessage.Payload)}", TAG);
             //.WithApplicationMessageInterceptor(context =>
             //{
             //    if (context.ApplicationMessage.Topic != mqtt_broker_topic)
@@ -83,7 +83,7 @@ namespace ab.Services
         private void MqttSubscriptionInterceptor(MqttSubscriptionInterceptorContext subscription_context)
         {
             Log.Debug(TAG, "MqttSubscriptionInterceptor");
-            logsDB.AddLogRow(LogStatusesEnum.Tracert, $"MqttSubscriptionInterceptor - ClientId={subscription_context.ClientId} Topic={subscription_context.TopicFilter.Topic}", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttSubscriptionInterceptor - ClientId={subscription_context.ClientId} Topic={subscription_context.TopicFilter.Topic}", TAG);
         }
     }
 }

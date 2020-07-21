@@ -40,7 +40,7 @@ namespace ab.Services
         {
             string msg = $"OnServiceDisconnected {name.ClassName}";
             Log.Error(TAG, msg);
-            logsDB.AddLogRow(Model.LogStatusesEnum.Warning, msg, TAG);
+            logsDB.AddLogRow(Model.LogStatusesEnum.Warn, msg, TAG);
 
             IsConnected = false;
             Binder = null;
