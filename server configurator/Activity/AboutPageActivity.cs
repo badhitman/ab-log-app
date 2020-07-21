@@ -4,6 +4,7 @@
 
 using ab.Services;
 using Android.App;
+using Android.Graphics;
 using Android.OS;
 using Android.Widget;
 using System.IO;
@@ -24,12 +25,18 @@ namespace ab
         {
             base.OnCreate(savedInstanceState);
             linearLayoutAddingInfo = FindViewById<LinearLayout>(Resource.Id.linearLayoutAddingInfo);
+            
             linearLayoutAddingInfo.AddView(new TextView(this) { Text = " " });
-            linearLayoutAddingInfo.AddView(new TextView(this) { Text = $"main database file path ({gs.SizeDataAsString(new FileInfo(gs.DatabasePathBase).Length)}):" });
-            linearLayoutAddingInfo.AddView(new TextView(this) { Text = gs.DatabasePathBase });
+            linearLayoutAddingInfo.AddView(new TextView(this) { Text = $"main database file ({gs.SizeDataAsString(new FileInfo(gs.DatabasePathBase).Length)}):" });            
+            TextView textViewMainDatabaseFilePath = new TextView(this) { Text = gs.DatabasePathBase };
+            textViewMainDatabaseFilePath.SetTextColor(Color.DarkGray);
+            linearLayoutAddingInfo.AddView(textViewMainDatabaseFilePath);
+
             linearLayoutAddingInfo.AddView(new TextView(this) { Text = " " });
-            linearLayoutAddingInfo.AddView(new TextView(this) { Text = $"logs database file path ({gs.SizeDataAsString(new FileInfo(LogsContext.DatabasePathLogs).Length)}):" });
-            linearLayoutAddingInfo.AddView(new TextView(this) { Text = LogsContext.DatabasePathLogs });
+            linearLayoutAddingInfo.AddView(new TextView(this) { Text = $"logs database file ({gs.SizeDataAsString(new FileInfo(LogsContext.DatabasePathLogs).Length)}):" });
+            TextView textViewLogsDatabaseFilePath = new TextView(this) { Text = LogsContext.DatabasePathLogs };
+            textViewLogsDatabaseFilePath.SetTextColor(Color.DarkGray);
+            linearLayoutAddingInfo.AddView(textViewLogsDatabaseFilePath);
         }
     }
 }

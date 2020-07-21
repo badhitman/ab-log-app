@@ -21,6 +21,8 @@ namespace ab.Services
     public abstract class aForegroundService : Service, IForegroundService
     {
         readonly string TAG = "service";
+        readonly string TelegramBotTAG = "telegram-bot";
+
         public const int SERVICE_RUNNING_NOTIFICATION_ID = 10000;
         LogsContext logsDB = new LogsContext();
         public static IForegroundService ForegroundServiceManager;
@@ -33,19 +35,19 @@ namespace ab.Services
 
         Thread TelegramBotClientThread;
 
-        private async void TelegramBotClientAction()
+        private void TelegramBotClientAction()
         {
             string log_msg;
             using (LogsContext log = new LogsContext())
             {
                 log_msg = "TelegramBotClientAction()";
-                Log.Debug(TAG, log_msg);
+                Log.Debug(TelegramBotTAG, log_msg);
                 log.AddLogRow(LogStatusesEnum.Tracert, log_msg, TAG);
             }
             if (TelegramBotSurveyInterval < 1 || string.IsNullOrWhiteSpace(TelegramBotToken))
             {
                 log_msg = "TelegramBotSurveyInterval < 1 || string.IsNullOrWhiteSpace(TelegramBotToken)";
-                Log.Error(TAG, log_msg);
+                Log.Error(TelegramBotTAG, log_msg);
                 using (LogsContext log = new LogsContext())
                 {
                     log.AddLogRow(LogStatusesEnum.Error, log_msg, TAG);
@@ -56,7 +58,7 @@ namespace ab.Services
             if (telegramClient?.Me == null)
             {
                 log_msg = "telegramClient?.Me == null";
-                Log.Error(TAG, log_msg);
+                Log.Error(TelegramBotTAG, log_msg);
                 using (LogsContext log = new LogsContext())
                 {
                     log.AddLogRow(LogStatusesEnum.Error, log_msg, TAG);
@@ -64,13 +66,14 @@ namespace ab.Services
                 return;
             }
 
-            while (true)
+            while (TelegramBotSurveyInterval > 0)
             {
-                Update[] updates = await telegramClient.getUpdates();
+                Log.Debug(TelegramBotTAG, " ~ request telegram updates");
+                Update[] updates = telegramClient.getUpdates().Result;
                 if (updates == null)
                 {
                     log_msg = "telegramClient.getUpdates() == null";
-                    Log.Error(TAG, log_msg);
+                    Log.Error(TelegramBotTAG, log_msg);
                     using (LogsContext log = new LogsContext())
                     {
                         log.AddLogRow(LogStatusesEnum.Error, log_msg, TAG);
@@ -80,7 +83,7 @@ namespace ab.Services
                 if (updates.Length > 0)
                 {
                     log_msg = $"incoming telegram updates: {updates.Length} items";
-                    Log.Info(TAG, log_msg);
+                    Log.Info(TelegramBotTAG, log_msg);
                     using (LogsContext log = new LogsContext())
                     {
                         log.AddLogRow(LogStatusesEnum.Information, log_msg, TAG);
@@ -93,7 +96,7 @@ namespace ab.Services
                             foreach (Update update in updates)
                             {
                                 log_msg = $"incoming telegram message: {update.message.text}";
-                                Log.Info(TAG, log_msg);
+                                Log.Info(TelegramBotTAG, log_msg);
                                 using (LogsContext log = new LogsContext())
                                 {
                                     log.AddLogRow(LogStatusesEnum.Information, log_msg, TAG);
@@ -125,7 +128,7 @@ namespace ab.Services
                                     db.SaveChanges();
 
                                     log_msg = $"new telegram user: {telegramUserModel}";
-                                    Log.Info(TAG, log_msg);
+                                    Log.Info(TelegramBotTAG, log_msg);
                                     using (LogsContext log = new LogsContext())
                                     {
                                         log.AddLogRow(LogStatusesEnum.Information, log_msg, TAG);
@@ -145,7 +148,7 @@ namespace ab.Services
                                         db.SaveChanges();
 
                                         log_msg = $"update telegram user: {telegramUserModel}";
-                                        Log.Info(TAG, log_msg);
+                                        Log.Info(TelegramBotTAG, log_msg);
                                         using (LogsContext log = new LogsContext())
                                         {
                                             log.AddLogRow(LogStatusesEnum.Information, log_msg, TAG);
@@ -157,7 +160,14 @@ namespace ab.Services
                     }
                     telegramClient.offset = updates.Max(x => x.update_id);
                 }
-                Thread.Sleep(TelegramBotSurveyInterval * 1000);
+                if (TelegramBotSurveyInterval > 0)
+                {
+                    Thread.Sleep(TelegramBotSurveyInterval * 1000);
+                }
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -251,7 +261,7 @@ namespace ab.Services
             return pendingIntent;
         }
 
-        public async void StartForegroundService(int foreground_service_port)
+        public void StartForegroundService(int foreground_service_port)
         {
             string msg = $"StartForegroundService(port={foreground_service_port})";
             Log.Debug(TAG, msg);
@@ -275,6 +285,9 @@ namespace ab.Services
             string msg = "StopForegroundService()";
             Log.Info(TAG, msg);
 
+            TelegramBotSurveyInterval = -1;
+            TelegramBotClientThread.Abort();
+
             if (ForegroundServiceManager == null)
             {
                 msg = "Error stopping foreground service: ForegroundServiceManager == null";
@@ -282,7 +295,6 @@ namespace ab.Services
                 logsDB.AddLogRow(LogStatusesEnum.Error, msg, TAG);
                 return;
             }
-            TelegramBotClientThread.Abort();
             ForegroundServiceManager.StopForegroundService();
         }
     }
