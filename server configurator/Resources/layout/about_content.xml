@@ -28,11 +28,19 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/about_app_information"
             android:autoLink="all"
             android:layout_gravity="start" />
-        
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayoutAddingInfo" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

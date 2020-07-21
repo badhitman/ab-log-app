@@ -16,42 +16,32 @@
         android:gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <RadioGroup
+    <GridLayout
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/radioGroup1">
+        android:rowCount="1"
+        android:columnCount="3">
 
-        <GridLayout
-            android:minWidth="25px"
-            android:minHeight="25px"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/protocol_title"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:rowCount="1"
-            android:columnCount="3">
+            android:text="HTTP"
+            android:id="@+id/radioButtonUseHtttpProtocol" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/protocol_title"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MQTT"
+            android:id="@+id/radioButtonUseMqttProtocol" />
 
-            <RadioButton
-                
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HTTP"
-                android:id="@+id/radioButtonUseHtttpProtocol" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MQTT"
-                android:id="@+id/radioButtonUseMqttProtocol" />
-
-        </GridLayout>
-
-    </RadioGroup>
+    </GridLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,6 +59,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/service_port"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginVertical="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="@string/telegram_bot_survey_interval_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="55dp"
+                android:id="@+id/telegram_bot_interval"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:text="@string/telegram_bot_survey_interval_subtitle"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

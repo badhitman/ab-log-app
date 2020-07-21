@@ -27,7 +27,7 @@ namespace ab
         protected override int DrawerLayoutId => Resource.Id.cloud_drawer_layout;
         protected override int NavId => Resource.Id.cloud_nav_view;
 
-        #region EditText handlers
+        #region fields
         private Switch switch_enable_first_cloud;
         private EditText cloud_first_email_address;
         private EditText cloud_first_email_login;

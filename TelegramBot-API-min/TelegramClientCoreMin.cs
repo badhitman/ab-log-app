@@ -124,7 +124,7 @@ namespace TelegramBotMin
                 onLogEvent(msg_txt, lm);
         }
 
-        private async void SendRequest(string api_bot_method_name, NameValueCollection request_param, InputFileClass file_post)
+        private async Task<string> SendRequest(string api_bot_method_name, NameValueCollection request_param, InputFileClass file_post)
         {
             http_response_raw = "";
             if (request_param != null && !string.IsNullOrEmpty(request_param["captiom"]) && string.IsNullOrWhiteSpace(request_param["parse_mode"]))
@@ -134,9 +134,10 @@ namespace TelegramBotMin
             {
                 http_response_raw = MyWebClient.SendRequest(apiUrl + "/" + api_bot_method_name, HttpMethod.Post, request_param, new List<PostedFile>() { new PostedFile() { Data = file_post.Data, FieldName = file_post.FieldName, FileName = file_post.FileName } }, MyWebClient.RequestContentTypes.MultipartFormData);
             });
+            return http_response_raw;
         }
 
-        private async void SendRequest(string api_bot_method_name, NameValueCollection request_param)
+        private async Task<string> SendRequest(string api_bot_method_name, NameValueCollection request_param)
         {
             http_response_raw = "";
             if (request_param != null && !string.IsNullOrEmpty(request_param["text"]) && string.IsNullOrWhiteSpace(request_param["parse_mode"]))
@@ -146,6 +147,7 @@ namespace TelegramBotMin
             {
                 http_response_raw = MyWebClient.SendRequest(apiUrl + "/" + api_bot_method_name, HttpMethod.Post, request_param, null, MyWebClient.RequestContentTypes.ApplicationXWwwFormUrlencoded);
             });
+            return http_response_raw;
         }
 
         /// <summary>
@@ -189,9 +191,9 @@ namespace TelegramBotMin
                 allowed_updates = new string[0]
             };
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                SendRequest(nameof(getUpdates), updates_filter.GetFiealds(new string[0]));
+                await SendRequest(nameof(getUpdates), updates_filter.GetFiealds(new string[0]));
             });
 
             if (string.IsNullOrEmpty(http_response_raw))
@@ -209,7 +211,7 @@ namespace TelegramBotMin
         /// <returns>Returns basic information about the bot in form of a User (https://core.telegram.org/bots/api#user) object.</returns>
         public async Task<UserClass> getMe()
         {
-            SendRequest(nameof(getMe), null);
+            await SendRequest(nameof(getMe), null);
             if (string.IsNullOrEmpty(http_response_raw))
                 return null;
             getMeJSON.Result result = (getMeJSON.Result) await SerialiserJSON.ReadObject(typeof(getMeJSON.Result), http_response_raw);
@@ -290,7 +292,7 @@ namespace TelegramBotMin
             if (reply_markup == null)
                 skip_fields.Add("reply_markup");
 
-            SendRequest(nameof(sendMessage), send_msg_json.GetFiealds(skip_fields.ToArray()));
+            await SendRequest(nameof(sendMessage), send_msg_json.GetFiealds(skip_fields.ToArray()));
 
             if (string.IsNullOrEmpty(http_response_raw))
                 return null;
@@ -318,7 +320,7 @@ namespace TelegramBotMin
             if (!disable_notification)
                 skip_fields.Add("disable_notification");
 
-            SendRequest(nameof(forwardMessage), forward_msg_json.GetFiealds(skip_fields.ToArray()));
+            await SendRequest(nameof(forwardMessage), forward_msg_json.GetFiealds(skip_fields.ToArray()));
             if (string.IsNullOrEmpty(http_response_raw))
                 return null;
             forwardMessageJSON.Result result = (forwardMessageJSON.Result)await SerialiserJSON.ReadObject(typeof(forwardMessageJSON.Result), http_response_raw);
@@ -366,14 +368,14 @@ namespace TelegramBotMin
 
             if (document is string || document is int)
             {
-                SendRequest(nameof(sendDocument), send_document_json.GetFiealds(skip_fields.ToArray()));
+                await SendRequest(nameof(sendDocument), send_document_json.GetFiealds(skip_fields.ToArray()));
                 if (string.IsNullOrEmpty(http_response_raw))
                     return null;
             }
             else if (document is InputFileClass)
             {
                 skip_fields.Add("document");
-                SendRequest(nameof(sendDocument), send_document_json.GetFiealds(skip_fields.ToArray()), (InputFileClass)document);
+                await SendRequest(nameof(sendDocument), send_document_json.GetFiealds(skip_fields.ToArray()), (InputFileClass)document);
                 if (string.IsNullOrEmpty(http_response_raw))
                     return null;
             }
@@ -425,14 +427,14 @@ namespace TelegramBotMin
             if (photo is string || photo is int)
             {
                 send_photo_json.photo = photo;
-                SendRequest(nameof(sendPhoto), send_photo_json.GetFiealds(skip_fields.ToArray()));
+                await SendRequest(nameof(sendPhoto), send_photo_json.GetFiealds(skip_fields.ToArray()));
                 if (string.IsNullOrEmpty(http_response_raw))
                     return null;
             }
             else if (photo is InputFileClass)
             {
                 skip_fields.Add("photo");
-                SendRequest(nameof(sendPhoto), send_photo_json.GetFiealds(skip_fields.ToArray()), (InputFileClass)photo);
+                await SendRequest(nameof(sendPhoto), send_photo_json.GetFiealds(skip_fields.ToArray()), (InputFileClass)photo);
                 if (string.IsNullOrEmpty(http_response_raw))
                     return null;
             }
@@ -449,7 +451,7 @@ namespace TelegramBotMin
         public async Task<FileClass> getFile(string file_id)
         {
             getFileJSON get_file_json = new getFileJSON() { file_id = file_id };
-            SendRequest(nameof(getFile), get_file_json.GetFiealds(new string[0]));
+            await SendRequest(nameof(getFile), get_file_json.GetFiealds(new string[0]));
             if (string.IsNullOrEmpty(http_response_raw.Trim()))
                 return null;
             getFileJSON.Result result = (getFileJSON.Result)await SerialiserJSON.ReadObject(typeof(getFileJSON.Result), http_response_raw);
@@ -464,7 +466,7 @@ namespace TelegramBotMin
         public async Task<ChatMemberClass[]> getChatAdministrators(string chat_id)
         {
             getChatAdministratorsJSON get_chat_administrators_json = new getChatAdministratorsJSON() { chat_id = chat_id };
-            SendRequest(nameof(getChatAdministrators), get_chat_administrators_json.GetFiealds(new string[0]));
+            await SendRequest(nameof(getChatAdministrators), get_chat_administrators_json.GetFiealds(new string[0]));
             if (string.IsNullOrEmpty(http_response_raw.Trim()))
                 return null;
             getChatAdministratorsJSON.Result result = (getChatAdministratorsJSON.Result)await SerialiserJSON.ReadObject(typeof(getChatAdministratorsJSON.Result), http_response_raw);

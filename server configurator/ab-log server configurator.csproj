@@ -88,6 +88,7 @@
     <Compile Include="Model\LogRowModel.cs" />
     <Compile Include="Model\LogStatusesEnum.cs" />
     <Compile Include="Model\PortsHardwaresModel.cs" />
+    <Compile Include="Model\TelegramUserModel.cs" />
     <Compile Include="Model\TelegramMessageModel.cs" />
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Services\abstract\aViewHolder.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="Activity\SplashActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\telegram-users\TelegramUsersListAdapter.cs" />
+    <Compile Include="Services\telegram-users\TelegramUsersViewHolder.cs" />
     <Compile Include="Services\logg\LogListAdapter.cs" />
     <Compile Include="Services\logg\LogViewHolder.cs" />
     <Compile Include="Services\LogsContext.cs" />
@@ -597,7 +600,12 @@
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\telegram_user_list_item.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />

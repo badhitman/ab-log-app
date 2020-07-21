@@ -85,15 +85,6 @@
                 android:autoLink="phone"
                 android:gravity="right" />
 
-            <TextView
-                android:text="@string/telegram_hint"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/user_list_item_telegram"
-                android:layout_marginLeft="10dp"
-                android:gravity="right" />
-
         </LinearLayout>
 
     </LinearLayout>

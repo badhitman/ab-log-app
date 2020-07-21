@@ -80,13 +80,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/user_phone" />
 
-            <EditText
-                android:hint="@string/telegram_hint"
-                android:inputType="phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/user_telegram" />
-
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

@@ -77,7 +77,7 @@ namespace ab
             //await logsDB.Database.EnsureCreatedAsync();
             try
             {
-                await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, GetText(Resource.String.start_app_msg), TAG);
+                logsDB.AddLogRow(LogStatusesEnum.Tracert, GetText(Resource.String.start_app_msg), TAG);
             }
             catch (DbUpdateException ex)
             {
@@ -92,7 +92,7 @@ namespace ab
                 }
                 await logsDB.Database.EnsureDeletedAsync();
                 await logsDB.Database.EnsureCreatedAsync();
-                await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, GetText(Resource.String.start_app_msg), TAG);
+                logsDB.AddLogRow(LogStatusesEnum.Tracert, GetText(Resource.String.start_app_msg), TAG);
 
                 RunOnUiThread(() =>
                 {
@@ -109,7 +109,7 @@ namespace ab
             {
                 log_msg = GetText(Resource.String.deleting_main_database_file);
 
-                await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);
+                logsDB.AddLogRow(LogStatusesEnum.Tracert, log_msg, TAG);
                 AddSplashText(log_msg);
                 File.Delete(gs.DatabasePathBase);
             }
@@ -117,7 +117,7 @@ namespace ab
             log_msg = GetText(Resource.String.initializing_db_demo_data);
             DatabaseContext db = new DatabaseContext(gs.DatabasePathBase);
             AddSplashText(log_msg);
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Tracert, log_msg, TAG);
             await db.Database.EnsureCreatedAsync();
 
             try
@@ -127,6 +127,7 @@ namespace ab
                 _ = db.Hardwares.FirstOrDefault();
                 _ = db.CloudMessages.FirstOrDefault();
                 _ = db.TelegramMessages.FirstOrDefault();
+                _ = db.TelegramUsers.FirstOrDefault();
                 _ = db.PortsHardwares.FirstOrDefault();
             }
             catch (Exception ex)
@@ -152,21 +153,27 @@ namespace ab
             if (await db.Users.CountAsync() == 0)
             {
                 log_msg = GetText(Resource.String.load_demo_users);
-                await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);
+                logsDB.AddLogRow(LogStatusesEnum.Tracert, log_msg, TAG);
                 AddSplashText(log_msg);
-                await db.Users.AddAsync(new UserModel { Name = "Tom", Email = "tom@gmail.com", Phone = "+79995554422", TelegramId = "00000000000", AlarmSubscriber = true, CommandsAllowed = true });
-                await db.Users.AddAsync(new UserModel { Name = "Alice", Email = "alice@gmail.com", Phone = "+75556664411", TelegramId = "159357456258", AlarmSubscriber = false, CommandsAllowed = true });
+                await db.Users.AddAsync(new UserModel { Name = "Tom", Email = "tom@gmail.com", Phone = "+79995554422", AlarmSubscriber = true, CommandsAllowed = true });
+                await db.Users.AddAsync(new UserModel { Name = "Alice", Email = "alice@gmail.com", Phone = "+75556664411", AlarmSubscriber = false, CommandsAllowed = true });
                 await db.SaveChangesAsync();
             }
             if (await db.Hardwares.CountAsync() == 0)
             {
                 log_msg = GetText(Resource.String.load_demo_hardwares);
-                await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);
+                logsDB.AddLogRow(LogStatusesEnum.Tracert, log_msg, TAG);
                 AddSplashText(log_msg);
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Home", Address = "192.168.2.114", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Outdoor", Address = "192.168.1.6", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
                 await db.SaveChangesAsync();
             }
+            //if (await db.TelegramUsers.CountAsync() == 0)
+            //{
+            //    await db.TelegramUsers.AddAsync(new TelegramUserModel { Name = "telegram user 1", LinkedUserId = 1, TelegramId = 111111111111, TelegramParentBotId = 3333333333, UserName = "user_name_1" });
+            //    await db.TelegramUsers.AddAsync(new TelegramUserModel { Name = "telegram user 2", LinkedUserId = 2, TelegramId = 222222222222, TelegramParentBotId = 4444444444, UserName = "user_name_2" });
+            //    await db.SaveChangesAsync();
+            //}
 #endif
 
             using (StreamReader sr = new StreamReader(Assets.Open("bootstrap.min.css")))
@@ -262,7 +269,7 @@ namespace ab
             }
 
             log_msg = GetText(Resource.String.finish_initializing_application);
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, log_msg, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Tracert, log_msg, TAG);
             AddSplashText(log_msg);
             isCompleted = true;
             StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));

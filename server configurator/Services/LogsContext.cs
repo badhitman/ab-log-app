@@ -31,11 +31,14 @@ namespace ab.Services
 
         public DbSet<LogRowModel> Logs { get; set; }
 
-        public async Task<LogRowModel> AddLogRowAsync(LogStatusesEnum logStatus, string Message, string tag)
+        public LogRowModel AddLogRow(LogStatusesEnum logStatus, string Message, string tag)
         {
             LogRowModel logRow = new LogRowModel() { Status = logStatus, Name = Message, TAG = tag };
-            await Logs.AddAsync(logRow);
-            await SaveChangesAsync();
+            lock (DbLocker)
+            {
+                Logs.Add(logRow);
+                SaveChanges();
+            }
             return logRow;
         }
 

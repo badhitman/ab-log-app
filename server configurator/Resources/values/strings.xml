@@ -55,20 +55,20 @@
   <string name="footer_text_with_remove_user">Wanted! Deleting user? This action cannot be undone!</string>
 
   <string name="alarms_title">Alarms *</string>
-  <string name="alarm_short_label">{A} *</string>
+  <string name="alarm_short_label">{a} *</string>
   <string name="interpretation_alarm_for_hardware">*  sending alarms to users</string>
   <string name="interpretation_alarm_for_user">*  receive notifications from the server/controller</string>
 
   <string name="commands_title">Commands **</string>
-  <string name="command_short_label">[C] **</string>
+  <string name="command_short_label">[c] **</string>
   <string name="interpretation_command_for_hardware">**  command execution from remote users</string>
   <string name="interpretation_command_for_user">**  allow sending commands to the server/controller</string>
 
   <string name="hardware_adding_subtitle">Add connected hardware</string>
 
-  <string name="phone_hint">Phone: +79994443322</string>
+  <string name="phone_hint">Phone: +79990003311</string>
   <string name="email_hint">E-mail: my@domain.com</string>
-  <string name="telegram_hint">Telegram id: 45678912345</string>
+  <string name="telegram_hint">Telegram user</string>
 
   <string name="nav_sub_header_title">configurator</string>
   <string name="about_app_information">Application:\n Xamarin AndroidX .Net C# (db: SQLite) / Android version 5.0 and latter\n\nOpen source project:\n  https://github.com/badhitman/ab-log-app \n\nHardware oficial site/shop:\n  https://ab-log.ru </string>
@@ -144,4 +144,7 @@
   <string name="telegram_bot_private_token_title">Telegram bot private token</string>
   <string name="telegram_bot_private_token_info">The secret authorization key that you received from @BotFather</string>
   <string name="check_token_title">Check the token</string>
+  <string name="telegram_bot_survey_interval_title">TelegramBot survey interval (sec.)</string>
+  <string name="telegram_bot_survey_interval_subtitle">To disable it specify a value equal to or less than zero</string>
+  <string name="telegram_bot_is_not_configured_title">Telegram bot is not configured</string>
 </resources>

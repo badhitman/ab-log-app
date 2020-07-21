@@ -26,11 +26,11 @@ namespace ab.Services
             httpServer = new HttpListener();
         }
 
-        public async void StartForegroundService(int service_port)
+        public void StartForegroundService(int service_port)
         {
             string msg = $"StartForegroundService(port={service_port})";
             Log.Debug(TAG, msg);
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, msg, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Tracert, msg, TAG);
 
             HttpListenerPort = service_port;
             httpServer.Prefixes.Add($"http://*:{service_port}/");
@@ -38,10 +38,10 @@ namespace ab.Services
             IAsyncResult result = httpServer.BeginGetContext(new AsyncCallback(ListenerCallback), httpServer);
         }
 
-        public async void StopForegroundService()
+        public void StopForegroundService()
         {
             Log.Debug(TAG, "StopForegroundService()");
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, "StopForegroundService()", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Tracert, "StopForegroundService()", TAG);
 
             httpServer.Stop();
             httpServer.Prefixes.Clear();
@@ -60,7 +60,7 @@ namespace ab.Services
 
             string s_request = $"ListenerCallback() - request: {request.Url}";
             Log.Debug(TAG, s_request);
-            await logsDB.AddLogRowAsync(LogStatusesEnum.Tracert, s_request, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Tracert, s_request, TAG);
 
             // Obtain a response object.
             HttpListenerResponse response = context.Response;

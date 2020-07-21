@@ -29,6 +29,8 @@ namespace ab
         protected AppCompatRadioButton use_http_radio_button;
         protected AppCompatRadioButton use_mqtt_radio_button;
 
+        protected AppCompatEditText telegram_bot_interval;
+
         protected AppCompatButton service_start_button;
         protected AppCompatButton service_stop_button;
 
@@ -62,6 +64,9 @@ namespace ab
 
             service_tcp_port = FindViewById<AppCompatEditText>(Resource.Id.service_port);
             service_tcp_port.Text = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.service_port), 8080).ToString();
+
+            telegram_bot_interval = FindViewById<AppCompatEditText>(Resource.Id.telegram_bot_interval);
+            telegram_bot_interval.Text = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.telegram_bot_interval), 0).ToString();
 
             service_start_button = FindViewById<AppCompatButton>(Resource.Id.service_start_button);
             service_stop_button = FindViewById<AppCompatButton>(Resource.Id.service_stop_button);
@@ -111,6 +116,7 @@ namespace ab
 
                 service_start_button.Enabled = false;
                 service_tcp_port.Enabled = false;
+                telegram_bot_interval.Enabled = false;
                 use_http_radio_button.Enabled = false;
                 use_http_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
                 use_mqtt_radio_button.Enabled = false;
@@ -123,8 +129,11 @@ namespace ab
 
                 service_stop_button.Enabled = false;
 
-                service_tcp_port.TextChanged += ServicePort_TextChanged;
+                service_tcp_port.TextChanged += Input_TextChanged;
                 service_tcp_port.Enabled = true;
+
+                telegram_bot_interval.TextChanged += Input_TextChanged;
+                telegram_bot_interval.Enabled = true;
 
                 use_http_radio_button.Enabled = true;
                 use_http_radio_button.CheckedChange += UseProtocolRadioButton_CheckedChange;
@@ -167,7 +176,7 @@ namespace ab
 
             service_start_button.Click -= HandlerServiceStarterButton_Click;
             service_stop_button.Click -= HandlerServiceStarterButton_Click;
-            service_tcp_port.TextChanged -= ServicePort_TextChanged;
+            service_tcp_port.TextChanged -= Input_TextChanged;
             use_http_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
             use_mqtt_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
 
@@ -183,8 +192,11 @@ namespace ab
             service_stop_button.Click += HandlerServiceStarterButton_Click;
             service_stop_button.Enabled = true;
 
-            service_tcp_port.TextChanged -= ServicePort_TextChanged;
+            service_tcp_port.TextChanged -= Input_TextChanged;
             service_tcp_port.Enabled = false;
+
+            telegram_bot_interval.TextChanged -= Input_TextChanged;
+            telegram_bot_interval.Enabled = false;
 
             use_http_radio_button.CheckedChange -= UseProtocolRadioButton_CheckedChange;
             use_http_radio_button.Enabled = false;
@@ -203,8 +215,11 @@ namespace ab
             service_stop_button.Click -= HandlerServiceStarterButton_Click;
             service_stop_button.Enabled = false;
 
-            service_tcp_port.TextChanged += ServicePort_TextChanged;
+            service_tcp_port.TextChanged += Input_TextChanged;
             service_tcp_port.Enabled = true;
+
+            telegram_bot_interval.TextChanged += Input_TextChanged;
+            telegram_bot_interval.Enabled = true;
 
             use_http_radio_button.CheckedChange += UseProtocolRadioButton_CheckedChange;
             use_http_radio_button.Enabled = true;
@@ -233,6 +248,18 @@ namespace ab
 
             startServiceIntent.SetAction(Constants.ACTION_START_SERVICE);
             stopServiceIntent.SetAction(Constants.ACTION_STOP_SERVICE);
+
+            long telegramBotId = Preferences.Get(Constants.TELEGRAM_BOT_ID, (long)0);
+            string token = Preferences.Get(base.Resources.GetResourceEntryName(Resource.Id.editTextTelegramBotToken), string.Empty);
+            if (telegramBotId > 0 && !string.IsNullOrWhiteSpace(token))
+            {
+                startServiceIntent.PutExtra(Constants.TELEGRAM_BOT_TOKEN, token);
+                startServiceIntent.PutExtra(Constants.TELEGRAM_BOT_SURVEY_INTERVAL, Preferences.Get(Resources.GetResourceEntryName(Resource.Id.telegram_bot_interval), 3));
+            }
+            else
+            {
+                Toast.MakeText(this, GetText(Resource.String.telegram_bot_is_not_configured_title), ToastLength.Long).Show();
+            }
 
             switch (button.Id)
             {
@@ -269,7 +296,7 @@ namespace ab
             Preferences.Set(Resources.GetResourceEntryName(auth_req.Id), auth_req.Checked);
         }
 
-        private void ServicePort_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
+        private void Input_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
             AppCompatEditText text_field = (AppCompatEditText)sender;
             if (text_field.InputType == Android.Text.InputTypes.ClassNumber)

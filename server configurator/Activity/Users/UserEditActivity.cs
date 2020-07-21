@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ab.Model;
 using ab.Services;
@@ -24,6 +25,8 @@ namespace ab
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            UserFooterLayout = FindViewById<LinearLayout>(Resource.Id.user_footer_layout);
+
             ReadView();
 
             lock (DatabaseContext.DbLocker)
@@ -42,9 +45,6 @@ namespace ab
                         UserPhone.Text = err_title;
                         UserPhone.Enabled = false;
 
-                        UserTelegram.Text = err_title;
-                        UserTelegram.Enabled = false;
-
                         UserAlarmSubscribing.Enabled = false;
                         UserCommandsAllowed.Enabled = false;
 
@@ -60,7 +60,6 @@ namespace ab
                     UserName.Text = user?.Name;
                     UserEmail.Text = user?.Email;
                     UserPhone.Text = user?.Phone;
-                    UserTelegram.Text = user?.TelegramId;
                     UserAlarmSubscribing.Checked = user.AlarmSubscriber;
                     UserCommandsAllowed.Checked = user.CommandsAllowed;
                 }
@@ -74,6 +73,22 @@ namespace ab
             buttonDeleteUser.Click += ButtonDeleteUser_Click;
             buttonDeleteUser.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             UserFooterLayout.AddView(buttonDeleteUser);
+
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+                    List<TelegramUserModel> telegram_users = db.TelegramUsers.Where(x => x.LinkedUserId == userId).ToList();
+                    if (telegram_users.Count > 0)
+                    {
+                        UserFooterLayout.AddView(new TextView(this) { Text = "Telegram users" });
+                        foreach (TelegramUserModel t_user in telegram_users)
+                        {
+                            UserFooterLayout.AddView(new TextView(this) { Text = $"  ~ {t_user}" });
+                        }
+                    }
+                }
+            }
         }
 
         private void ButtonDeleteUser_Click(object sender, EventArgs e)
@@ -85,7 +100,6 @@ namespace ab
             UserName.Enabled = false;
             UserEmail.Enabled = false;
             UserPhone.Enabled = false;
-            UserTelegram.Enabled = false;
             UserAlarmSubscribing.Enabled = false;
             UserCommandsAllowed.Enabled = false;
             UserCardSubHeader.Text = GetText(Resource.String.delete_user_card_sub_title);
@@ -138,7 +152,6 @@ namespace ab
                     user.Name = UserName.Text.Trim();
                     user.Email = UserEmail.Text.Trim();
                     user.Phone = UserPhone.Text.Trim();
-                    user.TelegramId = UserTelegram.Text.Trim();
 
                     user.AlarmSubscriber = UserAlarmSubscribing.Checked;
                     user.CommandsAllowed = UserCommandsAllowed.Checked;

@@ -25,7 +25,7 @@
             android:gravity="center_horizontal"
             android:typeface="serif"
             android:layout_marginBottom="10dp" />
-
+        
         <TextView
             android:text="@string/telegram_bot_private_token_title"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -52,11 +52,27 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:minWidth="25px"
-            android:minHeight="25px"
+            android:minHeight="15px"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutCheckTelegramBotToken" />
+
+        <RelativeLayout
+            android:minWidth="25px"
+            android:minHeight="925dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_light">
+
+            <android.support.v7.widget.RecyclerView
+                android:minWidth="25px"
+                android:minHeight="925dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:id="@+id/recyclerViewTelegramUsersList" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

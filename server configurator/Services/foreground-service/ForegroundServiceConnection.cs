@@ -36,11 +36,11 @@ namespace ab.Services
             IsConnected = Binder != null;
         }
 
-        public async void OnServiceDisconnected(ComponentName name)
+        public void OnServiceDisconnected(ComponentName name)
         {
             string msg = $"OnServiceDisconnected {name.ClassName}";
             Log.Error(TAG, msg);
-            await logsDB.AddLogRowAsync(Model.LogStatusesEnum.Warning, msg, TAG);
+            logsDB.AddLogRow(Model.LogStatusesEnum.Warning, msg, TAG);
 
             IsConnected = false;
             Binder = null;

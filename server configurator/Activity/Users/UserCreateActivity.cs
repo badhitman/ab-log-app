@@ -28,7 +28,6 @@ namespace ab
         protected AppCompatEditText UserName;
         protected AppCompatEditText UserEmail;
         protected AppCompatEditText UserPhone;
-        protected AppCompatEditText UserTelegram;
 
         protected Switch UserAlarmSubscribing;
         protected Switch UserCommandsAllowed;
@@ -47,7 +46,6 @@ namespace ab
             UserName = FindViewById<AppCompatEditText>(Resource.Id.user_name);
             UserEmail = FindViewById<AppCompatEditText>(Resource.Id.user_email);
             UserPhone = FindViewById<AppCompatEditText>(Resource.Id.user_phone);
-            UserTelegram = FindViewById<AppCompatEditText>(Resource.Id.user_telegram);
 
             UserAlarmSubscribing = FindViewById<Switch>(Resource.Id.user_alarms_switch);
             UserCommandsAllowed = FindViewById<Switch>(Resource.Id.user_commands_switch);
@@ -97,10 +95,6 @@ namespace ab
                     {
                         errMsg = GetText(Resource.String.error_duplicate_phone_user) + System.Environment.NewLine;
                     }
-                    if (!string.IsNullOrWhiteSpace(UserTelegram.Text) && db.Users.Where(x => x.TelegramId.Trim().ToLower() == UserTelegram.Text.ToLower() && x.Id != userId).Any())
-                    {
-                        errMsg = GetText(Resource.String.error_duplicate_telegram_user) + System.Environment.NewLine;
-                    }
                 }
             }
 
@@ -129,8 +123,7 @@ namespace ab
                         CommandsAllowed = UserCommandsAllowed.Checked,
                         Name = UserName.Text.Trim(),
                         Email = UserEmail.Text.Trim(),
-                        Phone = UserPhone.Text.Trim(),
-                        TelegramId = UserTelegram.Text.Trim()
+                        Phone = UserPhone.Text.Trim()
                     };
                     db.Users.Add(user);
                     db.SaveChanges();

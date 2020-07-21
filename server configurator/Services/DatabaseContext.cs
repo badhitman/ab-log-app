@@ -16,6 +16,7 @@ namespace ab.Services
         public DbSet<HardwareModel> Hardwares { get; set; }
         public DbSet<CloudEmailMessageModel> CloudMessages { get; set; }
         public DbSet<TelegramMessageModel> TelegramMessages { get; set; }
+        public DbSet<TelegramUserModel> TelegramUsers { get; set; }
         public DbSet<PortsHardwaresModel> PortsHardwares { get; set; }
 
         public DatabaseContext(string databasePath)

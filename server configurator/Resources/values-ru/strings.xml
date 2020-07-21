@@ -55,20 +55,18 @@
   <string name="footer_text_with_remove_user">Внимание! Удаление пользователя? Данное действие невозможно будет отменить!</string>
 
   <string name="alarms_title">Информирование *</string>
-  <string name="alarm_short_label">{И} *</string>
+  <string name="alarm_short_label">{i} *</string>
   <string name="interpretation_alarm_for_hardware">*  отправка уведомлений пользователям</string>
   <string name="interpretation_alarm_for_user">*  получение уведомлений от сервера</string>
 
   <string name="commands_title">Команды **</string>
-  <string name="command_short_label">[К] **</string>
+  <string name="command_short_label">[k] **</string>
   <string name="interpretation_command_for_hardware">**  выполнение команд удалённых пользователей</string>
   <string name="interpretation_command_for_user">**  разрешение на отправку команд серверу</string>
 
   <string name="hardware_adding_subtitle">Добавление подключённого к сети устройства</string>
 
   <string name="phone_hint">Телефон: +79994443322</string>
-  <string name="email_hint">E-mail: my@domain.com</string>
-  <string name="telegram_hint">Telegram id: 45678912345</string>
 
   <string name="nav_sub_header_title">конфигуратор</string>
   <string name="about_app_information">Приложение:\n Xamarin AndroidX .Net C# SQLite / Android версии 5.0 и выше\n\nOpen source проект:\n  https://github.com/badhitman/ab-log-app \n\nОфициальный сайт производителя контроллеров:\n  https://ab-log.ru </string>
@@ -136,4 +134,7 @@
   <string name="telegram_bot_private_token_title">Приватный ключ Telegram bot</string>
   <string name="telegram_bot_private_token_info">Секретный ключ авторизации, который вы получили от @BotFather</string>
   <string name="check_token_title">Проверить токен</string>
+  <string name="telegram_bot_survey_interval_title">Интервал опроса TelegramBot (сек.)</string>
+  <string name="telegram_bot_survey_interval_subtitle">Для отключения укажите значение равное или меньшее нуля</string>
+  <string name="telegram_bot_is_not_configured_title">Telegram bot не настроен</string>
 </resources>

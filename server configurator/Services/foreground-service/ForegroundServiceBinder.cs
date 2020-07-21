@@ -31,21 +31,21 @@ namespace ab.Services
             {
                 string msg = "Can't start foreground service. Service is null";
                 Log.Error(TAG, msg);
-                await logsDB.AddLogRowAsync(Model.LogStatusesEnum.Error, msg, TAG);
+                logsDB.AddLogRow(Model.LogStatusesEnum.Error, msg, TAG);
 
                 return;
             }
             Service.StartForegroundService(foreground_service_port);
         }
 
-        public async void StopForegroundService()
+        public void StopForegroundService()
         {
             Log.Debug(TAG, "StopForegroundService()");
             if (Service == null)
             {
                 string msg = "Can't stop foreground service. Service is null";
                 Log.Error(TAG, msg);
-                await logsDB.AddLogRowAsync(Model.LogStatusesEnum.Error, msg, TAG);
+                logsDB.AddLogRow(Model.LogStatusesEnum.Error, msg, TAG);
 
                 return;
             }

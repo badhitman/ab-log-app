@@ -15,34 +15,32 @@ namespace ab.Services
     {
         public event EventHandler<int> ItemClick;
 
-        public override int ItemCount { get { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.Users.Count(); } } }
+        public override int ItemCount { get { lock (DatabaseContext.DbLocker) { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.Users.Count(); } } } }
 
         void OnClick(int position)
         {
-            if (ItemClick != null)
-                ItemClick(this, position);
+            ItemClick?.Invoke(this, position);
         }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            UserViewHolder vh = holder as UserViewHolder;
+            UserViewHolder userViewHolder = holder as UserViewHolder;
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
                     UserModel user = db.Users.Skip(position).FirstOrDefault();
-                    vh.Name.Text = user.Name;
-                    vh.AlarmSubscriber.Text = user.AlarmSubscriber ? "{A}" : " ";
-                    vh.CommandsAllowed.Text = user.CommandsAllowed ? "[C]" : " ";
-                    vh.Email.Text = $"e-mail: {user.Email}";
-                    vh.Phone.Text = $"phone: {user.Phone}";
-                    vh.TelegramId.Text = $"telegram: {user.TelegramId}";
+                    userViewHolder.Name.Text = user.Name;
+                    userViewHolder.AlarmSubscriber.Text = user.AlarmSubscriber ? "{a}" : " ";
+                    userViewHolder.CommandsAllowed.Text = user.CommandsAllowed ? "[c]" : " ";
+                    userViewHolder.Email.Text = $"e-mail: {user.Email}";
+                    userViewHolder.Phone.Text = $"phone: {user.Phone}";
                 }
             }
-            if (string.IsNullOrWhiteSpace(vh.AlarmSubscriber.Text + vh.CommandsAllowed.Text))
+            if (string.IsNullOrWhiteSpace(userViewHolder.AlarmSubscriber.Text + userViewHolder.CommandsAllowed.Text))
             {
-                vh.CommandsAllowed.Text = "≡ OFF ≡";
-                vh.CommandsAllowed.SetTextColor(Color.LightGray);
+                userViewHolder.CommandsAllowed.Text = "≡ off ≡";
+                userViewHolder.CommandsAllowed.SetTextColor(Color.LightGray);
             }
         }
 
@@ -50,8 +48,8 @@ namespace ab.Services
         {
             View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.user_list_item, parent, false);
 
-            UserViewHolder vh = new UserViewHolder(itemView, OnClick);
-            return vh;
+            UserViewHolder userViewHolder = new UserViewHolder(itemView, OnClick);
+            return userViewHolder;
         }
     }
 }

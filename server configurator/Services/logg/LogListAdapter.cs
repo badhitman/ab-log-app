@@ -11,7 +11,7 @@ namespace ab.Services
 {
     public class LogListAdapter : RecyclerView.Adapter
     {
-        public override int ItemCount { get { using (LogsContext db = new LogsContext()) { return db.Logs.Count(); } } }
+        public override int ItemCount { get { lock (LogsContext.DbLocker) { using (LogsContext db = new LogsContext()) { return db.Logs.Count(); } } } }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
@@ -20,7 +20,7 @@ namespace ab.Services
             {
                 using (LogsContext db = new LogsContext())
                 {
-                    LogRowModel row = db.Logs.OrderByDescending(x=>x.CreatedAt).Skip(position).FirstOrDefault();
+                    LogRowModel row = db.Logs.OrderByDescending(x => x.CreatedAt).Skip(position).FirstOrDefault();
                     vh.LogMessageTextMessage.Text = row.Name;
                     vh.LogMessageDateTimeStamp.Text = row.CreatedAt.ToString();
                     vh.LogMessageStatus.Text = row.Status.ToString();

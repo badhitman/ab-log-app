@@ -12,5 +12,9 @@
         public const string ACTION_STOP_SERVICE = "ab.action.STOP_SERVICE";
         public const string ACTION_RESTART_SERVICE = "ab.action.RESTART_SERVICE";
         public const string ACTION_SERVICE_ACTIVITY = "ab.action.SERVICE_ACTIVITY";
+
+        public const string TELEGRAM_BOT_TOKEN = "ab.action.TELEGRAM_BOT_TOKEN";
+        public const string TELEGRAM_BOT_SURVEY_INTERVAL = "ab.action.TELEGRAM_BOT_SURVEY_INTERVAL";
+        public const string TELEGRAM_BOT_ID = "ab.action.TELEGRAM_BOT_ID";
     }
 }

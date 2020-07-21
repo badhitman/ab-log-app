@@ -12,7 +12,6 @@ namespace ab.Services
     {
         public TextView Email { get; private set; }
         public TextView Phone { get; private set; }
-        public TextView TelegramId { get; private set; }
 
         protected override int _nameId => Resource.Id.user_list_item;
         protected override int _alarmId => Resource.Id.user_list_item_alarm_subscribed;
@@ -22,7 +21,6 @@ namespace ab.Services
         {
             Email = itemView.FindViewById<TextView>(Resource.Id.user_list_item_email);
             Phone = itemView.FindViewById<TextView>(Resource.Id.user_list_item_phone);
-            TelegramId = itemView.FindViewById<TextView>(Resource.Id.user_list_item_telegram);
         }
     }
 }
