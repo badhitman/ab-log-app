@@ -11,6 +11,6 @@ namespace ab.Model
         public string Email { get; set; }
         public string Phone { get; set; }
 
-        public List<TelegramUserModel> TelegramUsers { get; set; }
+        //public List<TelegramUserModel> TelegramUsers { get; set; }
     }
 }

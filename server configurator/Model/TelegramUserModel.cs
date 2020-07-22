@@ -9,9 +9,9 @@ namespace ab.Model
         public long TelegramParentBotId { get; set; }
         public long TelegramId { get; set; }
         public string UserName { get; set; }
-        
+
         public int LinkedUserId { get; set; }
-        public UserModel LinkedUser { get; set; }
+        //public UserModel LinkedUser { get; set; }
 
         public override string ToString()
         {

@@ -700,6 +700,7 @@ namespace ab
                             {
                                 err_msg += System.Environment.NewLine + ex.InnerException.Message;
                             }
+                            Log.Error(TAG, err_msg);
                             Toast.MakeText(this, err_msg, ToastLength.Long);
                             return null;
                         }

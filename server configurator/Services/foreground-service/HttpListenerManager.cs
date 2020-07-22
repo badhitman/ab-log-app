@@ -68,50 +68,75 @@ namespace ab.Services
 
             // Obtain a response object.
             HttpListenerResponse response = context.Response;
-            // Construct a response.
-            string responseString = "Hello world!";
+
+            string remote_ip_address = request.RemoteEndPoint.Address.ToString();
+            string clear_query = request.Url.Query;
+            if (clear_query.StartsWith("?"))
+            {
+                clear_query = clear_query.Substring(1);
+            }
+
+            string log_msg = $"incoming http request (from > {remote_ip_address}): {clear_query}";
+            //log_msg = "telegramClient?.Me == null";
+            Log.Info(TAG, log_msg);
+            using (LogsContext log = new LogsContext())
+            {
+                log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
+            }
+
+            HardwareModel hardwareModel;
+            string hw_name = string.Empty;
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+                    hardwareModel = db.Hardwares.FirstOrDefault(x => x.Address == remote_ip_address);
+                    hw_name = hardwareModel?.Name ?? string.Empty;
+                    if (string.IsNullOrEmpty(hw_name))
+                    {
+                        hw_name = remote_ip_address;
+                    }
+                    else
+                    {
+                        hw_name += $" ({remote_ip_address})";
+                    }
+                }
+            }
 
             string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);
             if (!string.IsNullOrWhiteSpace(token))
             {
-                string log_msg = $"incoming http request: {request.Url}";
                 TelegramClientCore telegramClient = new TelegramClientCore(token);
-                if (telegramClient?.Me == null)
-                {
-                    log_msg = "telegramClient?.Me == null";
-                    Log.Info(TAG, log_msg);
-                    using (LogsContext log = new LogsContext())
-                    {
-                        log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
-                    }
-                    goto without_telegram;
-                }
-                else
+                if (telegramClient?.Me != null)
                 {
                     lock (DatabaseContext.DbLocker)
                     {
                         using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                         {
-                            foreach (UserModel user in db.Users.Include(x => x.TelegramUsers).Where(x => x.AlarmSubscriber))
+                            foreach (UserModel user in db.Users.Where(x => x.AlarmSubscriber))
                             {
-                                foreach (TelegramUserModel telegramUser in user.TelegramUsers)
+                                foreach (TelegramUserModel telegramUser in db.TelegramUsers.Where(xx => xx.LinkedUserId == user.Id))
                                 {
-                                    telegramClient.sendMessage(telegramUser.TelegramId.ToString(), log_msg);
+                                    telegramClient.sendMessage(telegramUser.TelegramId.ToString(), $"Сообщение от: {hw_name}{Environment.NewLine}{clear_query}");
                                 }
                             }
                         }
                     }
                 }
-            without_telegram:
-                byte[] buffer = Encoding.UTF8.GetBytes(responseString);
-                // Get a response stream and write the response to it.
-                response.ContentLength64 = buffer.Length;
-                System.IO.Stream output = response.OutputStream;
-                await output.WriteAsync(buffer, 0, buffer.Length);
-                // You must close the output stream.
-                output.Close();
-                result = httpServer.BeginGetContext(new AsyncCallback(ListenerCallback), httpServer);
             }
+
+
+
+            // Construct a response.
+            string responseString = "Hello world!";
+            byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+            // Get a response stream and write the response to it.
+            response.ContentLength64 = buffer.Length;
+            System.IO.Stream output = response.OutputStream;
+            await output.WriteAsync(buffer, 0, buffer.Length);
+            // You must close the output stream.
+            output.Close();
+            result = httpServer.BeginGetContext(new AsyncCallback(ListenerCallback), httpServer);
         }
     }
 }

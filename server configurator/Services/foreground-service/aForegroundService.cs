@@ -5,9 +5,12 @@
 using ab.Model;
 using Android.App;
 using Android.Content;
+using Android.Nfc;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -125,8 +128,19 @@ namespace ab.Services
                                         TelegramParentBotId = telegramClient.Me.id
                                     };
                                     db.TelegramUsers.Add(telegramUserModel);
-                                    db.SaveChanges();
-
+                                    try
+                                    {
+                                        db.SaveChanges();
+                                    }
+                                    catch (DbUpdateException ex)
+                                    {
+                                        string err_msg = ex.Message;
+                                        if (ex.InnerException != null)
+                                        {
+                                            err_msg += System.Environment.NewLine + ex.InnerException.Message;
+                                        }
+                                        Log.Error(TelegramBotTAG, err_msg);
+                                    }
                                     log_msg = $"new telegram user: {telegramUserModel}";
                                     Log.Info(TelegramBotTAG, log_msg);
                                     using (LogsContext log = new LogsContext())
