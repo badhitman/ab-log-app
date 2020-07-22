@@ -10,9 +10,12 @@ using Android.OS;
 using Android.Util;
 using Android.Webkit;
 using Android.Widget;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -53,7 +56,7 @@ namespace ab
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    hardware = db.Hardwares.Find(id);
+                    hardware = db.Hardwares.Include(x => x.Ports).FirstOrDefault(x => x.Id == id);
                 }
             }
             hardwareCardSubHeader.Text = hardware.Name;
@@ -91,6 +94,43 @@ namespace ab
             webView.SetWebViewClient(myWebViewClient);
             string html_raw = string.Empty;
 
+            string cf = uri.GetQueryParameter("cf") ?? string.Empty;
+            string pt = uri.GetQueryParameter("pt") ?? string.Empty;
+            string eip = uri.GetQueryParameter("eip") ?? string.Empty;
+            string pwd = uri.GetQueryParameter("pwd") ?? string.Empty;
+
+            string pn = uri.GetQueryParameter("pn") ?? string.Empty;
+            string pty = uri.GetQueryParameter("pty") ?? string.Empty;
+            string set_port_name = uri.GetQueryParameter("set_port_name");
+            if (set_port_name != null)
+            {
+                url = url
+                    .Replace($"set_port_name={WebUtility.UrlEncode(set_port_name)}", string.Empty)
+                    .Replace("?&", "?");
+
+                if (!string.IsNullOrEmpty(pn))
+                {
+                    PortHardwareModel portHardware = GetPortHardware(pn);
+                    if (portHardware == null)
+                    {
+                        return;
+                    }
+
+                    if (portHardware.Name != set_port_name)
+                    {
+                        portHardware.Name = set_port_name;
+                        lock (DatabaseContext.DbLocker)
+                        {
+                            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                            {
+                                db.PortsHardwares.Update(portHardware);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
+
             using (HttpClient client = new HttpClient())
             {
                 try
@@ -102,13 +142,11 @@ namespace ab
                 {
                     Toast.MakeText(this, ex.Message, ToastLength.Short).Show();
                     StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));
+                    return;
                 }
             }
 
-            string cf = uri.GetQueryParameter("cf") ?? string.Empty;
-            string pt = uri.GetQueryParameter("pt") ?? string.Empty;
-            string eip = uri.GetQueryParameter("eip") ?? string.Empty;
-            string pwd = uri.GetQueryParameter("pwd") ?? string.Empty;
+
 
             await Task.Run(() =>
             {
@@ -468,6 +506,12 @@ namespace ab
                 {
                     onload_js = MyWebViewClient.onload_pt_js;
 
+                    PortHardwareModel portHardware = GetPortHardware(pt);
+                    if (portHardware == null)
+                    {
+                        return;
+                    }
+
                     if (external_web_mode)
                     {
                         if (html_raw.Contains("selected>Out<option"))
@@ -487,7 +531,7 @@ namespace ab
                         html_raw = html_raw
                         .Replace($"<a href=/{hardware.Password}>Back</a>", $"<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/{hardware.Password}\">Back</a> <a class=\"btn btn-info btn-sm\" role=\"button\" onclick=\"window.location.reload()\">Reload</a>")//window.location.href = this
                         .Replace("<style>input,select{margin:1px}</style>", string.Empty)
-                        .Replace($"<form action=/{hardware.Password}/>", $"{System.Environment.NewLine}<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form action=\"/{hardware.Password}/\">{System.Environment.NewLine}")
+                        .Replace($"<form action=/{hardware.Password}/>", $"{System.Environment.NewLine}<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form action=\"/{hardware.Password}/\">{System.Environment.NewLine}<div class=\"form-group\"><label>Name</label><input type=\"text\" name=\"set_port_name\" class=\"form-control\" placeholder=\"Наименовние\" value=\"{portHardware.Name}\"></div>")
                         .Replace("<input type=submit value=Save>", "<input class=\"btn btn-outline-primary btn-block\" type=\"submit\" value=\"Save\"/>")
                         .Replace("</form>", $"{System.Environment.NewLine}</form>{System.Environment.NewLine}</div>{System.Environment.NewLine}</div>")
                         .Replace("Type <select", "Type <select class=\"form-control\"")
@@ -601,7 +645,13 @@ namespace ab
                     }
                 }
 
-                if (!external_web_mode && html_raw.Length > 12 && html_raw != "Unauthorized")
+                if (html_raw == "Unauthorized")
+                {
+                    html_raw +=
+                    "<div style=\"color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; margin-top: 1rem; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; box-sizing: border-box; font-size: 1rem; font-weight: 400; line-height: 1.5;\">" +
+                    $"Пароль доступа неверный</div>";
+                }
+                else if (!external_web_mode && html_raw.Length > 12 && html_raw != "Unauthorized")
                 {
                     html_raw +=
                     "<div style=\"color: #856404; background-color: #fff3cd; border-color: #ffeeba; margin-top: 1rem; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; box-sizing: border-box; font-size: 1rem; font-weight: 400; line-height: 1.5;\">" +
@@ -623,16 +673,41 @@ namespace ab
             HardwareSystemSettingsLayout.AddView(webView);
         }
 
-        protected override void OnResume()
+        private PortHardwareModel GetPortHardware(string port)
         {
-            base.OnResume();
-
-        }
-
-        protected override void OnPause()
-        {
-            base.OnPause();
-
+            int port_num = int.Parse(port);
+            PortHardwareModel portHardware = hardware.Ports.FirstOrDefault(x => x.PortNumb == port_num);
+            if (portHardware == null)
+            {
+                lock (DatabaseContext.DbLocker)
+                {
+                    using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                    {
+                        portHardware = new PortHardwareModel()
+                        {
+                            HardwareId = hardware.Id,
+                            PortNumb = port_num
+                        };
+                        db.PortsHardwares.Add(portHardware);
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            string err_msg = ex.Message;
+                            if (ex.InnerException != null)
+                            {
+                                err_msg += System.Environment.NewLine + ex.InnerException.Message;
+                            }
+                            Toast.MakeText(this, err_msg, ToastLength.Long);
+                            return null;
+                        }
+                        hardware.Ports.Add(portHardware);
+                    }
+                }
+            }
+            return portHardware;
         }
     }
 }

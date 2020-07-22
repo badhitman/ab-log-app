@@ -36,8 +36,6 @@ namespace ab
 
         bool isStarted = false;
 
-        //public static MqttBrokerConnection serviceConnection;
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Log.Debug(TAG, "OnCreate");

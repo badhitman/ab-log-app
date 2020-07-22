@@ -17,7 +17,7 @@ namespace ab.Services
         public DbSet<CloudEmailMessageModel> CloudMessages { get; set; }
         public DbSet<TelegramMessageModel> TelegramMessages { get; set; }
         public DbSet<TelegramUserModel> TelegramUsers { get; set; }
-        public DbSet<PortsHardwaresModel> PortsHardwares { get; set; }
+        public DbSet<PortHardwareModel> PortsHardwares { get; set; }
 
         public DatabaseContext(string databasePath)
         {
@@ -27,6 +27,18 @@ namespace ab.Services
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite($"Filename={_databasePath}");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserModel>().HasAlternateKey(u => u.Name);
+            modelBuilder.Entity<UserModel>().HasAlternateKey(u => u.Phone);
+            modelBuilder.Entity<UserModel>().HasAlternateKey(u => u.Email);
+
+            modelBuilder.Entity<HardwareModel>().HasAlternateKey(u => u.Name);
+            modelBuilder.Entity<HardwareModel>().HasAlternateKey(u => u.Address);
+
+            modelBuilder.Entity<PortHardwareModel>().HasAlternateKey(u => new { u.HardwareId, u.PortNumb });
         }
     }
 }

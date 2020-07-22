@@ -22,7 +22,7 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/MyTheme.Splash", MainLauncher = true)]
     public class SplashActivity : AppCompatActivity
     {
-        public static bool reWriteDataBase { get; } = false;
+        public static bool reWriteDataBase { get; } = true;
         public override void OnBackPressed() { }
         private LinearLayout main_splash;
 
