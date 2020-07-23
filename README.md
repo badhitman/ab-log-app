@@ -43,14 +43,14 @@ HTTP/MQTT сервис исполняется в "Запущеной служб�
 
 TelegramBot
 
-![TelegramBot 1](./screenshots/telegram-bot-1.png)
+![TelegramBot 1](./screenshots/telegram-bot-1.jpg)
 
-![TelegramBot 2](./screenshots/telegram-bot-2.png)
+![TelegramBot 2](./screenshots/telegram-bot-2.jpg)
 
-![TelegramBot 3](./screenshots/telegram-bot-3.png)
+![TelegramBot 3](./screenshots/telegram-bot-3.jpg)
 
-![TelegramBot 4](./screenshots/telegram-bot-4.png)
+![TelegramBot 4](./screenshots/telegram-bot-4.jpg)
 
-![TelegramBot 5](./screenshots/telegram-bot-5.png)
+![TelegramBot 5](./screenshots/telegram-bot-5.jpg)
 
-![TelegramBot 6](./screenshots/telegram-bot-6.png)
+![TelegramBot 6](./screenshots/telegram-bot-6.jpg)
