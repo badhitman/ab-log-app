@@ -13682,199 +13682,202 @@ namespace ab
 			public const int mqtt_broker_port_hint_default = 2131820696;
 			
 			// aapt resource value: 0x7F110099
-			public const int mqtt_topic_title = 2131820697;
+			public const int mqtt_protocol_is_not_supported = 2131820697;
 			
 			// aapt resource value: 0x7F11009A
-			public const int mqtt_user_name_title = 2131820698;
+			public const int mqtt_topic_title = 2131820698;
 			
 			// aapt resource value: 0x7F11009B
-			public const int mqtt_user_passwd_title = 2131820699;
+			public const int mqtt_user_name_title = 2131820699;
 			
 			// aapt resource value: 0x7F11009C
-			public const int mtrl_chip_close_icon_content_description = 2131820700;
+			public const int mqtt_user_passwd_title = 2131820700;
 			
 			// aapt resource value: 0x7F11009D
-			public const int mute_marker_title = 2131820701;
+			public const int mtrl_chip_close_icon_content_description = 2131820701;
 			
 			// aapt resource value: 0x7F11009E
-			public const int name_title = 2131820702;
-			
-			// aapt resource value: 0x7F1100A2
-			public const int navigation_drawer_close = 2131820706;
-			
-			// aapt resource value: 0x7F1100A3
-			public const int navigation_drawer_open = 2131820707;
+			public const int mute_marker_title = 2131820702;
 			
 			// aapt resource value: 0x7F11009F
-			public const int nav_header_title = 2131820703;
+			public const int name_title = 2131820703;
 			
-			// aapt resource value: 0x7F1100A0
-			public const int nav_sub_header = 2131820704;
-			
-			// aapt resource value: 0x7F1100A1
-			public const int nav_sub_header_title = 2131820705;
+			// aapt resource value: 0x7F1100A3
+			public const int navigation_drawer_close = 2131820707;
 			
 			// aapt resource value: 0x7F1100A4
-			public const int new_user_title = 2131820708;
+			public const int navigation_drawer_open = 2131820708;
 			
-			// aapt resource value: 0x7F1100A6
-			public const int notification_mqtt_broker_text = 2131820710;
+			// aapt resource value: 0x7F1100A0
+			public const int nav_header_title = 2131820704;
+			
+			// aapt resource value: 0x7F1100A1
+			public const int nav_sub_header = 2131820705;
+			
+			// aapt resource value: 0x7F1100A2
+			public const int nav_sub_header_title = 2131820706;
 			
 			// aapt resource value: 0x7F1100A5
-			public const int not_set = 2131820709;
+			public const int new_user_title = 2131820709;
 			
 			// aapt resource value: 0x7F1100A7
-			public const int ok_mute_button_with_remove_hardware = 2131820711;
+			public const int notification_mqtt_broker_text = 2131820711;
+			
+			// aapt resource value: 0x7F1100A6
+			public const int not_set = 2131820710;
 			
 			// aapt resource value: 0x7F1100A8
-			public const int ok_mute_button_with_remove_user = 2131820712;
+			public const int ok_mute_button_with_remove_hardware = 2131820712;
 			
 			// aapt resource value: 0x7F1100A9
-			public const int ok_title = 2131820713;
+			public const int ok_mute_button_with_remove_user = 2131820713;
 			
 			// aapt resource value: 0x7F1100AA
-			public const int orb_search_action = 2131820714;
+			public const int ok_title = 2131820714;
 			
 			// aapt resource value: 0x7F1100AB
-			public const int password_title = 2131820715;
+			public const int orb_search_action = 2131820715;
 			
 			// aapt resource value: 0x7F1100AC
-			public const int password_toggle_content_description = 2131820716;
+			public const int password_title = 2131820716;
 			
 			// aapt resource value: 0x7F1100AD
-			public const int path_password_eye = 2131820717;
+			public const int password_toggle_content_description = 2131820717;
 			
 			// aapt resource value: 0x7F1100AE
-			public const int path_password_eye_mask_strike_through = 2131820718;
+			public const int path_password_eye = 2131820718;
 			
 			// aapt resource value: 0x7F1100AF
-			public const int path_password_eye_mask_visible = 2131820719;
+			public const int path_password_eye_mask_strike_through = 2131820719;
 			
 			// aapt resource value: 0x7F1100B0
-			public const int path_password_strike_through = 2131820720;
+			public const int path_password_eye_mask_visible = 2131820720;
 			
 			// aapt resource value: 0x7F1100B1
-			public const int phone_hint = 2131820721;
+			public const int path_password_strike_through = 2131820721;
 			
 			// aapt resource value: 0x7F1100B2
-			public const int port_setting_title = 2131820722;
+			public const int phone_hint = 2131820722;
 			
 			// aapt resource value: 0x7F1100B3
-			public const int preference_cloud_email_pass_hint = 2131820723;
+			public const int port_setting_title = 2131820723;
 			
 			// aapt resource value: 0x7F1100B4
-			public const int preference_cloud_email_pop3_hint = 2131820724;
+			public const int preference_cloud_email_pass_hint = 2131820724;
 			
 			// aapt resource value: 0x7F1100B5
-			public const int preference_cloud_email_smtp_hint = 2131820725;
+			public const int preference_cloud_email_pop3_hint = 2131820725;
 			
 			// aapt resource value: 0x7F1100B6
-			public const int preference_cloud_first_email_address_hint = 2131820726;
+			public const int preference_cloud_email_smtp_hint = 2131820726;
 			
 			// aapt resource value: 0x7F1100B7
-			public const int preference_cloud_first_email_login_hint = 2131820727;
+			public const int preference_cloud_first_email_address_hint = 2131820727;
 			
 			// aapt resource value: 0x7F1100B8
-			public const int preference_cloud_first_email_title = 2131820728;
+			public const int preference_cloud_first_email_login_hint = 2131820728;
 			
 			// aapt resource value: 0x7F1100B9
-			public const int preference_cloud_second_email_address_hint = 2131820729;
+			public const int preference_cloud_first_email_title = 2131820729;
 			
 			// aapt resource value: 0x7F1100BA
-			public const int preference_cloud_second_email_login_hint = 2131820730;
+			public const int preference_cloud_second_email_address_hint = 2131820730;
 			
 			// aapt resource value: 0x7F1100BB
-			public const int preference_cloud_second_email_title = 2131820731;
+			public const int preference_cloud_second_email_login_hint = 2131820731;
 			
 			// aapt resource value: 0x7F1100BC
-			public const int preference_copied = 2131820732;
+			public const int preference_cloud_second_email_title = 2131820732;
 			
 			// aapt resource value: 0x7F1100BD
-			public const int protocol_title = 2131820733;
-			
-			// aapt resource value: 0x7F1100BF
-			public const int restarting_the_service_title = 2131820735;
+			public const int preference_copied = 2131820733;
 			
 			// aapt resource value: 0x7F1100BE
-			public const int restart_title = 2131820734;
+			public const int protocol_title = 2131820734;
 			
 			// aapt resource value: 0x7F1100C0
-			public const int saving_is_required = 2131820736;
+			public const int restarting_the_service_title = 2131820736;
+			
+			// aapt resource value: 0x7F1100BF
+			public const int restart_title = 2131820735;
 			
 			// aapt resource value: 0x7F1100C1
-			public const int search_menu_title = 2131820737;
+			public const int saving_is_required = 2131820737;
 			
 			// aapt resource value: 0x7F1100C2
-			public const int second_cloud_layout = 2131820738;
+			public const int search_menu_title = 2131820738;
 			
 			// aapt resource value: 0x7F1100C3
-			public const int second_cloud_mode_prompt = 2131820739;
+			public const int second_cloud_layout = 2131820739;
 			
 			// aapt resource value: 0x7F1100C4
-			public const int server_port_title = 2131820740;
+			public const int second_cloud_mode_prompt = 2131820740;
 			
 			// aapt resource value: 0x7F1100C5
-			public const int services_title = 2131820741;
+			public const int server_port_title = 2131820741;
 			
 			// aapt resource value: 0x7F1100C6
-			public const int source_github_title2 = 2131820742;
+			public const int services_title = 2131820742;
 			
 			// aapt resource value: 0x7F1100C7
-			public const int start_app_msg = 2131820743;
+			public const int source_github_title2 = 2131820743;
 			
 			// aapt resource value: 0x7F1100C8
-			public const int start_title = 2131820744;
+			public const int start_app_msg = 2131820744;
 			
 			// aapt resource value: 0x7F1100C9
-			public const int status_bar_notification_info_overflow = 2131820745;
+			public const int start_title = 2131820745;
 			
 			// aapt resource value: 0x7F1100CA
-			public const int stop_title = 2131820746;
+			public const int status_bar_notification_info_overflow = 2131820746;
 			
 			// aapt resource value: 0x7F1100CB
-			public const int summary_collapsed_preference_list = 2131820747;
+			public const int stop_title = 2131820747;
 			
 			// aapt resource value: 0x7F1100CC
-			public const int system_settings_title = 2131820748;
+			public const int summary_collapsed_preference_list = 2131820748;
 			
 			// aapt resource value: 0x7F1100CD
-			public const int telegram_bot_is_not_configured_title = 2131820749;
+			public const int system_settings_title = 2131820749;
 			
 			// aapt resource value: 0x7F1100CE
-			public const int telegram_bot_private_token_info = 2131820750;
+			public const int telegram_bot_is_not_configured_title = 2131820750;
 			
 			// aapt resource value: 0x7F1100CF
-			public const int telegram_bot_private_token_title = 2131820751;
+			public const int telegram_bot_private_token_info = 2131820751;
 			
 			// aapt resource value: 0x7F1100D0
-			public const int telegram_bot_survey_interval_subtitle = 2131820752;
+			public const int telegram_bot_private_token_title = 2131820752;
 			
 			// aapt resource value: 0x7F1100D1
-			public const int telegram_bot_survey_interval_title = 2131820753;
+			public const int telegram_bot_survey_interval_subtitle = 2131820753;
 			
 			// aapt resource value: 0x7F1100D2
-			public const int telegram_bot_title = 2131820754;
+			public const int telegram_bot_survey_interval_title = 2131820754;
 			
 			// aapt resource value: 0x7F1100D3
-			public const int telegram_hint = 2131820755;
+			public const int telegram_bot_title = 2131820755;
 			
 			// aapt resource value: 0x7F1100D4
-			public const int the_service_is_already_running_title = 2131820756;
+			public const int telegram_hint = 2131820756;
 			
 			// aapt resource value: 0x7F1100D5
-			public const int the_service_is_being_started_title = 2131820757;
+			public const int the_service_is_already_running_title = 2131820757;
 			
 			// aapt resource value: 0x7F1100D6
-			public const int the_service_is_stopped_title = 2131820758;
+			public const int the_service_is_being_started_title = 2131820758;
 			
 			// aapt resource value: 0x7F1100D7
-			public const int users_title = 2131820759;
+			public const int the_service_is_stopped_title = 2131820759;
 			
 			// aapt resource value: 0x7F1100D8
-			public const int v7_preference_off = 2131820760;
+			public const int users_title = 2131820760;
 			
 			// aapt resource value: 0x7F1100D9
-			public const int v7_preference_on = 2131820761;
+			public const int v7_preference_off = 2131820761;
+			
+			// aapt resource value: 0x7F1100DA
+			public const int v7_preference_on = 2131820762;
 			
 			static String()
 			{

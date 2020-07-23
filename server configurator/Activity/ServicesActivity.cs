@@ -140,7 +140,7 @@ namespace ab
             }
         }
 
-        private void UseProtocolRadioButton_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+        protected void UseProtocolRadioButton_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
         {
             AppCompatRadioButton radioButton = (AppCompatRadioButton)sender;
             Log.Debug(TAG, $"UseProtocolRadioButton_CheckedChange: { radioButton.Text} - {e.IsChecked}");
@@ -162,6 +162,13 @@ namespace ab
                     if (use_http_radio_button.Checked == e.IsChecked)
                     {
                         use_http_radio_button.Checked = !e.IsChecked;
+                    }
+                    if (e.IsChecked)
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            Toast.MakeText(this, Resource.String.mqtt_protocol_is_not_supported, ToastLength.Long);
+                        });
                     }
                     break;
             }
@@ -286,12 +293,6 @@ namespace ab
                     Log.Error(TAG, "HandlerServiceStarterButton_Click() - id");
                     break;
             }
-        }
-
-        private void MqttBrokerAuthReq_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
-        {
-            AppCompatCheckBox auth_req = (AppCompatCheckBox)sender;
-            Preferences.Set(Resources.GetResourceEntryName(auth_req.Id), auth_req.Checked);
         }
 
         private void Input_TextChanged(object sender, Android.Text.TextChangedEventArgs e)

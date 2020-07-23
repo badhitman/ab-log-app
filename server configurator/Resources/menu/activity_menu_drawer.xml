@@ -16,7 +16,8 @@
     <item
         android:id="@+id/nav_cloud_queue"
         android:icon="@drawable/ic_cloud_queue"
-        android:title="@string/cloud_title" />
+        android:title="@string/cloud_title"
+        android:enabled="false"/>
     <item
         android:id="@+id/nav_smart_button"
         android:icon="@drawable/ic_smart_button"

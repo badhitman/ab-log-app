@@ -6,8 +6,11 @@ using ab.Model;
 using Android.Util;
 using MQTTnet;
 using MQTTnet.Server;
+using System.Linq;
 using System.Net;
 using System.Text;
+using TelegramBotMin;
+using Xamarin.Essentials;
 
 namespace ab.Services
 {
@@ -55,20 +58,36 @@ namespace ab.Services
         {
             Log.Debug(TAG, "MqttConnectionValidator");
             logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttConnectionValidator - ClientId={connection_context.ClientId} Username={connection_context.Username}", TAG);
-            //.WithConnectionValidator(context => 
-            //{
-            //    if(context.Password == "")
-            //    {
-            //        context.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.BadUserNameOrPassword;
-            //        return;
-            //    }
-            //})
         }
 
         public void MqttMessageInterceptor(MqttApplicationMessageInterceptorContext message_context)
         {
             Log.Debug(TAG, "MqttMessageInterceptor");
-            logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={Encoding.UTF8.GetString(message_context.ApplicationMessage.Payload)}", TAG);
+            string PayloadTest = Encoding.UTF8.GetString(message_context.ApplicationMessage.Payload);
+            
+            logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={PayloadTest}", TAG);
+            string bot_message = $"В топике \"{message_context.ApplicationMessage.Topic}\" новое MQTT сообщение: {PayloadTest}";
+            //string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);
+            //if (!string.IsNullOrWhiteSpace(token))
+            //{
+            //    TelegramClientCore telegramClient = new TelegramClientCore(token);
+            //    if (telegramClient?.Me != null)
+            //    {
+            //        lock (DatabaseContext.DbLocker)
+            //        {
+            //            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+            //            {
+            //                foreach (UserModel user in db.Users.Where(x => x.AlarmSubscriber))
+            //                {
+            //                    foreach (TelegramUserModel telegramUser in db.TelegramUsers.Where(xx => xx.LinkedUserId == user.Id))
+            //                    {
+            //                        telegramClient.sendMessage(telegramUser.TelegramId.ToString(), bot_message.Trim());
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
             //.WithApplicationMessageInterceptor(context =>
             //{
             //    if (context.ApplicationMessage.Topic != mqtt_broker_topic)
