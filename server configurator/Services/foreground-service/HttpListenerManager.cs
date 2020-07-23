@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using TelegramBotMin;
 using Xamarin.Essentials;
 
@@ -69,38 +70,127 @@ namespace ab.Services
             // Obtain a response object.
             HttpListenerResponse response = context.Response;
 
+            Android.Net.Uri uri = Android.Net.Uri.Parse(request.Url.ToString());
             string remote_ip_address = request.RemoteEndPoint.Address.ToString();
-            string clear_query = request.Url.Query;
-            if (clear_query.StartsWith("?"))
-            {
-                clear_query = clear_query.Substring(1);
-            }
 
-            string log_msg = $"incoming http request (from > {remote_ip_address}): {clear_query}";
-            //log_msg = "telegramClient?.Me == null";
-            Log.Info(TAG, log_msg);
-            using (LogsContext log = new LogsContext())
-            {
-                log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
-            }
+            string pt = uri.GetQueryParameter("pt");
+            string dir = uri.GetQueryParameter("dir");
+            string mdid = uri.GetQueryParameter("mdid");
+            string v = uri.GetQueryParameter("v");
+            string value = uri.GetQueryParameter("value");
+            string st = uri.GetQueryParameter("st");
+            string m = uri.GetQueryParameter("m");
+            string click = uri.GetQueryParameter("click");
+            string cnt = uri.GetQueryParameter("cnt");
 
-            HardwareModel hardwareModel;
+            HardwareModel hardware;
             string hw_name = string.Empty;
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    hardwareModel = db.Hardwares.FirstOrDefault(x => x.Address == remote_ip_address);
-                    hw_name = hardwareModel?.Name ?? string.Empty;
-                    if (string.IsNullOrEmpty(hw_name))
+                    hardware = db.Hardwares.FirstOrDefault(x => x.Address == remote_ip_address);
+                }
+            }
+
+            hw_name = hardware?.Name ?? string.Empty;
+            if (string.IsNullOrEmpty(hw_name))
+            {
+                hw_name = remote_ip_address;
+            }
+            else
+            {
+                hw_name += $" ({remote_ip_address})";
+
+            }
+
+            string bot_message = $"Сообщение от устройства \"{hw_name}\": {Environment.NewLine}";
+
+            if (!string.IsNullOrWhiteSpace(pt))
+            {
+                if (Regex.IsMatch(pt, @"^\d+$"))
+                {
+                    PortHardwareModel portHardware = null;
+                    int pt_num_int = 0;
+                    pt_num_int = int.Parse(pt);
+                    if (pt_num_int > 0 && hardware != null)
                     {
-                        hw_name = remote_ip_address;
+                        lock (DatabaseContext.DbLocker)
+                        {
+                            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                            {
+                                portHardware = db.PortsHardwares.FirstOrDefault(x => x.HardwareId == hardware.Id && x.PortNumb == pt_num_int);
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(pt) && string.IsNullOrWhiteSpace(portHardware?.Name))
+                    {
+                        pt = $"Порт: P{pt}; ";
                     }
                     else
                     {
-                        hw_name += $" ({remote_ip_address})";
+                        pt = $"Порт: \"{portHardware.Name}\" (P{pt}); ";
                     }
                 }
+                else
+                {
+                    pt = $"Порт: {pt}; ";
+                }
+                bot_message += $"{pt}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(m))
+            {
+                m = (m == "1" ? "Освобождние после длительного удержания" : $"Длительное удержание") + "; ";
+                bot_message += $"{m}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(click))
+            {
+                click = (click == "1" ? "обычный клик" : "двойной клик") + "; ";
+                bot_message += $"{click}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(dir))
+            {
+                if (dir == "0")//падение значения
+                {
+                    dir = "Значение опустилось ниже порога; ";
+                }
+                else if (dir == "1")//повышение знчения
+                {
+                    dir = "Значение превышает пороговое; ";
+                }
+                else
+                {
+                    dir = $"ошибка определения вектора 'dir':{dir}; ";
+                }
+                bot_message += $"{dir}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(mdid))
+            {
+                mdid = $"mdid=\"{mdid}\"; ";
+                bot_message += $"{mdid}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(st))
+            {
+                st = $"st=\"{st}\"; ";
+                bot_message += $"{st}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(v))
+            {
+                v = $"v=\"{v}\"; ";
+                bot_message += $"{v}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                value = $"value=\"{value}\"; ";
+                bot_message += $"{value}";
             }
 
             string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);
@@ -117,7 +207,7 @@ namespace ab.Services
                             {
                                 foreach (TelegramUserModel telegramUser in db.TelegramUsers.Where(xx => xx.LinkedUserId == user.Id))
                                 {
-                                    telegramClient.sendMessage(telegramUser.TelegramId.ToString(), $"Сообщение от: {hw_name}{Environment.NewLine}{clear_query}");
+                                    telegramClient.sendMessage(telegramUser.TelegramId.ToString(), bot_message.Trim());
                                 }
                             }
                         }
@@ -126,6 +216,14 @@ namespace ab.Services
             }
 
 
+
+            string log_msg = $"incoming http request (from > {remote_ip_address}): {request.Url.Query}";
+            //log_msg = "telegramClient?.Me == null";
+            Log.Info(TAG, log_msg);
+            using (LogsContext log = new LogsContext())
+            {
+                log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
+            }
 
             // Construct a response.
             string responseString = "Hello world!";

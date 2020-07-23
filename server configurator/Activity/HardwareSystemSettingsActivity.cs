@@ -528,8 +528,12 @@ namespace ab
                             }
                         }
 
+                        html_raw = a_href_regex.Replace(html_raw, (Match match) =>
+                        {
+                            return $"<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"{match.Groups[1].Value}\">Back</a> <a class=\"btn btn-info btn-sm\" role=\"button\" onclick=\"window.location.reload()\">Reload</a>";
+                        });
+
                         html_raw = html_raw
-                        .Replace($"<a href=/{hardware.Password}>Back</a>", $"<a class=\"btn btn-primary btn-sm\" role=\"button\" href=\"/{hardware.Password}\">Back</a> <a class=\"btn btn-info btn-sm\" role=\"button\" onclick=\"window.location.reload()\">Reload</a>")//window.location.href = this
                         .Replace("<style>input,select{margin:1px}</style>", string.Empty)
                         .Replace($"<form action=/{hardware.Password}/>", $"{System.Environment.NewLine}<div class=\"card mt-2\">{System.Environment.NewLine}<div class=\"card-body\">{System.Environment.NewLine}<form action=\"/{hardware.Password}/\">{System.Environment.NewLine}<div class=\"form-group\"><label>Name</label><input type=\"text\" name=\"set_port_name\" class=\"form-control\" placeholder=\"Наименовние\" value=\"{portHardware.Name}\"></div>")
                         .Replace("<input type=submit value=Save>", "<input class=\"btn btn-outline-primary btn-block\" type=\"submit\" value=\"Save\"/>")
