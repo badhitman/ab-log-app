@@ -212,7 +212,7 @@ namespace ab.Services
                                     user = telegramUser.LinkedUserId == default ? null : db.Users.FirstOrDefault(x => x.Id == telegramUser.LinkedUserId);
                                 }
 
-                                if (!user.AlarmSubscriber && !user.CommandsAllowed)
+                                if (user?.AlarmSubscriber != true && user?.CommandsAllowed != true)
                                 {
                                     continue;
                                 }
@@ -294,7 +294,7 @@ namespace ab.Services
                                                             }
                                                             else
                                                             {
-                                                                response_msg += $"{System.Environment.NewLine}/port_{portHardware.Id}_get{separator}";
+                                                                response_msg += $"{System.Environment.NewLine}/port_{portHardware.Id}{separator}";
                                                             }
                                                             port_num++;
                                                         }
@@ -373,8 +373,18 @@ namespace ab.Services
                                 }
                                 else if (set_port_regex.IsMatch(cmd))
                                 {
+                                    if(!user.CommandsAllowed)
+                                    {
+                                        response_msg = "У вас нет прав для упрвления портми";
+                                        goto sendTelegramMessage;
+                                    }                                    
                                     Match m = set_port_regex.Match(cmd);
                                     PortHardwareModel port_hw = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
+                                    if (!port_hw.Hardware.CommandsAllowed)
+                                    {
+                                        response_msg = "Для устройства запрещены вызовы команд от удалённых пользователей";
+                                        goto sendTelegramMessage;
+                                    }
                                     string setter = m.Groups[2].Value;
                                     if (setter == "off")
                                     {
@@ -416,7 +426,7 @@ namespace ab.Services
                                                 }
                                                 else
                                                 {
-                                                     response_msg += $"{responseFromServer}; ";
+                                                    response_msg += $"{responseFromServer}; ";
                                                 }
                                             }
                                             else
@@ -434,6 +444,7 @@ namespace ab.Services
                                 {
                                     response_msg = "Команда запроса списка устройств: /hardwares";
                                 }
+                            sendTelegramMessage:
                                 telegramClient.sendMessage(update.message.from.id.ToString(), response_msg.Trim());
                             }
                         }

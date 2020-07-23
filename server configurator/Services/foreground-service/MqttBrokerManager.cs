@@ -66,7 +66,7 @@ namespace ab.Services
             string PayloadTest = Encoding.UTF8.GetString(message_context.ApplicationMessage.Payload);
             
             logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={PayloadTest}", TAG);
-            string bot_message = $"В топике \"{message_context.ApplicationMessage.Topic}\" новое MQTT сообщение: {PayloadTest}";
+            //string bot_message = $"В топике \"{message_context.ApplicationMessage.Topic}\" новое MQTT сообщение: {PayloadTest}";
             //string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);
             //if (!string.IsNullOrWhiteSpace(token))
             //{
