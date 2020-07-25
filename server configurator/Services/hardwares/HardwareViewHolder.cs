@@ -12,9 +12,9 @@ namespace ab.Services
     {
         public TextView Address { get; private set; }
 
-        protected override int _nameId => Resource.Id.hardware_name_list_item;
-        protected override int _alarmId => Resource.Id.hardware_alarm_subscriber_list_item;
-        protected override int _commandId => Resource.Id.hardware_commands_allowed_list_item;
+        protected override int NameId => Resource.Id.hardware_name_list_item;
+        protected override int AlarmId => Resource.Id.hardware_alarm_subscriber_list_item;
+        protected override int CommandId => Resource.Id.hardware_commands_allowed_list_item;
 
         public HardwareViewHolder(View itemView, Action<int> listener) : base(itemView, listener)
         {

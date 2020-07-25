@@ -11,7 +11,7 @@ using AndroidX.RecyclerView.Widget;
 
 namespace ab.Services
 {
-    public class UserListAdapter : RecyclerView.Adapter
+    public class UsersListAdapter : RecyclerView.Adapter
     {
         public event EventHandler<int> ItemClick;
 
@@ -24,7 +24,7 @@ namespace ab.Services
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            UserViewHolder userViewHolder = holder as UserViewHolder;
+            UserListItemViewHolder userViewHolder = holder as UserListItemViewHolder;
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
@@ -46,9 +46,9 @@ namespace ab.Services
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
-            View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.user_list_item, parent, false);
+            View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.users_list_item, parent, false);
 
-            UserViewHolder userViewHolder = new UserViewHolder(itemView, OnClick);
+            UserListItemViewHolder userViewHolder = new UserListItemViewHolder(itemView, OnClick);
             return userViewHolder;
         }
     }

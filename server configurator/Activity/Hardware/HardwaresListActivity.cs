@@ -21,7 +21,7 @@ namespace ab
 
         RecyclerView mRecyclerView;
         RecyclerView.LayoutManager mLayoutManager;
-        HardwareListAdapter mAdapter;
+        HardwaresListAdapter mAdapter;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -31,7 +31,7 @@ namespace ab
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.SetLayoutManager(mLayoutManager);
 
-            mAdapter = new HardwareListAdapter(this);
+            mAdapter = new HardwaresListAdapter(this);
 
             mRecyclerView.SetAdapter(mAdapter);           
         }

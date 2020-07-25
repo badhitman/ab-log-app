@@ -100,7 +100,7 @@ namespace ab
                 });
             }
 
-#if DEBUG
+#if DEBUG            
             log_msg = GetText(Resource.String.deleting_outdated_logs);
             AddSplashText(log_msg);
             logsDB.Logs.RemoveRange(logsDB.Logs.Where(x => x.CreatedAt < DateTime.Now.AddDays(-7)).ToArray());
@@ -126,9 +126,10 @@ namespace ab
                 _ = db.Users.FirstOrDefault();
                 _ = db.Hardwares.FirstOrDefault();
                 _ = db.CloudMessages.FirstOrDefault();
-                _ = db.TelegramMessages.FirstOrDefault();
                 _ = db.TelegramUsers.FirstOrDefault();
                 _ = db.PortsHardwares.FirstOrDefault();
+                _ = db.ScriptsHardware.FirstOrDefault();
+                _ = db.ComandsScript.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -141,7 +142,7 @@ namespace ab
                         gs.DatabasePathBase;
 
                 }
-                await db.Database.EnsureDeletedAsync();
+                File.Delete(gs.DatabasePathBase);
                 await db.Database.EnsureCreatedAsync();
 
                 RunOnUiThread(() =>
@@ -167,13 +168,27 @@ namespace ab
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Дом", Address = "192.168.2.114", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Двор", Address = "192.168.1.6", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
                 await db.SaveChangesAsync();
+                for (int i = 0; i < 38; i++)
+                {
+                    await db.PortsHardwares.AddRangeAsync(new PortHardwareModel() { HardwareId = 1, PortNumb = i }, new PortHardwareModel() { HardwareId = 2, PortNumb = i });
+                    await db.SaveChangesAsync();
+                }
             }
-            //if (await db.TelegramUsers.CountAsync() == 0)
-            //{
-            //    await db.TelegramUsers.AddAsync(new TelegramUserModel { Name = "telegram user 1", LinkedUserId = 1, TelegramId = 111111111111, TelegramParentBotId = 3333333333, UserName = "user_name_1" });
-            //    await db.TelegramUsers.AddAsync(new TelegramUserModel { Name = "telegram user 2", LinkedUserId = 2, TelegramId = 222222222222, TelegramParentBotId = 4444444444, UserName = "user_name_2" });
-            //    await db.SaveChangesAsync();
-            //}
+
+            if (await db.ScriptsHardware.CountAsync() == 0)
+            {
+                await db.ScriptsHardware.AddAsync(new ScriptHardwareModel { Name = "Утро", Notifications = true, TriggerPortState = true });
+                await db.ScriptsHardware.AddAsync(new ScriptHardwareModel { Name = "Ушёл из дома", Notifications = false, TriggerPortState = false });
+                await db.SaveChangesAsync();
+            }
+
+
+            if (await db.ComandsScript.CountAsync() == 0)
+            {
+                await db.ComandsScript.AddAsync(new ComandScriptModel { Name = "Выключить уличный свет", Ordering = 1, TypeCommand = TypesCommands.Controller, ScriptHardwareId = 1, Execution = 2, ExecutionParametr = "15:0;10:0" });
+                await db.ComandsScript.AddAsync(new ComandScriptModel { Name = "Включить полив", Ordering = 2, TypeCommand = TypesCommands.Port, ScriptHardwareId = 1, Execution = 30, ExecutionParametr = "on" });
+                await db.SaveChangesAsync();
+            }
 #endif
 
             using (StreamReader sr = new StreamReader(Assets.Open("bootstrap.min.css")))

@@ -11,27 +11,27 @@ using AndroidX.RecyclerView.Widget;
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class UsersListActivity : aListActivity
+    public class ScriptsListActivity : aListActivity
     {
-        protected override int ViewId => Resource.Layout.users_list_activity;
-        protected override int ToolbarId => Resource.Id.users_list_toolbar;
-        protected override int DrawerLayoutId => Resource.Id.users_list_drawer_layout;
-        protected override int ButtonAdd => Resource.Id.users_list_add_button;
-        protected override int NavId => Resource.Id.users_list_nav_view;
+        protected override int ViewId => Resource.Layout.scripts_list_activity;
+        protected override int ToolbarId => Resource.Id.scripts_list_toolbar;
+        protected override int DrawerLayoutId => Resource.Id.scripts_list_drawer_layout;
+        protected override int ButtonAdd => Resource.Id.scripts_list_add_button;
+        protected override int NavId => Resource.Id.scripts_list_nav_view;
 
         RecyclerView mRecyclerView;
         RecyclerView.LayoutManager mLayoutManager;
-        UsersListAdapter mAdapter;
+        ScriptsListAdapter mAdapter;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            mRecyclerView = FindViewById<RecyclerView>(Resource.Id.users_list);
+            mRecyclerView = FindViewById<RecyclerView>(Resource.Id.scripts_list);
 
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.SetLayoutManager(mLayoutManager);
 
-            mAdapter = new UsersListAdapter();
+            mAdapter = new ScriptsListAdapter(this);
 
             mRecyclerView.SetAdapter(mAdapter);
         }
@@ -50,13 +50,13 @@ namespace ab
 
         protected override void ButtonAddOnClick(object sender, EventArgs eventArgs)
         {
-            StartActivity(typeof(UserCreateActivity));
+            StartActivity(typeof(ScriptAddActivity));
         }
 
         void OnItemClick(object sender, int position)
         {
             gs.SelectedListPosition = position;
-            StartActivity(typeof(UserEditActivity));
+            StartActivity(typeof(ScriptEditActivity));
         }
     }
 }

@@ -12,14 +12,14 @@ using AndroidX.RecyclerView.Widget;
 
 namespace ab.Services
 {
-    public class HardwareListAdapter : RecyclerView.Adapter
+    public class HardwaresListAdapter : RecyclerView.Adapter
     {
         public event EventHandler<int> ItemClick;
         Context mContext;
 
         public override int ItemCount { get { lock (DatabaseContext.DbLocker) { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.Hardwares.Count(); } } } }
 
-        public HardwareListAdapter(Context _mContext)
+        public HardwaresListAdapter(Context _mContext)
         {
             mContext = _mContext;
         }
@@ -57,7 +57,7 @@ namespace ab.Services
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
             // Inflate the CardView for the photo:
-            View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.hardware_list_item, parent, false);
+            View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.hardwares_list_item, parent, false);
 
             // Create a ViewHolder to hold view references inside the CardView:
             HardwareViewHolder vh = new HardwareViewHolder(itemView, OnClick);

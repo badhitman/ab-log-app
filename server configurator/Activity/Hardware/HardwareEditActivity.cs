@@ -21,7 +21,6 @@ namespace ab
     {
         protected int hardwareId;
         AppCompatButton buttonDeleteHardware;
-        //AppCompatButton ButtonConfigPortsHardware;
         AppCompatButton SystemSettingsHardware;
         HardwareModel hardware;
 
@@ -78,16 +77,12 @@ namespace ab
             SystemSettingsHardware = new AppCompatButton(this) { Text = GetText(Resource.String.system_settings_title) };
             SystemSettingsHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             HardwareTopLayout.AddView(SystemSettingsHardware);
-
-            //ButtonConfigPortsHardware = new AppCompatButton(this) { Text = GetText(Resource.String.port_setting_title) };
-            //ButtonConfigPortsHardware.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            //HardwareFooterLayout.AddView(ButtonConfigPortsHardware);
         }
 
         private void SystemSettingsHardware_Click(object sender, EventArgs e)
         {
-            if(hardware.Address != HardwareAddress.Text || 
-                hardware.Password != HardwarePassword.Text || 
+            if (hardware.Address != HardwareAddress.Text ||
+                hardware.Password != HardwarePassword.Text ||
                 hardware.Name != HardwareName.Text ||
                 hardware.AlarmSubscriber != HardwareAlarmSubscribing.Checked ||
                 hardware.CommandsAllowed != HardwareCommandsAllowed.Checked)
@@ -107,7 +102,6 @@ namespace ab
         {
             base.OnResume();
             buttonDeleteHardware.Click += ButtonDeleteHardware_Click;
-            //ButtonConfigPortsHardware.Click += ButtonConfigPortsHardware_Click;
             SystemSettingsHardware.Click += SystemSettingsHardware_Click;
         }
 
@@ -115,7 +109,6 @@ namespace ab
         {
             base.OnPause();
             buttonDeleteHardware.Click -= ButtonDeleteHardware_Click;
-            //ButtonConfigPortsHardware.Click -= ButtonConfigPortsHardware_Click;
             SystemSettingsHardware.Click -= SystemSettingsHardware_Click;
         }
 
@@ -143,10 +136,6 @@ namespace ab
             SystemSettingsHardware.Enabled = false;
             SystemSettingsHardware.SetTextColor(Color.Gray);
             SystemSettingsHardware.Click -= SystemSettingsHardware_Click;
-
-            //ButtonConfigPortsHardware.Enabled = false;
-            //ButtonConfigPortsHardware.SetTextColor(Color.Gray);
-            //ButtonConfigPortsHardware.Click -= ButtonConfigPortsHardware_Click;
 
             AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = GetText(Resource.String.footer_text_with_remove_hardware), TextSize = 15 };
             appCompatTextView.SetTextColor(Color.Red);

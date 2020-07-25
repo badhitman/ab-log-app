@@ -11,21 +11,21 @@ namespace ab.Services
 {
     public abstract class aViewHolder : RecyclerView.ViewHolder
     {
-        protected abstract int _nameId { get; }
-        protected abstract int _alarmId { get; }
-        protected abstract int _commandId { get; }
+        protected abstract int NameId { get; }
+        protected abstract int AlarmId { get; }
+        protected abstract int CommandId { get; }
 
         public TextView Name { get; protected set; }
         //
         public TextView AlarmSubscriber { get; protected set; }
         public TextView CommandsAllowed { get; protected set; }
 
-        public aViewHolder(View itemView, Action<int> listener) : base(itemView)
+        protected aViewHolder(View itemView, Action<int> listener) : base(itemView)
         {
-            Name = itemView.FindViewById<TextView>(_nameId);
+            Name = itemView.FindViewById<TextView>(NameId);
 
-            AlarmSubscriber = itemView.FindViewById<TextView>(_alarmId);
-            CommandsAllowed = itemView.FindViewById<TextView>(_commandId);
+            AlarmSubscriber = itemView.FindViewById<TextView>(AlarmId);
+            CommandsAllowed = itemView.FindViewById<TextView>(CommandId);
 
             itemView.Click += (sender, e) => listener(LayoutPosition);
         }

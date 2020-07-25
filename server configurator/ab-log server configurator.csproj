@@ -66,6 +66,9 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activity\Scripts\ScriptAddActivity.cs" />
+    <Compile Include="Activity\Scripts\ScriptEditActivity.cs" />
+    <Compile Include="Activity\Scripts\ScriptsListActivity.cs" />
     <Compile Include="Activity\TelegramBotActivity.cs" />
     <Compile Include="Activity\HardwareSystemSettingsActivity.cs" />
     <Compile Include="Activity\PortsConfigActivity.cs" />
@@ -88,6 +91,8 @@
     <Compile Include="Model\LogRowModel.cs" />
     <Compile Include="Model\LogStatusesEnum.cs" />
     <Compile Include="Model\PortHardwareModel.cs" />
+    <Compile Include="Model\ComandScriptModel.cs" />
+    <Compile Include="Model\ScriptHardwareModel.cs" />
     <Compile Include="Model\TelegramUserModel.cs" />
     <Compile Include="Model\TelegramMessageModel.cs" />
     <Compile Include="Model\UserModel.cs" />
@@ -102,20 +107,22 @@
     <Compile Include="Services\foreground-service\HttpListenerManager.cs" />
     <Compile Include="Services\foreground-service\MqttBrokerManager.cs" />
     <Compile Include="Services\foreground-service\IForegroundService.cs" />
-    <Compile Include="Services\hardware\HardwareListAdapter.cs" />
-    <Compile Include="Services\hardware\HardwareViewHolder.cs" />
+    <Compile Include="Services\scripts\ScriptsListAdapter.cs" />
+    <Compile Include="Services\scripts\ScriptListItemViewHolder.cs" />
+    <Compile Include="Services\hardwares\HardwaresListAdapter.cs" />
+    <Compile Include="Services\hardwares\HardwareViewHolder.cs" />
     <Compile Include="Activity\Users\UsersListActivity.cs" />
     <Compile Include="Activity\SplashActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\telegram-users\TelegramUsersListAdapter.cs" />
-    <Compile Include="Services\telegram-users\TelegramUsersViewHolder.cs" />
+    <Compile Include="Services\telegram-users\TelegramUserListItemViewHolder.cs" />
     <Compile Include="Services\logg\LogListAdapter.cs" />
     <Compile Include="Services\logg\LogViewHolder.cs" />
     <Compile Include="Services\LogsContext.cs" />
     <Compile Include="Services\MyWebViewClient.cs" />
-    <Compile Include="Services\user\UserListAdapter.cs" />
-    <Compile Include="Services\user\UserViewHolder.cs" />
+    <Compile Include="Services\users\UsersListAdapter.cs" />
+    <Compile Include="Services\users\UserListItemViewHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -441,12 +448,12 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\user_list_item.xml">
+    <AndroidResource Include="Resources\layout\users_list_item.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\hardware_list_item.xml">
+    <AndroidResource Include="Resources\layout\hardwares_list_item.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -609,11 +616,36 @@
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup />
-  <ItemGroup />
-  <ItemGroup />
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-v21\ic_group_work.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\script_activity.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\script_app_bar.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\script_content.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\scripts_list_item.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi-v11\ic_action_restart_timer.png" />
   </ItemGroup>
@@ -664,6 +696,24 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxhdpi-v9\ic_stat_name.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\scripts_list_activity.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\scripts_list_app_bar.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\scripts_list_content.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <PropertyGroup>

@@ -14,10 +14,9 @@
         android:icon="@drawable/ic_people"
         android:title="@string/users_title" />
     <item
-        android:id="@+id/nav_cloud_queue"
-        android:icon="@drawable/ic_cloud_queue"
-        android:title="@string/cloud_title"
-        android:enabled="false"/>
+        android:id="@+id/nav_scripts"
+        android:icon="@drawable/ic_group_work"
+        android:title="@string/scripts_title" />
     <item
         android:id="@+id/nav_smart_button"
         android:icon="@drawable/ic_smart_button"

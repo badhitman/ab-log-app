@@ -35,7 +35,7 @@ namespace ab.Services
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            TelegramUsersViewHolder telegramUsersViewHolder = holder as TelegramUsersViewHolder;
+            TelegramUserListItemViewHolder telegramUsersViewHolder = holder as TelegramUserListItemViewHolder;
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
@@ -96,7 +96,7 @@ namespace ab.Services
         {
             View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.telegram_user_list_item, parent, false);
 
-            TelegramUsersViewHolder telegramUsersViewHolder = new TelegramUsersViewHolder(itemView);
+            TelegramUserListItemViewHolder telegramUsersViewHolder = new TelegramUserListItemViewHolder(itemView);
             return telegramUsersViewHolder;
         }
     }

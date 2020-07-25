@@ -6,6 +6,7 @@ using ab.Model;
 using Android.Util;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -17,9 +18,9 @@ namespace ab.Services
 {
     public class HttpListenerManager : IForegroundService
     {
-        static readonly string TAG = "http-manager";
+        readonly string TAG = "http-manager";
         private readonly HttpListener httpServer;
-        LogsContext logsDB = new LogsContext();
+        readonly LogsContext logsDB = new LogsContext();
         public IPAddress ipAddress => Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];
         public bool isStartedForegroundService { get { return httpServer?.IsListening ?? false; } }
         public int HttpListenerPort { get; private set; }
@@ -199,17 +200,28 @@ namespace ab.Services
                 TelegramClientCore telegramClient = new TelegramClientCore(token);
                 if (telegramClient?.Me != null)
                 {
+                    List<UserModel> users;
                     lock (DatabaseContext.DbLocker)
                     {
                         using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                         {
-                            foreach (UserModel user in db.Users.Where(x => x.AlarmSubscriber))
+                            users = db.Users.Where(x => x.AlarmSubscriber).ToList();
+                        }
+                    }
+
+                    List<TelegramUserModel> t_users;
+                    foreach (UserModel user in users)
+                    {
+                        lock (DatabaseContext.DbLocker)
+                        {
+                            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                             {
-                                foreach (TelegramUserModel telegramUser in db.TelegramUsers.Where(xx => xx.LinkedUserId == user.Id))
-                                {
-                                    telegramClient.sendMessage(telegramUser.TelegramId.ToString(), bot_message.Trim());
-                                }
+                                t_users = db.TelegramUsers.Where(xx => xx.LinkedUserId == user.Id).ToList();
                             }
+                        }
+                        foreach (TelegramUserModel telegramUser in t_users)
+                        {
+                            await telegramClient.sendMessage(telegramUser.TelegramId.ToString(), bot_message.Trim());
                         }
                     }
                 }

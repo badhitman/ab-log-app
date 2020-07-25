@@ -111,7 +111,6 @@ namespace ab
                     buttonCheckTelegramBotToken.Enabled = true;
                     editTextToken.Enabled = true;
                 });
-
             });
         }
     }

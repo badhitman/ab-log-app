@@ -47,7 +47,7 @@ namespace ab
                 case Resource.Id.nav_users:
                     ((navigationView.Menu as NavigationMenu).GetItem(1) as MenuItemImpl).SetChecked(true);
                     break;
-                case Resource.Id.nav_cloud_queue:
+                case Resource.Id.nav_scripts:
                     ((navigationView.Menu as NavigationMenu).GetItem(2) as MenuItemImpl).SetChecked(true);
                     break;
                 case Resource.Id.nav_smart_button:
@@ -98,7 +98,7 @@ namespace ab
                 StartActivity(typeof(AboutPageActivity));
                 return true;
             }
-            else if(id == Resource.Id.action_telegram_bot)
+            else if (id == Resource.Id.action_telegram_bot)
             {
                 StartActivity(typeof(TelegramBotActivity));
                 return true;
@@ -117,11 +117,11 @@ namespace ab
             }
             else if (id == Resource.Id.nav_users)
             {
-                StartActivity(typeof(UsersActivity));
+                StartActivity(typeof(UsersListActivity));
             }
-            else if (id == Resource.Id.nav_cloud_queue)
+            else if (id == Resource.Id.nav_scripts)
             {
-                StartActivity(typeof(CloudActivity));
+                StartActivity(typeof(ScriptsListActivity));
             }
             else if (id == Resource.Id.nav_smart_button)
             {

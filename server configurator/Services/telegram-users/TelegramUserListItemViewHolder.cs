@@ -10,13 +10,13 @@ using System.Linq;
 
 namespace ab.Services
 {
-    public class TelegramUsersViewHolder : RecyclerView.ViewHolder
+    public class TelegramUserListItemViewHolder : RecyclerView.ViewHolder
     {
         public TextView TelegramFirstSecondName { get; private set; }
         public TextView TelegramId { get; private set; }
         public AppCompatSpinner LinkedUserSpinner { get; private set; }
 
-        public TelegramUsersViewHolder(View itemView) : base(itemView)
+        public TelegramUserListItemViewHolder(View itemView) : base(itemView)
         {
             TelegramFirstSecondName = itemView.FindViewById<TextView>(Resource.Id.textViewTelegramFirstSecondName);
             TelegramId = itemView.FindViewById<TextView>(Resource.Id.textViewTelegramId);

@@ -124,7 +124,7 @@ namespace ab
                         db.Users.Remove(user);
                         db.SaveChanges();
 
-                        StartActivity(typeof(UsersActivity));
+                        StartActivity(typeof(UsersListActivity));
                     }
                 }
             });
@@ -160,7 +160,7 @@ namespace ab
                     db.SaveChanges();
                 }
             }
-            StartActivity(typeof(UsersActivity));
+            StartActivity(typeof(UsersListActivity));
         }
     }
 }

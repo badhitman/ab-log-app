@@ -129,7 +129,7 @@ namespace ab
                     db.SaveChanges();
                 }
             }
-            StartActivity(typeof(UsersActivity));
+            StartActivity(typeof(UsersListActivity));
         }
     }
 }

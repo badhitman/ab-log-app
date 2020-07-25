@@ -11,7 +11,8 @@
   <string name="logs_title">Логи</string>
   <string name="about_title">О программе</string>
   <string name="users_title">Пользователи</string>
-  
+
+  <string name="scripts_title">Сценарии</string>
   <string name="cloud_title">Облако</string>
   <string name="email_title">Email</string>
   <string name="delete_title">Удалить</string>
@@ -138,4 +139,13 @@
   <string name="telegram_bot_survey_interval_subtitle">Для отключения укажите значение равное или меньшее нуля</string>
   <string name="telegram_bot_is_not_configured_title">Telegram bot не настроен</string>
   <string name="mqtt_protocol_is_not_supported">Протокол MQTT не поддерживается в полном объёме. Сообщения в брокере записываются в логи приложения, но никак не обрабатываются</string>
+
+  <string name="script_hardware_creating_title">Создать скрипт</string>
+  <string name="script_hardware_adding_subtitle">Создание пакетного задания</string>
+  <string name="autorun_trigger_title">Автозапуск/Триггер</string>
+  <string name="hardware_title">Устройство</string>
+  <string name="port_title">Порт</string>
+  <string name="state_title">Состояние</string>
+  <string name="duplicate_script_name_error">Скрипт с таким именем уже существует. Задайте другое наименование</string>
+  <string name="abc_capital_switch">Переключение</string>
 </resources>
