@@ -2,7 +2,9 @@
 // © https://github.com/badhitman 
 ////////////////////////////////////////////////
 
+using ab.Services;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ab.Model
 {
@@ -12,11 +14,6 @@ namespace ab.Model
     public class ScriptHardwareModel : abstractEF
     {
         /// <summary>
-        /// Необходимость уведомления пользователей о начале/окончании выполнения скрипта
-        /// </summary>
-        public bool Notifications { get; set; }
-
-        /// <summary>
         /// Порт-тригер на который должен срабатывть скрипт в автоматическом режиме
         /// </summary>
         public PortHardwareModel TriggerPort { get; set; }
@@ -24,11 +21,36 @@ namespace ab.Model
         /// <summary>
         /// Состояние порта, которое следует считать тригером к выполнению скрипта
         /// </summary>
-        public bool TriggerPortState { get; set; }
+        public bool? TriggerPortState { get; set; }
 
         /// <summary>
         /// Команды скрипта
         /// </summary>
-        public List<ComandScriptModel> ComandsScripts { get; set; }
+        public List<CommandScriptModel> CommandsScripts { get; set; }
+
+        public override string ToString()
+        {
+            string script_name = Name;
+            if (TriggerPortId > 0 && TriggerPort == null)
+            {
+                lock (DatabaseContext.DbLocker)
+                {
+                    using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                    {
+                        TriggerPort = db.PortsHardwares.FirstOrDefault(x => x.Id == TriggerPortId);
+                    }
+                }
+            }
+            if (TriggerPort != null)
+            {
+                script_name += $" [tg:{TriggerPort}]";
+            }
+
+#if DEBUG
+            script_name = $"#{Id}; {script_name}";
+#endif
+
+            return script_name;
+        }
     }
 }

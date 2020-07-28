@@ -1,0 +1,94 @@
+﻿<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardElevation="4dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardCornerRadius="2dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="right">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="[h]"
+                android:id="@+id/command_info2_list_item"
+                android:gravity="center_vertical"
+                android:textColor="#ffd50000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="[p]"
+                android:id="@+id/command_info3_list_item"
+                android:gravity="center_vertical"
+                android:textColor="#ff2962ff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="[r]"
+                android:id="@+id/command_info4_list_item"
+                android:gravity="center_vertical"
+                android:textColor="#ff00c853" />
+
+            <TextView
+                android:layout_marginLeft="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="info"
+                android:id="@+id/command_info_list_item"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:paddingHorizontal="8dp"
+                android:layout_marginLeft="5dp"
+                android:text="↑"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewUpCommandOrdering"
+                android:background="#ff7986cb"
+                android:textColor="#ffffffff"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_marginHorizontal="5dp"
+                android:paddingHorizontal="8dp"
+                android:text="↓"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDownCommandOrdering"
+                android:background="#ff7986cb"
+                android:textColor="#ffffffff"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="name"
+            android:id="@+id/command_name_list_item" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

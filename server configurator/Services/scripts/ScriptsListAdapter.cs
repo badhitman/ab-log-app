@@ -6,9 +6,9 @@ using System;
 using System.Linq;
 using ab.Model;
 using Android.Content;
-using Android.Graphics;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
+using Microsoft.EntityFrameworkCore;
 
 namespace ab.Services
 {
@@ -37,8 +37,12 @@ namespace ab.Services
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    ScriptHardwareModel script = db.ScriptsHardware.Skip(position).FirstOrDefault();
+                    ScriptHardwareModel script = db.ScriptsHardware.Skip(position).Include(x => x.TriggerPort).ThenInclude(x => x.Hardware).FirstOrDefault();
                     scriptListItemViewHolder.Name.Text = script.Name;
+                    if (script.TriggerPort != null)
+                    {
+                        scriptListItemViewHolder.Name.Text += $" (tg: {script.TriggerPort.Hardware.Name} > {script.TriggerPort} > {(script.TriggerPortState == true ? "ON" : (script.TriggerPortState == false ? "OFF" : "Switch"))})";
+                    }
                 }
             }
         }

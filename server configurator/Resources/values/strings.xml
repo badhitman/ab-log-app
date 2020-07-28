@@ -7,6 +7,7 @@
   <string name="navigation_drawer_close">Close navigation drawer</string>
 
   <string name="ok_title">Ok</string>
+  <string name="cancel_title">Cancel</string>
   <string name="name_title">Name</string>
   <string name="telegram_bot_title">Telegram Bot</string>
   <string name="logs_title">Logs</string>
@@ -61,7 +62,8 @@
   <string name="interpretation_alarm_for_hardware">*  sending alarms to users</string>
   <string name="interpretation_alarm_for_user">*  receive notifications from the server/controller</string>
 
-  <string name="commands_title">Commands **</string>
+  <string name="commands_title">Commands</string>
+  <string name="commands_title_2">Commands **</string>
   <string name="command_short_label">[c] **</string>
   <string name="interpretation_command_for_hardware">**  command execution from remote users</string>
   <string name="interpretation_command_for_user">**  allow sending commands to the server/controller</string>
@@ -111,7 +113,7 @@
   <string name="logs_database_ensure_created">[Logs] database EnsureCreatedAsync() ...</string>
   <string name="deleting_outdated_logs">Deleting outdated logs (older than 7 days)</string>
   <string name="deleting_main_database_file">Deleting the main database file:</string>
-  <string name="initializing_db_demo_data">Initializing the database with demo data</string>
+  <string name="initializing_db_demo_data">Initializing DB (DEMO)</string>
   <string name="load_demo_users">Loading users (DEMO) ...</string>
   <string name="load_demo_hardwares">Loading hardwares (DEMO) ...</string>
   <string name="caching_hardwares_list">caching hardwares list ...</string>
@@ -153,6 +155,8 @@
 
   <string name="script_hardware_creating_title">Create a script</string>
   <string name="script_hardware_adding_subtitle">Creating a batch task</string>
+  <string name="script_hardware_edit_title">Edit a script</string>
+  <string name="script_hardware_edit_subtitle">Modify a batch task</string>
   <string name="autorun_trigger_title">Autorun/Trigger</string>
   <string name="hardware_title">Hardware</string>
   <string name="port_title">Port</string>
@@ -165,4 +169,49 @@
     <item>@string/abc_capital_off</item>
     <item>@string/abc_capital_switch</item>
   </string-array>
+
+  <string name="error_autorun_script_configured_title">Autorun of the script by event is enabled, but not configured</string>
+  <string name="run_the_script_title">Run the script</string>
+  <string name="delete_script_card_title">Deleting a script</string>
+  <string name="delete_script_card_sub_title">Request to delete a batch job from the database!</string>
+  <string name="ok_mute_button_with_remove_script">deleting the script ...</string>
+  <string name="footer_text_with_remove_script">Attention! Deleting a batch task script? This action cannot be undone!</string>
+  <string name="command_script_creating_title">Creating a command</string>
+  <string name="command_script_adding_subtitle">New command for the batch script</string>
+  <string name="command_script_requirement_title">Condition for completion</string>
+  <string name="type_command_script_title">Type of command to run</string>
+
+  <string name="delete_command_card_title">Deleting a command</string>
+  <string name="delete_command_card_sub_title">Request to delete a command from the database!</string>
+  <string name="ok_mute_button_with_remove_command">deleting a command ...</string>
+  <string name="footer_text_with_remove_command">Attention! Deleting a batch task command? This action cannot be undone!</string>
+  
+  <string name="command_type_array_item_port">Man. port</string>
+  <string name="command_type_array_item_controller">Com. controller</string>
+  <string name="command_type_array_item_transit">Exit/Transition</string>
+  <string-array name="commands_types_array">
+    <item>@string/command_type_array_item_port</item>
+    <item>@string/command_type_array_item_controller</item>
+    <item>@string/command_type_array_item_transit</item>
+  </string-array>
+  
+  <string name="pause_title">Pause</string>
+  <string name="sec_short_title">sec.</string>
+  <string name="pause_before_executing_info">Pre-pause before execution</string>
+  <string name="hidden_command_title">Hidden command</string>
+  <string name="command_title">Command</string>
+  <string name="about_selected_command_port_title">Specify the controller, port, and required state</string>
+  <string name="about_selected_command_controller_title">Specify the controller and the command to send. For example: 8:0;5:1;12:89</string>
+  <string name="about_selected_command_transit_title">Specify the transition script and the command in the script. Execution of the current script will be passed to another script</string>
+  <string name="controller_title">Controller</string>
+  <string name="type_command_title">Type command</string>
+  <string name="script_title">Script</string>
+  <string name="step_title">Step</string>
+  <string name="completing_the_script_title">↖ Completing the script</string>
+  <string name="err_selected_device_was_not_found_title">The selected device was not found</string>
+  <string name="err_selected_port_was_not_found_title">The selected port was not found</string>
+  <string name="error_controller_port_is_not_selected_title">Error! The controller port is not selected. Identifier (key) of the object</string>
+  <string name="error_controller_port_was_not_found_in_the_database_title">Error! The controller port was not found in the database</string>
+  <string name="error_no_controller_selected_title">Error! No controller selected. Identifier (key) of the object</string>
+  <string name="error_not_specified_the_command_controller_title">Error! Not specified, the command controller</string>
 </resources>

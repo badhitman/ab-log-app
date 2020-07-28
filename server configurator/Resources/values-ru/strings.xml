@@ -7,6 +7,7 @@
   <string name="navigation_drawer_close">Close navigation drawer</string>
 
   <string name="ok_title">Ok</string>
+  <string name="cancel_title">Отмена</string>
   <string name="name_title">Имя</string>
   <string name="logs_title">Логи</string>
   <string name="about_title">О программе</string>
@@ -60,7 +61,8 @@
   <string name="interpretation_alarm_for_hardware">*  отправка уведомлений пользователям</string>
   <string name="interpretation_alarm_for_user">*  получение уведомлений от сервера</string>
 
-  <string name="commands_title">Команды **</string>
+  <string name="commands_title">Команды</string>
+  <string name="commands_title_2">Команды **</string>
   <string name="command_short_label">[k] **</string>
   <string name="interpretation_command_for_hardware">**  выполнение команд удалённых пользователей</string>
   <string name="interpretation_command_for_user">**  разрешение на отправку команд серверу</string>
@@ -105,7 +107,7 @@
   <string name="logs_database_ensure_created">База данных [Логов] EnsureCreatedAsync() ...</string>
   <string name="deleting_outdated_logs">Удаление устаревших логов (старше 7 дней)</string>
   <string name="deleting_main_database_file">Удаление файла основной базы данных:</string>
-  <string name="initializing_db_demo_data">Инициализация базы данных демо данными</string>
+  <string name="initializing_db_demo_data">Инициализация БД (DEMO)</string>
   <string name="load_demo_users">Загрузка пользователей (DEMO) ...</string>
   <string name="load_demo_hardwares">Загрузка устройств (DEMO) ...</string>
   <string name="finish_initializing_application">Запуск интерфейса ...</string>
@@ -142,10 +144,51 @@
 
   <string name="script_hardware_creating_title">Создать скрипт</string>
   <string name="script_hardware_adding_subtitle">Создание пакетного задания</string>
+  <string name="script_hardware_edit_title">Редактировать скрипт</string>
+  <string name="script_hardware_edit_subtitle">Изменение пакетного задания</string>
   <string name="autorun_trigger_title">Автозапуск/Триггер</string>
   <string name="hardware_title">Устройство</string>
   <string name="port_title">Порт</string>
   <string name="state_title">Состояние</string>
   <string name="duplicate_script_name_error">Скрипт с таким именем уже существует. Задайте другое наименование</string>
   <string name="abc_capital_switch">Переключение</string>
+  <string name="error_autorun_script_configured_title">Автозапуск сценария по событию включён, но не настроен</string>
+  <string name="run_the_script_title">Выполнить скрипт</string>
+  <string name="delete_script_card_title">Удаление скрипта</string>
+  <string name="delete_script_card_sub_title">Запрос удаления пакетного задания из базы данных!</string>
+  <string name="ok_mute_button_with_remove_script">удаление скрипта ...</string>
+  <string name="footer_text_with_remove_script">Внимание! Удаление скрипта пакетного задания? Данное действие невозможно отменить!</string>
+  <string name="command_script_creating_title">Создание команды</string>
+  <string name="command_script_adding_subtitle">Новая команда для скрипта пкетного здания</string>
+  <string name="command_script_requirement_title">Условие для выполнения</string>
+  <string name="type_command_script_title">Тип выполняемой команды</string>
+
+  <string name="delete_command_card_title">Удаление команды</string>
+  <string name="delete_command_card_sub_title">Запрос удаления команды из базы данных!</string>
+  <string name="ok_mute_button_with_remove_command">удаление команды ...</string>
+  <string name="footer_text_with_remove_command">Внимание! Удаление команды пакетного задания? Данное действие невозможно отменить!</string>
+  
+  <string name="command_type_array_item_port">Упрвление портом</string>
+  <string name="command_type_array_item_controller">Команда контроллера</string>
+  <string name="command_type_array_item_transit">Выход/Переход</string>
+  
+  <string name="pause_title">Пауза</string>
+  <string name="sec_short_title">сек.</string>
+  <string name="pause_before_executing_info">Предварительная пауза до исполнения</string>
+  <string name="hidden_command_title">Скрытая команда</string>
+  <string name="command_title">Команда</string>
+  <string name="about_selected_command_port_title">Укажите контроллер, порт и требуемое состояние</string>
+  <string name="about_selected_command_controller_title">Укажите контроллер и команду для отправки. Например: 8:0;5:1;12:89</string>
+  <string name="about_selected_command_transit_title">Укажите скрипт перехода и команду в скрипте. Выполнение текущего скрипта будет передано другому скрипту</string>
+  <string name="controller_title">Контроллер</string>
+  <string name="type_command_title">Тип команды</string>
+  <string name="script_title">Скрипт</string>
+  <string name="step_title">Шаг</string>
+  <string name="completing_the_script_title">↖ Завершение выполнения скрипта</string>
+  <string name="err_selected_device_was_not_found_title">Выбранное устройство не найдено</string>
+  <string name="err_selected_port_was_not_found_title">Выбранный порт не найден</string>
+  <string name="error_controller_port_is_not_selected_title">Ошибка! Не выбран порт контроллера. Идентификатор (ключ) объекта</string>
+  <string name="error_controller_port_was_not_found_in_the_database_title">Ошибка! Порт контроллер не найден в БД</string>
+  <string name="error_no_controller_selected_title">Ошибка! Не выбран контроллер. Идентификатор (ключ) объекта</string>
+  <string name="error_not_specified_the_command_controller_title">Ошибка! Не указана команда контроллера</string>
 </resources>

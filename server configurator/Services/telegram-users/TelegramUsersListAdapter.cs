@@ -10,7 +10,7 @@ using Android.Graphics;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
-using Xamarin.Forms.Internals;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ab.Services
 {
@@ -24,13 +24,15 @@ namespace ab.Services
         {
             LinkedUsers = new Dictionary<int, string>();
             LinkedUsers.Add(0, "");
+            List<UserModel> users;
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    db.Users.ForEach(x => { LinkedUsers.Add(x.Id, x.Name); });
+                    users = db.Users.ToList();
                 }
             }
+            users.ForEach(x => { LinkedUsers.Add(x.Id, x.Name); });
         }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)

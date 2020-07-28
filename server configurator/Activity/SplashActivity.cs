@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ab
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/MyTheme.Splash", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true)]
     public class SplashActivity : AppCompatActivity
     {
         public static bool reWriteDataBase { get; } = false;
@@ -69,7 +69,7 @@ namespace ab
         async void SimulateSplash()
         {
             LogsContext logsDB = new LogsContext();
-            string log_msg = GetText(Resource.String.logs_database_ensure_created);
+            string log_msg = GetText(Resource.String.logs_database_ensure_created) + System.Environment.NewLine + LogsContext.DatabasePathLogs;
             RunOnUiThread(() =>
             {
                 Toast.MakeText(this, log_msg, ToastLength.Short).Show();
@@ -100,6 +100,8 @@ namespace ab
                 });
             }
 
+            DatabaseContext db = new DatabaseContext(gs.DatabasePathBase);
+            AddSplashText($"db patch: {gs.DatabasePathBase}");
 #if DEBUG            
             log_msg = GetText(Resource.String.deleting_outdated_logs);
             AddSplashText(log_msg);
@@ -115,7 +117,6 @@ namespace ab
             }
 
             log_msg = GetText(Resource.String.initializing_db_demo_data);
-            DatabaseContext db = new DatabaseContext(gs.DatabasePathBase);
             AddSplashText(log_msg);
             logsDB.AddLogRow(LogStatusesEnum.Trac, log_msg, TAG);
             await db.Database.EnsureCreatedAsync();
@@ -129,7 +130,7 @@ namespace ab
                 _ = db.TelegramUsers.FirstOrDefault();
                 _ = db.PortsHardwares.FirstOrDefault();
                 _ = db.ScriptsHardware.FirstOrDefault();
-                _ = db.ComandsScript.FirstOrDefault();
+                _ = db.CommandsScript.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -177,16 +178,17 @@ namespace ab
 
             if (await db.ScriptsHardware.CountAsync() == 0)
             {
-                await db.ScriptsHardware.AddAsync(new ScriptHardwareModel { Name = "Утро", Notifications = true, TriggerPortState = true });
-                await db.ScriptsHardware.AddAsync(new ScriptHardwareModel { Name = "Ушёл из дома", Notifications = false, TriggerPortState = false });
+                await db.ScriptsHardware.AddAsync(new ScriptHardwareModel { Name = "Утро", TriggerPortState = true, TriggerPortId = 1 });
+                await db.ScriptsHardware.AddAsync(new ScriptHardwareModel { Name = "Ушёл из дома", TriggerPortState = null });
                 await db.SaveChangesAsync();
             }
 
 
-            if (await db.ComandsScript.CountAsync() == 0)
+            if (await db.CommandsScript.CountAsync() == 0)
             {
-                await db.ComandsScript.AddAsync(new ComandScriptModel { Name = "Выключить уличный свет", Ordering = 1, TypeCommand = TypesCommands.Controller, ScriptHardwareId = 1, Execution = 2, ExecutionParametr = "15:0;10:0" });
-                await db.ComandsScript.AddAsync(new ComandScriptModel { Name = "Включить полив", Ordering = 2, TypeCommand = TypesCommands.Port, ScriptHardwareId = 1, Execution = 30, ExecutionParametr = "on" });
+                int scriptHardwareId = (await db.ScriptsHardware.FirstAsync()).Id;
+                await db.CommandsScript.AddAsync(new CommandScriptModel { Name = "Выключить уличный свет", Ordering = 1, TypeCommand = TypesCommands.Controller, ScriptHardwareId = scriptHardwareId, Execution = 2, ExecutionParametr = "15:0;10:0" });
+                await db.CommandsScript.AddAsync(new CommandScriptModel { Name = "Включить полив", Ordering = 2, TypeCommand = TypesCommands.Port, ScriptHardwareId = scriptHardwareId, Execution = 30, ExecutionParametr = "on" });
                 await db.SaveChangesAsync();
             }
 #endif

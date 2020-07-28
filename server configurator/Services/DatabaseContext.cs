@@ -19,7 +19,7 @@ namespace ab.Services
         public DbSet<TelegramUserModel> TelegramUsers { get; set; }
         public DbSet<PortHardwareModel> PortsHardwares { get; set; }
         public DbSet<ScriptHardwareModel> ScriptsHardware { get; set; }
-        public DbSet<ComandScriptModel> ComandsScript { get; set; }
+        public DbSet<CommandScriptModel> CommandsScript { get; set; }
 
         public DatabaseContext(string databasePath)
         {

@@ -75,6 +75,7 @@ namespace ab.Services
             Regex get_harware_regex = new Regex(@"^/hw_(\d+)$");
             Regex get_port_regex = new Regex(@"^/port_(\d+)$");
             Regex set_port_regex = new Regex(@"^/port_(\d+)_set_(.+)$");
+            Regex view_logs_regex = new Regex(@"^/logs_at_(\d+)$");
 
             while (TelegramBotSurveyInterval > 0)
             {
@@ -226,11 +227,26 @@ namespace ab.Services
                                         response_msg += $"{hw.Name} - /hw_{hw.Id}{System.Environment.NewLine}";
                                     }
                                 }
+                                else if (cmd == "/scripts" && user.CommandsAllowed)
+                                {
+                                    foreach (ScriptHardwareModel script in db.ScriptsHardware)
+                                    {
+                                        response_msg += $"{script.Name} - /script_{script.Id}{System.Environment.NewLine}";
+                                    }
+                                }
+                                else if (cmd == "/logs")
+                                {
+                                    response_msg += $"Статистика логов:{System.Environment.NewLine}";
+                                }
+                                else if (view_logs_regex.IsMatch(cmd))
+                                {
+                                    response_msg += $"Просмотр логов:{System.Environment.NewLine}";
+                                }
                                 else if (get_harware_regex.IsMatch(cmd))
                                 {
                                     Match m = get_harware_regex.Match(cmd);
                                     HardwareModel hw = db.Hardwares.Find(int.Parse(m.Groups[1].Value));
-                                    response_msg += $"\"{hw.Name}\" (ip:{hw.Address}).{System.Environment.NewLine}";
+                                    response_msg += $"\"{hw}\".{System.Environment.NewLine}";
 
                                     HttpWebRequest request = new HttpWebRequest(new Uri($"http://{hw.Address}/{hw.Password}/?cmd=all"));
                                     request.Timeout = 5000;
@@ -373,11 +389,11 @@ namespace ab.Services
                                 }
                                 else if (set_port_regex.IsMatch(cmd))
                                 {
-                                    if(!user.CommandsAllowed)
+                                    if (!user.CommandsAllowed)
                                     {
                                         response_msg = "У вас нет прав для упрвления портми";
                                         goto sendTelegramMessage;
-                                    }                                    
+                                    }
                                     Match m = set_port_regex.Match(cmd);
                                     PortHardwareModel port_hw = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
                                     if (!port_hw.Hardware.CommandsAllowed)
@@ -442,7 +458,14 @@ namespace ab.Services
                                 }
                                 else
                                 {
-                                    response_msg = "Команда запроса списка устройств: /hardwares";
+                                    response_msg = $"Доступные команда:{System.Environment.NewLine}" +
+                                        $"/hardwares - список устройств{System.Environment.NewLine}";
+
+                                    if (user.CommandsAllowed)
+                                    {
+                                        response_msg += $"/scripts - список скриптов{System.Environment.NewLine}";
+                                    }
+                                    response_msg += "/logs - просмотр логов";
                                 }
                             sendTelegramMessage:
                                 telegramClient.sendMessage(update.message.from.id.ToString(), response_msg.Trim());

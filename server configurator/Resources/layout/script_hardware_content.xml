@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/script_app_bar"
+    tools:showIn="@layout/script_hardware_app_bar"
     android:padding="5dp">
 
     <LinearLayout
@@ -67,38 +67,14 @@
 
             </LinearLayout>
 
-            <EditText
-                android:focusedByDefault="false"
-                android:hint="@string/name_title"
-                android:inputType="text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/script_name" />
-
-            <LinearLayout
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:minWidth="25px"
-                android:minHeight="25px"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:text="@string/autorun_trigger_title"
+            <Switch
+                android:layout_marginTop="10dp"
+                    android:text="Enable form"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/textView1"
-                    android:foregroundGravity="center_vertical"
-                    android:gravity="center_vertical" />
-
-                <Switch
                     android:checked="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/switchAutorunScriptTrigger" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -174,16 +150,35 @@
                     android:background="#ffcfd8dc" />
 
             </LinearLayout>
+            
+                <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/script_bottom_layout">
 
+            </LinearLayout>
         </LinearLayout>
 
         <Button
-            android:focusedByDefault="true"
             android:text="@string/ok_title"
-            android:layout_marginVertical="10dp"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/script_button_ok" />
+
+        <Button
+            android:text="@string/cancel_title"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancel_button_ok" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/script_footer_layout"/>
 
     </LinearLayout>
 

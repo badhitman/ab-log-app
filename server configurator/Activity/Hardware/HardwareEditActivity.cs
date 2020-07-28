@@ -27,7 +27,6 @@ namespace ab
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            ReadView();
 
             lock (DatabaseContext.DbLocker)
             {

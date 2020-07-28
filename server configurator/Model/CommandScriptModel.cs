@@ -27,7 +27,7 @@ namespace ab.Model
         Exit
     }
 
-    public class ComandScriptModel : abstractEF
+    public class CommandScriptModel : abstractEF
     {
         /// <summary>
         /// Тип команды
@@ -48,7 +48,7 @@ namespace ab.Model
         /// Пауза перед выполнением команды. Пауза выдерживается средствами самого сервера, а не управляющего блока.
         /// Пауза выдерживается до проверки условия выполнения, т.е. не зависит от того: будет ли команда выполняться или нет
         /// </summary>
-        public int PauseBeforeExecution { get; set; }
+        public double PauseBeforeExecution { get; set; }
         /// <summary>
         /// Скрытая команда. Т.е. она не будет выполняться в порядке общей очереди.
         /// На такую команду можно переместиться только принудительно из другой команды.
@@ -65,7 +65,7 @@ namespace ab.Model
         /// Требуемое состояние порта для того что бы команда была выполнена.
         /// В противном случе команда будет пропущена.
         /// </summary>
-        public bool PortExecutionConditionAllowingState { get; set; }
+        public bool? PortExecutionConditionAllowingState { get; set; }
 
         /// <summary>
         /// Идентификатор обслуживающей сущьности выполнения команды.
@@ -83,5 +83,14 @@ namespace ab.Model
         /// Exit: [int] указание на идентификатор команды, с которой следует начать выполнять скрипт, в который передаётся дальнейшее управление
         /// </summary>
         public string ExecutionParametr { get; set; }
+
+        public override string ToString()
+        {
+            string command_name = $"{Name}{(Hidden ? " [H]" : "")}{(PauseBeforeExecution > 0 ? $" [p {PauseBeforeExecution} sec]" : "")}";
+#if DEBUG
+            command_name = $"#{Id}; {command_name}";
+#endif
+            return command_name;
+        }
     }
 }
