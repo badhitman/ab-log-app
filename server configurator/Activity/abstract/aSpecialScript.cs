@@ -26,6 +26,8 @@ namespace ab
         public static Dictionary<int, string> Hardwares;
         public static Dictionary<int, string> Ports;
 
+        protected int selected_port_id = 0;
+
         protected AppCompatTextView CardHeader;
         protected AppCompatTextView CardSubHeader;
 
@@ -96,7 +98,7 @@ namespace ab
         protected void HardwareSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
             AppCompatSpinner spinner = (AppCompatSpinner)sender;
-            Log.Debug(TAG, $"FormSpinner_ItemSelected({Resources.GetResourceEntryName(spinner.Id)})");
+            Log.Debug(TAG, $"HardwareSpinner_ItemSelected(spinner id:{spinner.Id})");
 
             int hardware_id = Hardwares.Keys.ElementAt(e.Position);
             UpdatePortsListSpinner(hardware_id);
@@ -122,12 +124,16 @@ namespace ab
             ArrayAdapter<string> adapterPorts = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem, Ports.Values.ToList());
             adapterPorts.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             PortFormFieldSpinner.Adapter = adapterPorts;
+            if (selected_port_id > 0)
+            {
+                PortFormFieldSpinner.SetSelection(Ports.Keys.ToList().IndexOf(selected_port_id));
+            }
         }
 
         protected override void OnResume()
         {
-            base.OnResume();
             Log.Debug(TAG, "OnResume");
+            base.OnResume();
             CardButtonOk.Click += CardButton_Click;
             CardButtonCancel.Click += CardButton_Click;
             FormEnableTrigger.CheckedChange += FormEnableToggler_CheckedChange;
@@ -137,13 +143,42 @@ namespace ab
 
         protected override void OnPause()
         {
-            base.OnPause();
             Log.Debug(TAG, "OnPause");
+            base.OnPause();
             CardButtonOk.Click -= CardButton_Click;
             CardButtonCancel.Click -= CardButton_Click;
             FormEnableTrigger.CheckedChange -= FormEnableToggler_CheckedChange;
 
             HardwareFormFieldSpinner.ItemSelected -= HardwareSpinner_ItemSelected;
+        }
+
+        protected int GetIndexPortState(bool? port_state_as_bool, List<string> port_states_list)
+        {
+            if (port_state_as_bool == true)
+            {
+                return port_states_list.IndexOf(GetString(Resource.String.abc_capital_on));
+            }
+            else if (port_state_as_bool == false)
+            {
+                return port_states_list.IndexOf(GetString(Resource.String.abc_capital_off));
+            }
+            else
+            {
+                return port_states_list.IndexOf(GetString(Resource.String.abc_capital_switch));
+            }
+        }
+
+        protected int GetIndexPortState(string port_state_as_string)
+        {
+            Log.Debug(TAG, $"GetIndexPortState({port_state_as_string})");
+            List<string> port_states_list = new List<string>(Resources.GetStringArray(Resource.Array.script_trigger_port_states_array));
+            bool port_state;
+            if (string.IsNullOrWhiteSpace(port_state_as_string) || !bool.TryParse(port_state_as_string, out port_state))
+            {
+                return port_states_list.IndexOf(GetString(Resource.String.abc_capital_switch));
+            }
+
+            return GetIndexPortState(port_state, port_states_list);
         }
 
         private void FormEnableToggler_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)

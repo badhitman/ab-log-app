@@ -7,12 +7,10 @@ using System.Linq;
 using ab.Model;
 using ab.Services;
 using Android.App;
-using Android.Content;
 using Android.OS;
 using Android.Util;
 using Android.Widget;
 using AndroidX.AppCompat.Widget;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ab
 {
@@ -25,6 +23,7 @@ namespace ab
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
             FormEnableTrigger.Text = GetString(Resource.String.autorun_trigger_title);
             ScriptName = new AppCompatEditText(this);

@@ -15,18 +15,23 @@ using AndroidX.AppCompat.Widget;
 using Microsoft.EntityFrameworkCore;
 using Android.Content;
 using System.Collections.Generic;
+using Android.Util;
 
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class CommandEditActivity : CommandAddActivity
     {
+        public static new readonly string TAG = nameof(CommandEditActivity);
+
+
         CommandScriptModel command = null;
 
         AppCompatButton buttonDeleteCommand;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
             int CommandId = Intent.Extras.GetInt(nameof(CommandScriptModel.Id), 0);
 
@@ -64,19 +69,13 @@ namespace ab
             appCompatEditTextPauseBeforeStarting.Text = command.PauseBeforeExecution.ToString();
             appCompatCheckBoxHiddenCommand.Checked = command.Hidden;
 
-            if (command.PortExecutionCondition != null)
-            {
-                FormEnableTrigger.Checked = true;
-                
-                HardwareFormFieldSpinner.Enabled = true;
-                HardwareFormFieldSpinner.SetSelection(Hardwares.Keys.ToList().IndexOf(command.PortExecutionCondition.HardwareId));
-                
-                PortFormFieldSpinner.Enabled = true;
-                PortFormFieldSpinner.SetSelection(Ports.Keys.ToList().IndexOf(command.PortExecutionCondition.Id));
-                
-                StateFormFieldSpinner.Enabled = true;
-                StateFormFieldSpinner.SetSelection(GetIndexPortState(command.ExecutionParametr));
-            }
+        }
+
+        protected override void OnResume()
+        {
+            Log.Debug(TAG, "OnResume");
+            base.OnResume();
+            buttonDeleteCommand.Click += ButtonDeleteCommands_Click;
 
             List<string> types_command = new List<string>(Resources.GetStringArray(Resource.Array.commands_types_array));
             switch (command.TypeCommand)
@@ -84,6 +83,7 @@ namespace ab
                 case TypesCommands.Controller:
                     appCompatSpinnerTypesCommand.SetSelection(types_command.IndexOf(GetString(Resource.String.command_type_array_item_controller)));
                     TypesCommand_SpinnerItemSelected(null, null);
+
                     SettingsManageController settingsController = SettingsManageKit as SettingsManageController;
                     settingsController.controllers.SetSelection(Hardwares.Keys.ToList().IndexOf(command.Execution));
                     settingsController.command.Text = command.ExecutionParametr?.ToString();
@@ -91,6 +91,7 @@ namespace ab
                 case TypesCommands.Port:
                     appCompatSpinnerTypesCommand.SetSelection(types_command.IndexOf(GetString(Resource.String.command_type_array_item_port)));
                     TypesCommand_SpinnerItemSelected(null, null);
+
                     SettingsManagePort settingsPort = SettingsManageKit as SettingsManagePort;
                     PortHardwareModel port = null;
                     lock (DatabaseContext.DbLocker)
@@ -109,6 +110,7 @@ namespace ab
                 case TypesCommands.Exit:
                     appCompatSpinnerTypesCommand.SetSelection(types_command.IndexOf(GetString(Resource.String.command_type_array_item_transit)));
                     TypesCommand_SpinnerItemSelected(null, null);
+
                     SettingsManageTransfer settingsTransfer = SettingsManageKit as SettingsManageTransfer;
 
                     CommandScriptModel item_command = null;
@@ -123,45 +125,61 @@ namespace ab
                     settingsTransfer.steps.SetSelection(settingsTransfer.StepsScriptsList.Keys.ToList().IndexOf(item_command.Id));
                     break;
             }
-        }
 
-        int GetIndexPortState(string port_state_as_string)
-        {
-            List<string> port_states_list = new List<string>(Resources.GetStringArray(Resource.Array.script_trigger_port_states_array));
-            bool port_state;
-            if (string.IsNullOrWhiteSpace(port_state_as_string) || !bool.TryParse(port_state_as_string, out port_state))
+            if (command.PortExecutionCondition != null)
             {
-                return port_states_list.IndexOf(GetString(Resource.String.abc_capital_switch));
-            }
+                FormEnableTrigger.Checked = true;
 
-            if (port_state == true)
-            {
-                return port_states_list.IndexOf(GetString(Resource.String.abc_capital_on));
-            }
-            else if (port_state == false)
-            {
-                return port_states_list.IndexOf(GetString(Resource.String.abc_capital_off));
-            }
-            else
-            {
-                return port_states_list.IndexOf(GetString(Resource.String.abc_capital_switch));
-            }
-        }
+                HardwareFormFieldSpinner.Enabled = true;
+                HardwareFormFieldSpinner.SetSelection(Hardwares.Keys.ToList().IndexOf(command.PortExecutionCondition.HardwareId));
 
-        protected override void OnResume()
-        {
-            base.OnResume();
-            buttonDeleteCommand.Click += ButtonDeleteCommands_Click;
+                //UpdatePortsListSpinner(command.PortExecutionCondition.HardwareId);
+                PortFormFieldSpinner.Enabled = true;
+                //int i = PortFormFieldSpinner.SelectedItemPosition;
+                //i = Ports.Keys.ToList().IndexOf(command.PortExecutionCondition.Id);
+                //PortFormFieldSpinner.SetSelection(Ports.Keys.ToList().IndexOf(command.PortExecutionCondition.Id));
+                selected_port_id = command.PortExecutionCondition.Id;
+                //i = PortFormFieldSpinner.SelectedItemPosition;
+                //Log.Debug(TAG, $"set port: id:{command.PortExecutionCondition.Id} / position in spinner:{i}");
+                StateFormFieldSpinner.Enabled = true;
+                //var v = GetIndexPortState(command.ExecutionParametr);
+                StateFormFieldSpinner.SetSelection(GetIndexPortState(command.PortExecutionConditionAllowingState, new List<string>(Resources.GetStringArray(Resource.Array.script_trigger_port_states_array))));
+            }
         }
 
         protected override void OnPause()
         {
+            Log.Debug(TAG, "OnPause");
             base.OnPause();
             buttonDeleteCommand.Click -= ButtonDeleteCommands_Click;
         }
 
+        protected override void CardButton_Click(object sender, EventArgs e)
+        {
+            Log.Debug(TAG, "CardButton_Click");
+            if (!PreCardButton_Click(sender))
+            {
+                return;
+            }
+            command = ReadFormToObject(command);
+
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+                    db.CommandsScript.Update(command);
+                    db.SaveChanges();
+                }
+            }
+
+            Intent intent = new Intent(this, typeof(CommandsListActivity));
+            intent.PutExtra(nameof(ScriptHardwareModel.Id), command.ScriptHardwareId);
+            StartActivity(intent);
+        }
+
         private void ButtonDeleteCommands_Click(object sender, EventArgs e)
         {
+            Log.Debug(TAG, "ButtonDeleteCommands_Click");
             CardHeader.Text = GetText(Resource.String.delete_command_card_title);
 
             CardSubHeader.Text = GetText(Resource.String.delete_command_card_sub_title);

@@ -40,6 +40,7 @@ namespace ab
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
             ScriptId = Intent.Extras.GetInt(nameof(ScriptHardwareModel.Id), 0);
 
@@ -65,6 +66,7 @@ namespace ab
             appCompatSpinnerTypesCommand.Adapter = adapterTypesCommands;
         }
 
+
         protected void TypesCommand_SpinnerItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
             command_executer_id = -1;
@@ -79,19 +81,25 @@ namespace ab
 
             if (type_command_name == GetString(Resource.String.command_type_array_item_port))
             {
-                typeCommand = TypesCommands.Port;
-                about_selected_command.Text = GetString(Resource.String.about_selected_command_port_title);
-                Dictionary<int, string> CommandsPorts = new Dictionary<int, string>();
-
                 linearLayoutConfigCommandForm = LayoutInflater.Inflate(Resource.Layout.FormPortCommand, BottomLayout, false) as LinearLayoutCompat;
                 AppCompatSpinner spinnerControllerCommand = linearLayoutConfigCommandForm.FindViewById<AppCompatSpinner>(Resource.Id.spinnerControllerPortCommand);
                 AppCompatSpinner spinnerPortsCommand = linearLayoutConfigCommandForm.FindViewById<AppCompatSpinner>(Resource.Id.spinnerPortCommand);
                 AppCompatSpinner spinnerStateCommand = linearLayoutConfigCommandForm.FindViewById<AppCompatSpinner>(Resource.Id.spinnerStateCommand);
 
+                SettingsManagePort settingsManage = new SettingsManagePort()
+                {
+                    controllers = spinnerControllerCommand,
+                    ports = spinnerPortsCommand,
+                    states = spinnerStateCommand,
+                    CommandsPorts = new Dictionary<int, string>()
+                };
+                typeCommand = TypesCommands.Port;
+                about_selected_command.Text = GetString(Resource.String.about_selected_command_port_title);
+
                 spinnerControllerCommand.ItemSelected += delegate (object sender, AdapterView.ItemSelectedEventArgs e)
                 {
                     int hardware_id = Hardwares.Keys.ElementAt(e.Position);
-                    CommandsPorts = new Dictionary<int, string>();
+                    settingsManage.CommandsPorts = new Dictionary<int, string>();
 
                     Log.Debug(TAG, $"delegate update ports list ({hardware_id})");
                     HardwareModel hw = null;
@@ -115,16 +123,16 @@ namespace ab
                     {
                         Log.Debug(TAG, $"ControllerCommand_SpinnerItemSelected(hw:{hw}) - Position:{e.Position}");
                     }
-                    hw.Ports.ForEach(portHardware => { CommandsPorts.Add(portHardware.Id, portHardware.ToString()); });
+                    hw.Ports.ForEach(portHardware => { settingsManage.CommandsPorts.Add(portHardware.Id, portHardware.ToString()); });
                     //
-                    ArrayAdapter<string> adapterPorts = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem, CommandsPorts.Values.ToList());
+                    ArrayAdapter<string> adapterPorts = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem, settingsManage.CommandsPorts.Values.ToList());
                     adapterPorts.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
                     spinnerPortsCommand.Adapter = adapterPorts;
                 };
 
                 spinnerPortsCommand.ItemSelected += delegate (object sender, AdapterView.ItemSelectedEventArgs e)
                 {
-                    int port_id = CommandsPorts.Keys.ElementAt(e.Position);
+                    int port_id = settingsManage.CommandsPorts.Keys.ElementAt(e.Position);
                     command_executer_id = port_id;
 
                     PortHardwareModel portHardware = null;
@@ -170,13 +178,7 @@ namespace ab
                 spinnerStateCommand.Adapter = adapterPortStatuses;
                 UpdateHardwaresListSpinner(spinnerControllerCommand);
 
-                SettingsManageKit = new SettingsManagePort()
-                {
-                    controllers = spinnerControllerCommand,
-                    ports = spinnerPortsCommand,
-                    states = spinnerStateCommand,
-                    CommandsPorts = CommandsPorts
-                };
+                SettingsManageKit = settingsManage;
             }
             else if (type_command_name == GetString(Resource.String.command_type_array_item_controller))
             {
@@ -301,7 +303,7 @@ namespace ab
             BottomLayout.AddView(linearLayoutConfigCommandForm);
         }
 
-        protected override void CardButton_Click(object sender, EventArgs e)
+        protected bool PreCardButton_Click(object sender)
         {
             AppCompatButton button = (AppCompatButton)sender;
             Log.Debug(TAG, $"CardButton_Click: {button.Text}");
@@ -311,7 +313,7 @@ namespace ab
                 CancelIntent = new Intent(this, typeof(CommandsListActivity));
                 CancelIntent.PutExtra(nameof(CommandScriptModel.Id), ScriptId);
                 StartActivity(CancelIntent);
-                return;
+                return false;
             }
 
             string errMsg = ReadView();
@@ -322,18 +324,107 @@ namespace ab
                 CardSubHeader.Text = errMsg;
                 CardSubHeader.SetTextColor(Android.Graphics.Color.Red);
                 Toast.MakeText(this, errMsg, ToastLength.Short).Show();
+                return false;
+            }
+            return true;
+        }
+
+        protected CommandScriptModel ReadFormToObject(CommandScriptModel my_command)
+        {
+            Log.Debug(TAG, "ReadFormToObject");
+            my_command.TypeCommand = typeCommand;
+            my_command.Hidden = appCompatCheckBoxHiddenCommand.Checked;
+            my_command.PauseBeforeExecution = double.Parse($"0{appCompatEditTextPauseBeforeStarting.Text}");
+            my_command.Execution = command_executer_id;
+            my_command.ExecutionParametr = command_executer_parameter?.ToString();
+
+            string PortExecutionConditionAllowingState;
+            if (FormEnableTrigger.Checked)
+            {
+                my_command.PortExecutionConditionId = Ports.Keys.ElementAt(PortFormFieldSpinner.SelectedItemPosition);
+
+                PortExecutionConditionAllowingState = Resources.GetStringArray(Resource.Array.script_trigger_port_states_array)[StateFormFieldSpinner.SelectedItemPosition];
+                if (PortExecutionConditionAllowingState == GetString(Resource.String.abc_capital_on))
+                {
+                    my_command.PortExecutionConditionAllowingState = true;
+                }
+                else if (PortExecutionConditionAllowingState == GetString(Resource.String.abc_capital_off))
+                {
+                    my_command.PortExecutionConditionAllowingState = false;
+                }
+                else
+                {
+                    my_command.PortExecutionConditionAllowingState = null;
+                }
+            }
+            //my_command.;
+            //my_command.;
+            //my_command.;
+            //my_command.;
+            //my_command.;
+            //my_command.;
+            switch (typeCommand)
+            {
+                case TypesCommands.Port:
+                    bool? setter_state_port = command_executer_parameter as bool?;
+                    string setter_name_state_port = string.Empty;
+
+                    if (setter_state_port == true)
+                    {
+                        setter_name_state_port = GetString(Resource.String.abc_capital_on);
+                    }
+                    else if (setter_state_port == false)
+                    {
+                        setter_name_state_port = GetString(Resource.String.abc_capital_off);
+                    }
+                    else
+                    {
+                        setter_name_state_port = GetString(Resource.String.abc_capital_switch);
+                    }
+
+                    lock (DatabaseContext.DbLocker)
+                    {
+                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                        {
+                            PortHardwareModel port = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == command_executer_id);
+                            my_command.Name = $"{port.Hardware} ●> {port} ●> {setter_name_state_port}";
+                        }
+                    }
+                    break;
+                case TypesCommands.Controller:
+                    lock (DatabaseContext.DbLocker)
+                    {
+                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                        {
+                            HardwareModel hw = db.Hardwares.FirstOrDefault(x => x.Id == command_executer_id);
+                            my_command.Name = $"{hw} ●> {command_executer_parameter}";
+                        }
+                    }
+                    break;
+                case TypesCommands.Exit:
+                    lock (DatabaseContext.DbLocker)
+                    {
+                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                        {
+                            CommandScriptModel cmd = db.CommandsScript.Include(x => x.ScriptHardware).FirstOrDefault(x => x.Id == command_executer_id);
+                            my_command.Name = $"{cmd.ScriptHardware} ●> {cmd}";
+                        }
+                    }
+                    break;
+            }
+
+            return my_command;
+        }
+
+        protected override void CardButton_Click(object sender, EventArgs e)
+        {
+            Log.Debug(TAG, "CardButton_Click");
+            if (!PreCardButton_Click(sender))
+            {
                 return;
             }
 
-            CommandScriptModel command = new CommandScriptModel()
-            {
-                TypeCommand = typeCommand,
-                Hidden = appCompatCheckBoxHiddenCommand.Checked,
-                PauseBeforeExecution = double.Parse($"0{appCompatEditTextPauseBeforeStarting.Text}"),
-                ScriptHardwareId = ScriptId,
-                Execution = command_executer_id,
-                ExecutionParametr = command_executer_parameter?.ToString()
-            };
+            CommandScriptModel command = ReadFormToObject(new CommandScriptModel() { ScriptHardwareId = ScriptId });
 
             lock (DatabaseContext.DbLocker)
             {
@@ -349,75 +440,6 @@ namespace ab
                     }
                 }
             }
-            string PortExecutionConditionAllowingState = string.Empty;
-            if (FormEnableTrigger.Checked)
-            {
-                command.PortExecutionConditionId = Ports.Keys.ElementAt(PortFormFieldSpinner.SelectedItemPosition);
-
-                PortExecutionConditionAllowingState = Resources.GetStringArray(Resource.Array.script_trigger_port_states_array)[StateFormFieldSpinner.SelectedItemPosition];
-                if (PortExecutionConditionAllowingState == GetString(Resource.String.abc_capital_on))
-                {
-                    command.PortExecutionConditionAllowingState = true;
-                }
-                else if (PortExecutionConditionAllowingState == GetString(Resource.String.abc_capital_off))
-                {
-                    command.PortExecutionConditionAllowingState = false;
-                }
-                else
-                {
-                    command.PortExecutionConditionAllowingState = null;
-                }
-            }
-
-            switch (typeCommand)
-            {
-                case TypesCommands.Port:
-                    bool? setter_state_port = command_executer_parameter as bool?;
-                    string setter_name_state_port = string.Empty;
-
-                    if (setter_state_port == true)
-                    {
-                        setter_name_state_port = GetString(Resource.String.abc_capital_on);
-                    }
-                    else if (setter_state_port == true)
-                    {
-                        setter_name_state_port = GetString(Resource.String.abc_capital_off);
-                    }
-                    else
-                    {
-                        setter_name_state_port = GetString(Resource.String.abc_capital_switch);
-                    }
-
-                    lock (DatabaseContext.DbLocker)
-                    {
-                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                        {
-                            PortHardwareModel port = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == command_executer_id);
-                            command.Name = $"{port.Hardware} ●> {port} ●> {setter_name_state_port}";
-                        }
-                    }
-                    break;
-                case TypesCommands.Controller:
-                    lock (DatabaseContext.DbLocker)
-                    {
-                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                        {
-                            HardwareModel hw = db.Hardwares.FirstOrDefault(x => x.Id == command_executer_id);
-                            command.Name = $"{hw} ●> {command_executer_parameter}";
-                        }
-                    }
-                    break;
-                case TypesCommands.Exit:
-                    lock (DatabaseContext.DbLocker)
-                    {
-                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                        {
-                            CommandScriptModel cmd = db.CommandsScript.Include(x => x.ScriptHardware).FirstOrDefault(x => x.Id == command_executer_id);
-                            command.Name = $"{cmd.ScriptHardware} ●> {cmd}";
-                        }
-                    }
-                    break;
-            }
 
             lock (DatabaseContext.DbLocker)
             {
@@ -428,9 +450,9 @@ namespace ab
                 }
             }
 
-            CancelIntent = new Intent(this, typeof(CommandsListActivity));
-            CancelIntent.PutExtra(nameof(ScriptHardwareModel.Id), ScriptId);
-            StartActivity(CancelIntent);
+            Intent intent = new Intent(this, typeof(CommandsListActivity));
+            intent.PutExtra(nameof(ScriptHardwareModel.Id), ScriptId);
+            StartActivity(intent);
         }
 
         protected override string ReadView()

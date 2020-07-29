@@ -14,18 +14,22 @@ using Android.Widget;
 using AndroidX.AppCompat.Widget;
 using Microsoft.EntityFrameworkCore;
 using Android.Content;
+using Android.Util;
 
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class ScriptEditActivity : ScriptAddActivity
     {
+        public static new readonly string TAG = nameof(ScriptEditActivity);
+
         AppCompatButton buttonDeleteScript;
         AppCompatButton ButtonConfigScript;
         AppCompatButton ButtonStartScript;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
 
             lock (DatabaseContext.DbLocker)
@@ -113,6 +117,7 @@ namespace ab
 
         protected override void OnResume()
         {
+            Log.Debug(TAG, "OnResume");
             base.OnResume();
             buttonDeleteScript.Click += ButtonDeleteScript_Click;
             ButtonConfigScript.Click += ButtonConfigScript_Click;
@@ -121,6 +126,7 @@ namespace ab
 
         protected override void OnPause()
         {
+            Log.Debug(TAG, "OnPause");
             base.OnPause();
             buttonDeleteScript.Click -= ButtonDeleteScript_Click;
             ButtonConfigScript.Click -= ButtonConfigScript_Click;
@@ -129,6 +135,7 @@ namespace ab
 
         private void ButtonConfigScript_Click(object sender, EventArgs e)
         {
+            Log.Debug(TAG, "ButtonConfigScript_Click");
             Intent intent = new Intent(this, typeof(CommandsListActivity));
             intent.PutExtra(nameof(scriptHardware.Id), scriptHardware.Id);
             StartActivity(intent);
@@ -141,6 +148,7 @@ namespace ab
 
         private void ButtonDeleteScript_Click(object sender, EventArgs e)
         {
+            Log.Debug(TAG, "ButtonDeleteScript_Click");
             CardHeader.Text = GetText(Resource.String.delete_script_card_title);
 
             CardSubHeader.Text = GetText(Resource.String.delete_script_card_sub_title);
