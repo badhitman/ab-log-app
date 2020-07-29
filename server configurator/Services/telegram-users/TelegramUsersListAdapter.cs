@@ -43,15 +43,15 @@ namespace ab.Services
             users.ForEach(x => { LinkedUsers.Add(x.Id, x.Name); });
         }
 
-        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int telegram_user_id)
+        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            Log.Debug(TAG, $"OnBindViewHolder - telegram_user_id:{telegram_user_id}");
+            Log.Debug(TAG, $"OnBindViewHolder - position:{position}");
             TelegramUserListItemViewHolder telegramUsersViewHolder = holder as TelegramUserListItemViewHolder;
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    TelegramUserModel row = db.TelegramUsers.Find(telegram_user_id);
+                    TelegramUserModel row = db.TelegramUsers.Skip(position).FirstOrDefault();
 
                     telegramUsersViewHolder.TelegramId.Text = row.TelegramId + (string.IsNullOrWhiteSpace(row.UserName) ? "" : $" (@{row.UserName})");
 

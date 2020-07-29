@@ -80,7 +80,18 @@ namespace ab.Services
             while (TelegramBotSurveyInterval > 0)
             {
                 Log.Debug(TelegramBotTAG, " ~ request telegram updates");
-                Update[] updates = telegramClient.getUpdates().Result;
+                Update[] updates = null;
+                try
+                {
+                    updates = telegramClient.getUpdates().Result;
+                }
+                catch (AggregateException err)
+                {
+                    foreach (var errInner in err.InnerExceptions)
+                    {
+                        Log.Error(TAG, errInner.Message); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
+                    }
+                }
                 if (updates == null)
                 {
                     log_msg = "telegramClient.getUpdates() == null";
