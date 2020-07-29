@@ -14,19 +14,21 @@ namespace ab.Services
     public class CommandsListAdapter : RecyclerView.Adapter
     {
         public event EventHandler<int> ItemClick;
+        public event EventHandler<int> MoveOrderingCommand;
+
         Context mContext;
         int ScriptId;
-        
-        public override int ItemCount 
-        { 
-            get 
-            { 
-                lock (DatabaseContext.DbLocker) 
+
+        public override int ItemCount
+        {
+            get
+            {
+                lock (DatabaseContext.DbLocker)
                 {
                     using DatabaseContext db = new DatabaseContext(gs.DatabasePathBase);
                     return db.CommandsScript.Where(x => x.ScriptHardwareId == ScriptId).Count();
-                } 
-            } 
+                }
+            }
         }
 
         public CommandsListAdapter(Context _mContext, int script_id)
@@ -35,9 +37,14 @@ namespace ab.Services
             ScriptId = script_id;
         }
 
-        void OnClick(int position)
+        void OnClick(int command_id)
         {
-            ItemClick?.Invoke(this, position);
+            ItemClick?.Invoke(this, command_id);
+        }
+
+        void OnMoveOrderingCommand(object sender, int command_id)
+        {
+            MoveOrderingCommand?.Invoke(sender, command_id);
         }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
@@ -62,7 +69,7 @@ namespace ab.Services
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
             View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.commands_list_item, parent, false);
-            CommandsListItemViewHolder commandListItemViewHolder = new CommandsListItemViewHolder(itemView, OnClick);
+            CommandsListItemViewHolder commandListItemViewHolder = new CommandsListItemViewHolder(itemView, OnClick, OnMoveOrderingCommand);
             return commandListItemViewHolder;
         }
     }

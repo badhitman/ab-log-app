@@ -47,7 +47,7 @@ namespace ab
 
             mRecyclerView = FindViewById<RecyclerView>(Resource.Id.recyclerViewCommandsList);
 
-            
+
         }
 
         protected override void OnResume()
@@ -60,6 +60,51 @@ namespace ab
 
             mRecyclerView.SetAdapter(mAdapter);
             mAdapter.ItemClick += OnItemClick;
+            mAdapter.MoveOrderingCommand += MoveOrderingCommand;
+        }
+
+        private void MoveOrderingCommand(object sender, int command_id)
+        {
+            ImageButton button = (ImageButton)sender;
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+                    CommandScriptModel command = db.CommandsScript.Find(command_id);
+                    if (button.Id == Resource.Id.UpCommandOrdering)
+                    {
+                        if (db.CommandsScript.Any(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering < command.Ordering))
+                        {
+                            int exchange_order = db.CommandsScript.Where(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering < command.Ordering).Max(x=>x.Ordering);
+                            CommandScriptModel command2 = db.CommandsScript.FirstOrDefault(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering== exchange_order);
+                            command2.Ordering = command.Ordering;
+                            command.Ordering = exchange_order;
+                            //
+                            db.CommandsScript.UpdateRange(command, command2);
+                            db.SaveChanges();
+                            //mAdapter.NotifyAll();
+                        }
+                    }
+                    else
+                    {
+                        if (db.CommandsScript.Any(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering > command.Ordering))
+                        {
+                            int exchange_order = db.CommandsScript.Where(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering > command.Ordering).Min(x => x.Ordering);
+                            CommandScriptModel command2 = db.CommandsScript.FirstOrDefault(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering == exchange_order);
+                            command2.Ordering = command.Ordering;
+                            command.Ordering = exchange_order;
+                            //
+                            db.CommandsScript.UpdateRange(command, command2);
+                            db.SaveChanges();
+                            //mAdapter.Notify();
+                        }
+                    }
+                    mAdapter = new CommandsListAdapter(this, script.Id);
+                    mRecyclerView.SetAdapter(mAdapter);
+                    mAdapter.ItemClick += OnItemClick;
+                    mAdapter.MoveOrderingCommand += MoveOrderingCommand;
+                }
+            }
         }
 
         private void OnItemClick(object sender, int CommandId)
@@ -73,6 +118,7 @@ namespace ab
         {
             base.OnPause();
             mAdapter.ItemClick -= OnItemClick;
+            mAdapter.MoveOrderingCommand -= MoveOrderingCommand;
         }
 
         protected override void ButtonAddOnClick(object sender, EventArgs eventArgs)

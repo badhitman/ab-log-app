@@ -22,7 +22,7 @@ namespace ab
     {
         AppCompatButton buttonDeleteScript;
         AppCompatButton ButtonConfigScript;
-        AppCompatButton ButtonStartScript;       
+        AppCompatButton ButtonStartScript;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -184,5 +184,5 @@ namespace ab
             });
             FooterLayout.AddView(ButtonConfirmDeleteScript);
         }
-        }
+    }
 }
