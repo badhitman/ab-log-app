@@ -10,6 +10,7 @@ using ab.Services;
 using Android.App;
 using Android.Graphics;
 using Android.OS;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.Widget;
@@ -19,43 +20,46 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class UserEditActivity : UserCreateActivity
     {
+        public new readonly string TAG = "user-edit-activity";
+
         protected override int ViewId => Resource.Layout.user_activity;
         protected int userId;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
             UserFooterLayout = FindViewById<LinearLayout>(Resource.Id.user_footer_layout);
+            int user_id = Intent.Extras.GetInt(nameof(UserModel.Id), 0);
 
-            ReadView();
+            if (user_id < 1)
+            {
+                string err_title = GetText(Resource.String.err_title_2);
+                UserName.Text = err_title;
+                UserName.Enabled = false;
+
+                UserEmail.Text = err_title;
+                UserEmail.Enabled = false;
+
+                UserPhone.Text = err_title;
+                UserPhone.Enabled = false;
+
+                UserAlarmSubscribing.Enabled = false;
+                UserCommandsAllowed.Enabled = false;
+
+                UserCardSubHeader.Text = err_title;
+                UserCardSubHeader.Enabled = false;
+
+                UserCardButtonOk.Enabled = false;
+                return;
+            }
 
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    if (gs.SelectedListPosition < 0 || db.Users.Count() < gs.SelectedListPosition + 1)
-                    {
-                        string err_title = GetText(Resource.String.err_title_2);
-                        UserName.Text = err_title;
-                        UserName.Enabled = false;
 
-                        UserEmail.Text = err_title;
-                        UserEmail.Enabled = false;
-
-                        UserPhone.Text = err_title;
-                        UserPhone.Enabled = false;
-
-                        UserAlarmSubscribing.Enabled = false;
-                        UserCommandsAllowed.Enabled = false;
-
-                        UserCardSubHeader.Text = err_title;
-                        UserCardSubHeader.Enabled = false;
-
-                        UserCardButtonOk.Enabled = false;
-                        return;
-                    }
-
-                    UserModel user = db.Users.Skip(gs.SelectedListPosition).FirstOrDefault();
+                    UserModel user = db.Users.Find(user_id);
                     userId = user?.Id ?? 0;
                     UserName.Text = user?.Name;
                     UserEmail.Text = user?.Email;
@@ -93,6 +97,8 @@ namespace ab
 
         private void ButtonDeleteUser_Click(object sender, EventArgs e)
         {
+            Log.Debug(TAG, "ButtonDeleteUser_Click");
+
             AppCompatButton buttonDeleteUser = sender as AppCompatButton;
             buttonDeleteUser.Enabled = false;
             UserCardButtonOk.Enabled = false;
@@ -134,6 +140,8 @@ namespace ab
 
         protected override void HandlerUserButtonOk_Click(object sender, EventArgs e)
         {
+            Log.Debug(TAG, "HandlerUserButtonOk_Click");
+
             string errMsg = ReadView(userId);
             if (!string.IsNullOrWhiteSpace(errMsg))
             {

@@ -12,11 +12,12 @@ namespace ab.Services
     public class ScriptListItemViewHolder : RecyclerView.ViewHolder
     {
         public TextView Name { get; private set; }
+        public int ScriptId { get; set; }
 
         public ScriptListItemViewHolder(View itemView, Action<int> listener) : base(itemView)
         {
             Name = itemView.FindViewById<TextView>(Resource.Id.script_name_list_item);
-            itemView.Click += (sender, e) => listener(LayoutPosition);
+            itemView.Click += (sender, e) => listener(ScriptId);
         }
     }
 }

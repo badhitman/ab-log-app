@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
-    public class HardwareAddActivity : aActivity
+    public class HardwareAddActivity : AbstractActivity
     {
         protected override int ViewId => Resource.Layout.hardware_activity;
         protected override int ToolbarId => Resource.Id.hardware_toolbar;

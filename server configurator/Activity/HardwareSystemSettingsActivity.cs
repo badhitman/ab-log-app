@@ -24,13 +24,14 @@ using Xamarin.Essentials;
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class HardwareSystemSettingsActivity : aActivity
+    public class HardwareSystemSettingsActivity : AbstractActivity
     {
+        static new readonly string TAG = nameof(HardwareSystemSettingsActivity);
+
         protected override int ViewId => Resource.Layout.hardware_system_settings_activity;
         protected override int ToolbarId => Resource.Id.hardware_system_settings_toolbar;
         protected override int DrawerLayoutId => Resource.Id.hardware_system_settings_app_drawer_layout;
         protected override int NavId => Resource.Id.hardware_system_settings_app_nav_view;
-        static string TAG = nameof(HardwareSystemSettingsActivity);
         string[] supported_firmwares = new string[] { "(fw: 4.45b5)" };
 
         WebView webView;
@@ -49,6 +50,8 @@ namespace ab
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Log.Debug(TAG, "OnCreate");
+
             base.OnCreate(savedInstanceState);
             int id = Intent.Extras.GetInt(nameof(HardwareModel.Id), 0);
             hardwareCardSubHeader = FindViewById<TextView>(Resource.Id.hardware_system_settings_card_sub_header);
@@ -67,6 +70,8 @@ namespace ab
 
         public async void GetHttp(string url)
         {
+            Log.Debug(TAG, $"GetHttp - {url}");
+
             Android.Net.Uri uri = Android.Net.Uri.Parse(url);
             if (uri.Host == "ab-log.ru")
             {
@@ -131,7 +136,7 @@ namespace ab
                 }
             }
 
-            using (HttpClient client = new HttpClient())
+            using (HttpClient client = new HttpClient() { Timeout = new TimeSpan(0, 0, 5) })
             {
                 try
                 {
@@ -140,7 +145,7 @@ namespace ab
                 }
                 catch (Exception ex)
                 {
-                    Toast.MakeText(this, ex.Message, ToastLength.Short).Show();
+                    Toast.MakeText(this, ex.Message, ToastLength.Long).Show();
                     StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));
                     return;
                 }
@@ -679,6 +684,8 @@ namespace ab
 
         private PortHardwareModel GetPortHardware(string port)
         {
+            Log.Debug(TAG, $"GetPortHardware - {port}");
+
             int port_num = int.Parse(port);
             PortHardwareModel portHardware = hardware.Ports.FirstOrDefault(x => x.PortNumb == port_num);
             if (portHardware == null)

@@ -12,7 +12,7 @@ using System.IO;
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class AboutPageActivity : aActivity
+    public class AboutPageActivity : AbstractActivity
     {
         protected override int ViewId => Resource.Layout.about_activity;
         protected override int ToolbarId => Resource.Id.about_toolbar;

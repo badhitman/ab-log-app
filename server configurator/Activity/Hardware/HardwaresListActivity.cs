@@ -3,16 +3,21 @@
 ////////////////////////////////////////////////
 
 using System;
+using ab.Model;
 using ab.Services;
 using Android.App;
+using Android.Content;
 using Android.OS;
+using Android.Util;
 using AndroidX.RecyclerView.Widget;
 
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class HardwaresListActivity : aListActivity
+    public class HardwaresListActivity : AbstractListActivity
     {
+        public new readonly string TAG = "hardwares-list-activity";
+
         protected override int ViewId => Resource.Layout.hardwares_list_activity;
         protected override int ToolbarId => Resource.Id.hardwares_list_toolbar;
         protected override int DrawerLayoutId => Resource.Id.hardwares_list_drawer_layout;
@@ -25,6 +30,8 @@ namespace ab
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Log.Debug(TAG, "OnCreate");
+
             base.OnCreate(savedInstanceState);
             mRecyclerView = FindViewById<RecyclerView>(Resource.Id.hardwares_list);
 
@@ -33,31 +40,39 @@ namespace ab
 
             mAdapter = new HardwaresListAdapter(this);
 
-            mRecyclerView.SetAdapter(mAdapter);           
+            mRecyclerView.SetAdapter(mAdapter);
         }
 
         protected override void OnResume()
         {
+            Log.Debug(TAG, "OnResume");
+
             base.OnResume();
             mAdapter.ItemClick += OnItemClick;
         }
 
         protected override void OnPause()
         {
+            Log.Debug(TAG, "OnPause");
+
             base.OnPause();
             mAdapter.ItemClick -= OnItemClick;
         }
 
         protected override void ButtonAddOnClick(object sender, EventArgs eventArgs)
         {
+            Log.Debug(TAG, "ButtonAddOnClick");
+
             StartActivity(typeof(HardwareAddActivity));
         }
 
-        void OnItemClick(object sender, int position)
+        void OnItemClick(object sender, int hardware_id)
         {
-            gs.SelectedListPosition = position;
-            StartActivity(typeof(HardwareEditActivity));
+            Log.Debug(TAG, $"OnItemClick - hardware_id:{hardware_id}");
+
+            Intent intent = new Intent(this, typeof(HardwareEditActivity));
+            intent.PutExtra(nameof(HardwareModel.Id), hardware_id);
+            StartActivity(intent);
         }
     }
 }
-

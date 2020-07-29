@@ -6,6 +6,7 @@ using ab.Services;
 using Android.App;
 using Android.Graphics;
 using Android.OS;
+using Android.Util;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using System.Threading.Tasks;
@@ -15,8 +16,10 @@ using Xamarin.Essentials;
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class TelegramBotActivity : aActivity
+    public class TelegramBotActivity : AbstractActivity
     {
+        public new readonly string TAG = "telegram-bot-activity";
+
         protected override int ViewId => Resource.Layout.telegram_activity;
         protected override int ToolbarId => Resource.Id.telegram_toolbar;
         protected override int DrawerLayoutId => Resource.Id.telegram_app_drawer_layout;
@@ -31,6 +34,7 @@ namespace ab
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
             editTextToken = FindViewById<EditText>(Resource.Id.editTextTelegramBotToken);
             buttonCheckTelegramBotToken = FindViewById<Button>(Resource.Id.button_check_telegram_bot_token);
@@ -40,17 +44,16 @@ namespace ab
             editTextToken.Text = token;
             buttonCheckTelegramBotToken.Enabled = !string.IsNullOrEmpty(token);
 
-            //long telegramBotId = Preferences.Get(Constants.TELEGRAM_BOT_ID, (long)0);
-
             mLayoutManager = new LinearLayoutManager(this);
             recyclerViewUsersList.SetLayoutManager(mLayoutManager);
 
-            telegramUsersListAdapter = new TelegramUsersListAdapter();
+            telegramUsersListAdapter = new TelegramUsersListAdapter(this);
             recyclerViewUsersList.SetAdapter(telegramUsersListAdapter);
         }
 
         protected override void OnResume()
         {
+            Log.Debug(TAG, "OnResume");
             base.OnResume();
             editTextToken.TextChanged += EditTextToken_TextChanged;
             buttonCheckTelegramBotToken.Click += ButtonCheckTelegramBotToken_Click;
@@ -58,6 +61,7 @@ namespace ab
 
         protected override void OnPause()
         {
+            Log.Debug(TAG, "OnPause");
             base.OnPause();
             editTextToken.TextChanged -= EditTextToken_TextChanged;
             buttonCheckTelegramBotToken.Click -= ButtonCheckTelegramBotToken_Click;
@@ -65,6 +69,7 @@ namespace ab
 
         private void EditTextToken_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
+            Log.Debug(TAG, "EditTextToken_TextChanged");
             EditText editText = sender as EditText;
             Preferences.Set(Constants.TELEGRAM_TOKEN, editText.Text);
             buttonCheckTelegramBotToken.Enabled = !string.IsNullOrEmpty(editText.Text);
@@ -73,6 +78,7 @@ namespace ab
 
         private void ButtonCheckTelegramBotToken_Click(object sender, System.EventArgs e)
         {
+            Log.Debug(TAG, "ButtonCheckTelegramBotToken_Click");
             buttonCheckTelegramBotToken.Enabled = false;
             editTextToken.Enabled = false;
             CheckTelegramBotToken();
@@ -80,6 +86,7 @@ namespace ab
 
         private async void CheckTelegramBotToken()
         {
+            Log.Debug(TAG, "CheckTelegramBotToken");
             Preferences.Set(Constants.TELEGRAM_BOT_ID, (long)0);
 
             linearLayoutStatusCheckTelegramBotToken.RemoveAllViews();
@@ -115,4 +122,3 @@ namespace ab
         }
     }
 }
-

@@ -5960,11 +5960,11 @@ namespace ab
 			// aapt resource value: 0x7F0A009C
 			public const int container_list = 2131361948;
 			
-			// aapt resource value: 0x7F0A0002
-			public const int Content = 2131361794;
-			
 			// aapt resource value: 0x7F0A009D
 			public const int content = 2131361949;
+			
+			// aapt resource value: 0x7F0A0002
+			public const int Content = 2131361794;
 			
 			// aapt resource value: 0x7F0A009E
 			public const int contentPanel = 2131361950;
@@ -7238,20 +7238,20 @@ namespace ab
 			// aapt resource value: 0x7F0A023A
 			public const int useLogo = 2131362362;
 			
+			// aapt resource value: 0x7F0A024C
+			public const int users_list = 2131362380;
+			
+			// aapt resource value: 0x7F0A024D
+			public const int users_list_add_button = 2131362381;
+			
 			// aapt resource value: 0x7F0A024E
-			public const int users_list = 2131362382;
+			public const int users_list_drawer_layout = 2131362382;
 			
 			// aapt resource value: 0x7F0A024F
-			public const int users_list_add_button = 2131362383;
+			public const int users_list_nav_view = 2131362383;
 			
 			// aapt resource value: 0x7F0A0250
-			public const int users_list_drawer_layout = 2131362384;
-			
-			// aapt resource value: 0x7F0A0251
-			public const int users_list_nav_view = 2131362385;
-			
-			// aapt resource value: 0x7F0A0252
-			public const int users_list_toolbar = 2131362386;
+			public const int users_list_toolbar = 2131362384;
 			
 			// aapt resource value: 0x7F0A023B
 			public const int user_alarms_switch = 2131362363;
@@ -7293,43 +7293,37 @@ namespace ab
 			public const int user_list_item_command_allowed = 2131362375;
 			
 			// aapt resource value: 0x7F0A0248
-			public const int user_list_item_email = 2131362376;
+			public const int user_name = 2131362376;
 			
 			// aapt resource value: 0x7F0A0249
-			public const int user_list_item_phone = 2131362377;
+			public const int user_nav_view = 2131362377;
 			
 			// aapt resource value: 0x7F0A024A
-			public const int user_name = 2131362378;
+			public const int user_phone = 2131362378;
 			
 			// aapt resource value: 0x7F0A024B
-			public const int user_nav_view = 2131362379;
+			public const int user_toolbar = 2131362379;
 			
-			// aapt resource value: 0x7F0A024C
-			public const int user_phone = 2131362380;
+			// aapt resource value: 0x7F0A0251
+			public const int video_surface = 2131362385;
 			
-			// aapt resource value: 0x7F0A024D
-			public const int user_toolbar = 2131362381;
+			// aapt resource value: 0x7F0A0252
+			public const int video_surface_container = 2131362386;
 			
 			// aapt resource value: 0x7F0A0253
-			public const int video_surface = 2131362387;
+			public const int view_offset_helper = 2131362387;
 			
 			// aapt resource value: 0x7F0A0254
-			public const int video_surface_container = 2131362388;
+			public const int visible = 2131362388;
 			
 			// aapt resource value: 0x7F0A0255
-			public const int view_offset_helper = 2131362389;
+			public const int visible_removing_fragment_view_tag = 2131362389;
 			
 			// aapt resource value: 0x7F0A0256
-			public const int visible = 2131362390;
+			public const int withText = 2131362390;
 			
 			// aapt resource value: 0x7F0A0257
-			public const int visible_removing_fragment_view_tag = 2131362391;
-			
-			// aapt resource value: 0x7F0A0258
-			public const int withText = 2131362392;
-			
-			// aapt resource value: 0x7F0A0259
-			public const int wrap_content = 2131362393;
+			public const int wrap_content = 2131362391;
 			
 			static Id()
 			{

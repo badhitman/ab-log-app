@@ -9,7 +9,7 @@ using Android.Widget;
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class PortsConfigActivity : aActivity
+    public class PortsConfigActivity : AbstractActivity
     {
         protected override int ViewId => Resource.Layout.ports_config_activity;
         protected override int ToolbarId => Resource.Id.ports_config_toolbar;

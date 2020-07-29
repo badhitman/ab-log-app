@@ -20,7 +20,7 @@ using Xamarin.Essentials;
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class CloudActivity : aActivity
+    public class CloudActivity : AbstractActivity
     {
         protected override int ViewId => Resource.Layout.cloud_activity;
         protected override int ToolbarId => Resource.Id.cloud_toolbar;

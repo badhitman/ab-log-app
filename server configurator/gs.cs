@@ -28,8 +28,6 @@ namespace ab
             }
         }
 
-        public static int SelectedListPosition { get; internal set; }
-
         /// <summary>
         /// Преобразовать размер файла в человекочитаемы вид
         /// </summary>

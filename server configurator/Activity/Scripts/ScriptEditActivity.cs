@@ -31,24 +31,13 @@ namespace ab
         {
             Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
+            int scriptId = Intent.Extras.GetInt(nameof(ScriptHardwareModel.Id), 0);
 
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    if (gs.SelectedListPosition < 0 || db.ScriptsHardware.Count() < gs.SelectedListPosition + 1)
-                    {
-                        string err_title = GetText(Resource.String.err_title_2);
-                        ScriptName.Text = err_title;
-                        ScriptName.Enabled = false;
-
-                        FormEnableTrigger.Checked = false;
-                        FormEnableTrigger.Enabled = false;
-                        return;
-                    }
-
-                    scriptHardware = db.ScriptsHardware.OrderBy(x => x.Id).Skip(gs.SelectedListPosition).Include(x => x.TriggerPort).ThenInclude(x => x.Hardware).FirstOrDefault();
-                    //scriptId = scriptHardware?.Id ?? 0;
+                    scriptHardware = db.ScriptsHardware.Include(x => x.TriggerPort).ThenInclude(x => x.Hardware).FirstOrDefault(x => x.Id == scriptId);
                     ScriptName.Text = scriptHardware?.Name;
                     if (scriptHardware.TriggerPort != null)
                     {

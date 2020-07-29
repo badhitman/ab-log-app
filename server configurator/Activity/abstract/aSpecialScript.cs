@@ -14,7 +14,7 @@ using AndroidX.AppCompat.Widget;
 
 namespace ab
 {
-    public abstract class aSpecialScript : aActivity
+    public abstract class aSpecialScript : AbstractActivity
     {
         public static readonly string TAG = nameof(aSpecialScript);
 

@@ -11,7 +11,7 @@ using AndroidX.RecyclerView.Widget;
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class LogsActivity : aActivity
+    public class LogsActivity : AbstractActivity
     {
         protected override int ViewId => Resource.Layout.logs_list_activity;
         protected override int ToolbarId => Resource.Id.logs_toolbar;

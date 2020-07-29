@@ -4,6 +4,7 @@
 
 using Android.OS;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
 using AndroidX.AppCompat.App;
 using AndroidX.AppCompat.View.Menu;
@@ -15,8 +16,9 @@ using Google.Android.Material.Navigation;
 
 namespace ab
 {
-    public abstract class aActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
+    public abstract class AbstractActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
+        public readonly string TAG = "abstract-communication-view-holder";
         private static int selectedMenuId = 0;
         //
         protected abstract int NavId { get; }
@@ -26,6 +28,9 @@ namespace ab
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+#if DEBUG
+            Log.Debug(TAG, "OnCreate");
+#endif
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(ViewId);
@@ -62,12 +67,15 @@ namespace ab
 
         protected override void OnDestroy()
         {
+#if DEBUG
+            Log.Debug(TAG, "OnDestroy");
+#endif
             base.OnDestroy();
-            gs.SelectedListPosition = 0;
         }
 
         public override void OnBackPressed()
         {
+            Log.Debug(TAG, "OnBackPressed");
             DrawerLayout drawer = FindViewById<DrawerLayout>(DrawerLayoutId);
             if (drawer.IsDrawerOpen(GravityCompat.Start))
             {
@@ -81,12 +89,18 @@ namespace ab
 
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
+#if DEBUG
+            Log.Debug(TAG, "OnCreateOptionsMenu");
+#endif
             MenuInflater.Inflate(Resource.Menu.menu, menu);
             return true;
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
+#if DEBUG
+            Log.Debug(TAG, $"OnOptionsItemSelected - #{item.ItemId}:{Resources.GetResourceEntryName(item.ItemId)}");
+#endif
             int id = selectedMenuId = item.ItemId;
             if (id == Resource.Id.action_logs)
             {
@@ -109,6 +123,9 @@ namespace ab
 
         public bool OnNavigationItemSelected(IMenuItem item)
         {
+#if DEBUG
+            Log.Debug(TAG, $"OnNavigationItemSelected - #{item.ItemId}:{Resources.GetResourceEntryName(item.ItemId)}");
+#endif
             int id = selectedMenuId = item.ItemId;
 
             if (id == Resource.Id.nav_hardware)
@@ -135,7 +152,6 @@ namespace ab
             {
                 Xamarin.Essentials.Browser.OpenAsync("https://github.com/badhitman/ab-log-app");
             }
-
             DrawerLayout drawer = FindViewById<DrawerLayout>(DrawerLayoutId);
             drawer.CloseDrawer(GravityCompat.Start);
             return true;
@@ -143,10 +159,11 @@ namespace ab
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
+#if DEBUG
+            Log.Debug(TAG, $"OnRequestPermissionsResult - {requestCode}");
+#endif
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }
-

@@ -90,8 +90,8 @@
     <Compile Include="gs.cs" />
     <Compile Include="Activity\ServicesActivity.cs" />
     <Compile Include="Activity\LogsActivity.cs" />
-    <Compile Include="Activity\abstract\aListActivity.cs" />
-    <Compile Include="Activity\abstract\aActivity.cs" />
+    <Compile Include="Activity\abstract\AbstractListActivity.cs" />
+    <Compile Include="Activity\abstract\AbstractActivity.cs" />
     <Compile Include="Activity\AboutPageActivity.cs" />
     <Compile Include="Activity\CloudActivity.cs" />
     <Compile Include="Model\abstract\abstractEF.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="Model\TelegramUserModel.cs" />
     <Compile Include="Model\TelegramMessageModel.cs" />
     <Compile Include="Model\UserModel.cs" />
-    <Compile Include="Services\abstract\aViewHolder.cs" />
+    <Compile Include="Services\abstract\AbstractCommunicationViewHolder.cs" />
     <Compile Include="Services\DatabaseContext.cs" />
     <Compile Include="Services\foreground-service\ForegroundServiceBinder.cs" />
     <Compile Include="Services\foreground-service\ForegroundServiceConnection.cs" />
@@ -122,7 +122,7 @@
     <Compile Include="Services\scripts\ScriptsListAdapter.cs" />
     <Compile Include="Services\scripts\ScriptListItemViewHolder.cs" />
     <Compile Include="Services\hardwares\HardwaresListAdapter.cs" />
-    <Compile Include="Services\hardwares\HardwareViewHolder.cs" />
+    <Compile Include="Services\hardwares\HardwareListItemViewHolder.cs" />
     <Compile Include="Activity\Users\UsersListActivity.cs" />
     <Compile Include="Activity\SplashActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

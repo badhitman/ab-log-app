@@ -13,12 +13,15 @@ using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.Widget;
 using Android.Content;
+using Android.Util;
 
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class HardwareEditActivity : HardwareAddActivity
     {
+        public new readonly string TAG = "hardware-edit-activity";
+
         protected int hardwareId;
         AppCompatButton buttonDeleteHardware;
         AppCompatButton SystemSettingsHardware;
@@ -26,35 +29,37 @@ namespace ab
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
+            int hardware_id = Intent.Extras.GetInt(nameof(HardwareModel.Id), 0);
+            if (hardware_id < 1)
+            {
+                string err_title = GetText(Resource.String.err_title_2);
+                HardwareName.Text = err_title;
+                HardwareName.Enabled = false;
+
+                HardwareAddress.Text = err_title;
+                HardwareAddress.Enabled = false;
+
+                HardwarePassword.Text = err_title;
+                HardwarePassword.Enabled = false;
+
+                HardwareAlarmSubscribing.Enabled = false;
+                HardwareCommandsAllowed.Enabled = false;
+
+                HardwareCardSubHeader.Text = err_title;
+                HardwareCardSubHeader.Enabled = false;
+
+                HardwareCardButtonOk.Enabled = false;
+                return;
+            }
 
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    if (gs.SelectedListPosition < 0 || db.Hardwares.Count() < gs.SelectedListPosition + 1)
-                    {
-                        string err_title = GetText(Resource.String.err_title_2);
-                        HardwareName.Text = err_title;
-                        HardwareName.Enabled = false;
 
-                        HardwareAddress.Text = err_title;
-                        HardwareAddress.Enabled = false;
-
-                        HardwarePassword.Text = err_title;
-                        HardwarePassword.Enabled = false;
-
-                        HardwareAlarmSubscribing.Enabled = false;
-                        HardwareCommandsAllowed.Enabled = false;
-
-                        HardwareCardSubHeader.Text = err_title;
-                        HardwareCardSubHeader.Enabled = false;
-
-                        HardwareCardButtonOk.Enabled = false;
-                        return;
-                    }
-
-                    hardware = db.Hardwares.OrderBy(x => x.Id).Skip(gs.SelectedListPosition).FirstOrDefault();
+                    hardware = db.Hardwares.Find(hardware_id);
                     hardwareId = hardware?.Id ?? 0;
                     HardwareName.Text = hardware?.Name;
                     HardwareAddress.Text = hardware?.Address;
@@ -80,6 +85,8 @@ namespace ab
 
         private void SystemSettingsHardware_Click(object sender, EventArgs e)
         {
+            Log.Debug(TAG, "SystemSettingsHardware_Click");
+
             if (hardware.Address != HardwareAddress.Text ||
                 hardware.Password != HardwarePassword.Text ||
                 hardware.Name != HardwareName.Text ||
@@ -99,6 +106,8 @@ namespace ab
 
         protected override void OnResume()
         {
+            Log.Debug(TAG, "OnResume");
+
             base.OnResume();
             buttonDeleteHardware.Click += ButtonDeleteHardware_Click;
             SystemSettingsHardware.Click += SystemSettingsHardware_Click;
@@ -106,6 +115,8 @@ namespace ab
 
         protected override void OnPause()
         {
+            Log.Debug(TAG, "OnPause");
+
             base.OnPause();
             buttonDeleteHardware.Click -= ButtonDeleteHardware_Click;
             SystemSettingsHardware.Click -= SystemSettingsHardware_Click;
@@ -113,6 +124,8 @@ namespace ab
 
         private void ButtonDeleteHardware_Click(object sender, EventArgs e)
         {
+            Log.Debug(TAG, "ButtonDeleteHardware_Click");
+
             HardwareCardHeader.Text = GetText(Resource.String.delete_hardware_card_title);
 
             HardwareCardSubHeader.Text = GetText(Resource.String.delete_hardware_card_sub_title);
@@ -163,6 +176,8 @@ namespace ab
 
         protected override void HandlerHardwareButtonOk_Click(object sender, EventArgs e)
         {
+            Log.Debug(TAG, "HandlerHardwareButtonOk_Click");
+
             string errMsg = ReadView(hardwareId);
             if (!string.IsNullOrWhiteSpace(errMsg))
             {

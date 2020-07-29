@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ab.Model;
+using Android.Content;
 using Android.Graphics;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
@@ -16,14 +18,20 @@ namespace ab.Services
 {
     public class TelegramUsersListAdapter : RecyclerView.Adapter
     {
+        public readonly string TAG = "telegram-users-list-adapter";
+
         public static Dictionary<int, string> LinkedUsers;
 
         public override int ItemCount { get { lock (DatabaseContext.DbLocker) { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.TelegramUsers.Count(); } } } }
-
-        public TelegramUsersListAdapter()
+        Context mContext;
+        public TelegramUsersListAdapter(Context context)
         {
-            LinkedUsers = new Dictionary<int, string>();
-            LinkedUsers.Add(0, "");
+            Log.Debug(TAG, "~ constructor");
+            mContext = context;
+            LinkedUsers = new Dictionary<int, string>
+            {
+                { 0, "" }
+            };
             List<UserModel> users;
             lock (DatabaseContext.DbLocker)
             {
@@ -35,14 +43,15 @@ namespace ab.Services
             users.ForEach(x => { LinkedUsers.Add(x.Id, x.Name); });
         }
 
-        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
+        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int telegram_user_id)
         {
+            Log.Debug(TAG, $"OnBindViewHolder - telegram_user_id:{telegram_user_id}");
             TelegramUserListItemViewHolder telegramUsersViewHolder = holder as TelegramUserListItemViewHolder;
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    TelegramUserModel row = db.TelegramUsers.OrderByDescending(x => x.Id).Skip(position).FirstOrDefault();
+                    TelegramUserModel row = db.TelegramUsers.Find(telegram_user_id);
 
                     telegramUsersViewHolder.TelegramId.Text = row.TelegramId + (string.IsNullOrWhiteSpace(row.UserName) ? "" : $" (@{row.UserName})");
 
@@ -74,6 +83,7 @@ namespace ab.Services
 
         private void LinkedUser_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
+            Log.Debug(TAG, "LinkedUser_ItemSelected");
             Spinner spinner = (Spinner)sender;
             int telegram_user_id = (int)spinner.Tag;
             int user_id = LinkedUsers.Keys.ElementAt(e.Position);
@@ -82,7 +92,6 @@ namespace ab.Services
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    //UserModel userModel = db.Users.Find(user_id);
                     TelegramUserModel telegramUserModel = db.TelegramUsers.Find(telegram_user_id);
                     if (user_id != telegramUserModel.LinkedUserId)
                     {
@@ -96,6 +105,7 @@ namespace ab.Services
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
+            Log.Debug(TAG, "OnCreateViewHolder");
             View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.telegram_user_list_item, parent, false);
 
             TelegramUserListItemViewHolder telegramUsersViewHolder = new TelegramUserListItemViewHolder(itemView);

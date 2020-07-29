@@ -15,7 +15,7 @@ using Xamarin.Essentials;
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class ServicesActivity : aActivity
+    public class ServicesActivity : AbstractActivity
     {
         static readonly string TAG = typeof(ServicesActivity).Name;
 

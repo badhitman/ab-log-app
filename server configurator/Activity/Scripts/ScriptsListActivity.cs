@@ -3,15 +3,17 @@
 ////////////////////////////////////////////////
 
 using System;
+using ab.Model;
 using ab.Services;
 using Android.App;
+using Android.Content;
 using Android.OS;
 using AndroidX.RecyclerView.Widget;
 
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class ScriptsListActivity : aListActivity
+    public class ScriptsListActivity : AbstractListActivity
     {
         protected override int ViewId => Resource.Layout.scripts_list_activity;
         protected override int ToolbarId => Resource.Id.scripts_list_toolbar;
@@ -53,10 +55,11 @@ namespace ab
             StartActivity(typeof(ScriptAddActivity));
         }
 
-        void OnItemClick(object sender, int position)
+        void OnItemClick(object sender, int scriptId)
         {
-            gs.SelectedListPosition = position;
-            StartActivity(typeof(ScriptEditActivity));
+            Intent intent = new Intent(this, typeof(ScriptEditActivity));
+            intent.PutExtra(nameof(ScriptHardwareModel.Id), scriptId);
+            StartActivity(intent);
         }
     }
 }

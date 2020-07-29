@@ -8,6 +8,7 @@ using ab.Model;
 using Android.Content;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
+using Java.Lang;
 using Microsoft.EntityFrameworkCore;
 
 namespace ab.Services
@@ -24,10 +25,10 @@ namespace ab.Services
             mContext = _mContext;
         }
 
-        void OnClick(int position)
+        void OnClick(int scriptId)
         {
             if (ItemClick != null)
-                ItemClick(this, position);
+                ItemClick(this, scriptId);
         }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
@@ -38,6 +39,8 @@ namespace ab.Services
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
                     ScriptHardwareModel script = db.ScriptsHardware.Skip(position).Include(x => x.TriggerPort).ThenInclude(x => x.Hardware).FirstOrDefault();
+                    scriptListItemViewHolder.ScriptId = script.Id;
+                    //
                     scriptListItemViewHolder.Name.Text = script.Name;
                     if (script.TriggerPort != null)
                     {

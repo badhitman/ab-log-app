@@ -15,8 +15,8 @@ using System.Linq;
 
 namespace ab
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
-    public class CommandsListActivity : aListActivity
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
+    public class CommandsListActivity : AbstractListActivity
     {
         protected override int ViewId => Resource.Layout.commands_list_activity;
         protected override int ToolbarId => Resource.Id.commands_list_toolbar;
