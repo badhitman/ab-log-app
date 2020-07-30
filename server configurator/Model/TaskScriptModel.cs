@@ -44,7 +44,5 @@ namespace ab.Model
         public ScriptHardwareModel ScriptHardware { get; set; }
 
         public int ScriptHardwareId { get; set; }
-
-        public bool IsStarted { get; set; } = false;
     }
 }
