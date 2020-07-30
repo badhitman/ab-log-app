@@ -49,6 +49,10 @@ TelegramBot
 
 ![TelegramBot 6](./screenshots/telegram-bot-6.jpg)
 
+![TelegramBot 7](./screenshots/telegram-bot-7.png)
+
 ![commands-list](./screenshots/commands-list.png)
+
 ![edit-command](./screenshots/edit-command.png)
+
 ![edit-script](./screenshots/edit-script.png)

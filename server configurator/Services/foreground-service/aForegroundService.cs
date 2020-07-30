@@ -11,6 +11,7 @@ using Android.Runtime;
 using Android.Util;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -72,10 +73,12 @@ namespace ab.Services
                 return;
             }
 
-            Regex get_harware_regex = new Regex(@"^/hw_(\d+)$");
-            Regex get_port_regex = new Regex(@"^/port_(\d+)$");
-            Regex set_port_regex = new Regex(@"^/port_(\d+)_set_(.+)$");
-            Regex view_logs_regex = new Regex(@"^/logs_at_(\d+)$");
+            Regex get_harware_regex = new Regex(@"^/hw_(\d+)$", RegexOptions.Compiled);
+            Regex get_port_regex = new Regex(@"^/port_(\d+)$", RegexOptions.Compiled);
+            Regex set_port_regex = new Regex(@"^/port_(\d+)_set_(.+)$", RegexOptions.Compiled);
+            Regex view_logs_regex = new Regex(@"^/logs_at_(\d+)$", RegexOptions.Compiled);
+            Regex view_script_regex = new Regex(@"^/script_(\d+)$", RegexOptions.Compiled);
+            Regex run_script_regex = new Regex(@"^/script_run_(\d+)$", RegexOptions.Compiled);
 
             while (TelegramBotSurveyInterval > 0)
             {
@@ -244,6 +247,21 @@ namespace ab.Services
                                     {
                                         response_msg += $"{script.Name} - /script_{script.Id}{System.Environment.NewLine}";
                                     }
+                                }
+                                else if (view_script_regex.IsMatch(cmd) && user.CommandsAllowed)
+                                {
+                                    Match match = view_script_regex.Match(cmd);
+
+                                    foreach (CommandScriptModel command in db.CommandsScript.Where(x => x.ScriptHardwareId == int.Parse(match.Groups[1].Value)).Include(x => x.PortExecutionCondition).ThenInclude(x => x.Hardware))
+                                    {
+                                        response_msg +=
+                                            $"{command.Name} - {(command.PauseBeforeExecution > 0 ? $"[предв.пауза {command.PauseBeforeExecution} сек.]; " : "")}" +
+                                            $"{(command.PortExecutionCondition != null ? $"[предв.пров.порта {command.PortExecutionCondition.Hardware} > {command.PortExecutionCondition}" : "")} > " +
+                                            $"{(command.PortExecutionConditionAllowingState == true ? "Вкл" : (command.PortExecutionConditionAllowingState == true ? "Выкл" : "Перекл"))}]" +
+                                            $"{System.Environment.NewLine + System.Environment.NewLine}";
+                                    }
+
+                                    response_msg += $"{System.Environment.NewLine}Старт - /script_run_{match.Groups[1].Value}";
                                 }
                                 else if (cmd == "/logs")
                                 {

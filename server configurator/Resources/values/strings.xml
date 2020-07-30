@@ -170,6 +170,11 @@
     <item>@string/abc_capital_switch</item>
   </string-array>
 
+  <string-array name="script_trigger_port_states_crop_array">
+    <item>@string/abc_capital_on</item>
+    <item>@string/abc_capital_off</item>
+  </string-array>
+
   <string name="error_autorun_script_configured_title">Autorun of the script by event is enabled, but not configured</string>
   <string name="run_the_script_title">Run the script</string>
   <string name="delete_script_card_title">Deleting a script</string>

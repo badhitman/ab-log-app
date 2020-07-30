@@ -16,7 +16,7 @@ namespace ab
 {
     public abstract class aSpecialScript : AbstractActivity
     {
-        public static readonly string TAG = nameof(aSpecialScript);
+        public static new readonly string TAG = nameof(aSpecialScript);
 
         protected override int ViewId => Resource.Layout.script_hardware_activity;
         protected override int ToolbarId => Resource.Id.script_hardware_toolbar;
@@ -88,6 +88,28 @@ namespace ab
             StateFormFieldSpinner.Adapter = adapterPortStatuses;
         }
 
+        protected override void OnResume()
+        {
+            Log.Debug(TAG, "OnResume");
+            base.OnResume();
+            CardButtonOk.Click += CardButton_Click;
+            CardButtonCancel.Click += CardButton_Click;
+            FormEnableTrigger.CheckedChange += FormEnableToggler_CheckedChange;
+
+            HardwareFormFieldSpinner.ItemSelected += HardwareSpinner_ItemSelected;
+        }
+
+        protected override void OnPause()
+        {
+            Log.Debug(TAG, "OnPause");
+            base.OnPause();
+            CardButtonOk.Click -= CardButton_Click;
+            CardButtonCancel.Click -= CardButton_Click;
+            FormEnableTrigger.CheckedChange -= FormEnableToggler_CheckedChange;
+
+            HardwareFormFieldSpinner.ItemSelected -= HardwareSpinner_ItemSelected;
+        }
+
         protected void UpdateHardwaresListSpinner(AppCompatSpinner appCompatSpinnerHardwares)
         {
             ArrayAdapter<string> adapterHardwares = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem, Hardwares.Values.ToList());
@@ -128,28 +150,6 @@ namespace ab
             {
                 PortFormFieldSpinner.SetSelection(Ports.Keys.ToList().IndexOf(selected_port_id));
             }
-        }
-
-        protected override void OnResume()
-        {
-            Log.Debug(TAG, "OnResume");
-            base.OnResume();
-            CardButtonOk.Click += CardButton_Click;
-            CardButtonCancel.Click += CardButton_Click;
-            FormEnableTrigger.CheckedChange += FormEnableToggler_CheckedChange;
-
-            HardwareFormFieldSpinner.ItemSelected += HardwareSpinner_ItemSelected;
-        }
-
-        protected override void OnPause()
-        {
-            Log.Debug(TAG, "OnPause");
-            base.OnPause();
-            CardButtonOk.Click -= CardButton_Click;
-            CardButtonCancel.Click -= CardButton_Click;
-            FormEnableTrigger.CheckedChange -= FormEnableToggler_CheckedChange;
-
-            HardwareFormFieldSpinner.ItemSelected -= HardwareSpinner_ItemSelected;
         }
 
         protected int GetIndexPortState(bool? port_state_as_bool, List<string> port_states_list)

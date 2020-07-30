@@ -64,6 +64,10 @@ namespace ab
             ArrayAdapter adapterTypesCommands = ArrayAdapter<string>.CreateFromResource(this, Resource.Array.commands_types_array, Android.Resource.Layout.SimpleSpinnerItem);
             adapterTypesCommands.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             appCompatSpinnerTypesCommand.Adapter = adapterTypesCommands;
+
+            ArrayAdapter adapterPortStatusesCrop = ArrayAdapter<string>.CreateFromResource(this, Resource.Array.script_trigger_port_states_crop_array, Android.Resource.Layout.SimpleSpinnerItem);
+            adapterPortStatusesCrop.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            StateFormFieldSpinner.Adapter = adapterPortStatusesCrop;
         }
 
 
@@ -242,8 +246,6 @@ namespace ab
                     scriptes = scriptes,
                     steps = steps
                 };
-
-
 
                 scriptes.ItemSelected += delegate (object sender, AdapterView.ItemSelectedEventArgs e)
                 {
