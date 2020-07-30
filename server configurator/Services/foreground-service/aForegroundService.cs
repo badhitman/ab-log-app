@@ -117,99 +117,80 @@ namespace ab.Services
 
                     TelegramUserModel telegramUser = null;
                     UserModel user = null;
+                    updates = updates.Where(x => x.message.chat.type == "private" && !x.message.from.is_bot).ToArray();
 
-                    lock (DatabaseContext.DbLocker)
+                    foreach (var gUser in updates.GroupBy(x => x.message.from.id, (id, users) => new { id, users = users.ToArray() }))
                     {
-                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                        UserClass sender = gUser.users[0].message.from;
+                        lock (DatabaseContext.DbLocker)
                         {
-                            updates = updates.Where(x => x.message.chat.type == "private" && !x.message.from.is_bot).ToArray();
-
-                            foreach (var gUser in updates.GroupBy(x => x.message.from.id, (id, users) => new { id, users = users.ToArray() }))
+                            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                             {
-                                UserClass sender = gUser.users[0].message.from;
-
                                 telegramUser = db.TelegramUsers.FirstOrDefault(x => x.TelegramId == sender.id);
-                                if (telegramUser == null)
+                            }
+                        }
+                        if (telegramUser == null)
+                        {
+                            telegramUser = new TelegramUserModel()
+                            {
+                                Name = $"{sender.first_name.Trim()} {sender.last_name.Trim()}".Trim(),
+                                TelegramId = sender.id,
+                                UserName = sender.username,
+                                TelegramParentBotId = telegramClient.Me.id
+                            };
+                            log_msg = $"new telegram user: {telegramUser}";
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
-                                    telegramUser = new TelegramUserModel()
-                                    {
-                                        Name = $"{sender.first_name.Trim()} {sender.last_name.Trim()}".Trim(),
-                                        TelegramId = sender.id,
-                                        UserName = sender.username,
-                                        TelegramParentBotId = telegramClient.Me.id
-                                    };
                                     db.TelegramUsers.Add(telegramUser);
-                                    try
-                                    {
-                                        db.SaveChanges();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        string err_msg = ex.Message;
-                                        if (ex.InnerException != null)
-                                        {
-                                            err_msg += System.Environment.NewLine + ex.InnerException.Message;
-                                        }
-                                        Log.Error(TelegramBotTAG, err_msg);
-                                        using (LogsContext log = new LogsContext())
-                                        {
-                                            log.AddLogRow(LogStatusesEnum.Error, err_msg, TAG);
-                                        }
-                                    }
-                                    log_msg = $"new telegram user: {telegramUser}";
-                                    Log.Info(TelegramBotTAG, log_msg);
-                                    using (LogsContext log = new LogsContext())
-                                    {
-                                        log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
-                                    }
+                                    db.SaveChanges();
                                 }
-                                else
+                            }
+                        }
+                        else
+                        {
+                            string new_full_name = $"{sender.first_name.Trim()} {sender.last_name.Trim()}".Trim();
+                            string new_username = sender.username;
+                            long new_telegram_parent_bot_id = telegramClient.Me.id;
+                            if (telegramUser.Name != new_full_name || telegramUser.UserName != new_username || telegramUser.TelegramParentBotId != new_telegram_parent_bot_id)
+                            {
+                                telegramUser.Name = new_full_name;
+                                telegramUser.UserName = new_username;
+                                telegramUser.TelegramParentBotId = new_telegram_parent_bot_id;
+                                log_msg = $"update telegram user: {telegramUser}";
+                                lock (DatabaseContext.DbLocker)
                                 {
-                                    string new_full_name = $"{sender.first_name.Trim()} {sender.last_name.Trim()}".Trim();
-                                    string new_username = sender.username;
-                                    long new_telegram_parent_bot_id = telegramClient.Me.id;
-                                    if (telegramUser.Name != new_full_name || telegramUser.UserName != new_username || telegramUser.TelegramParentBotId != new_telegram_parent_bot_id)
+                                    using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                     {
-                                        telegramUser.Name = new_full_name;
-                                        telegramUser.UserName = new_username;
-                                        telegramUser.TelegramParentBotId = new_telegram_parent_bot_id;
                                         db.TelegramUsers.Update(telegramUser);
-                                        try
-                                        {
-                                            db.SaveChanges();
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            string err_msg = ex.Message;
-                                            if (ex.InnerException != null)
-                                            {
-                                                err_msg += System.Environment.NewLine + ex.InnerException.Message;
-                                            }
-                                            Log.Error(TelegramBotTAG, err_msg);
-                                            using (LogsContext log = new LogsContext())
-                                            {
-                                                log.AddLogRow(LogStatusesEnum.Error, err_msg, TAG);
-                                            }
-                                        }
-
-                                        log_msg = $"update telegram user: {telegramUser}";
-                                        Log.Info(TelegramBotTAG, log_msg);
-                                        using (LogsContext log = new LogsContext())
-                                        {
-                                            log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
-                                        }
+                                        db.SaveChanges();
                                     }
                                 }
                             }
+                        }
+                        Log.Info(TelegramBotTAG, log_msg);
+                        using (LogsContext log = new LogsContext())
+                        {
+                            log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
+                        }
+                    }
 
-                            foreach (Update update in updates)
+
+
+                    foreach (Update update in updates)
+                    {
+                        log_msg = $"incoming telegram message: {update.message.text}";
+                        Log.Info(TelegramBotTAG, log_msg);
+                        using (LogsContext log = new LogsContext())
+                        {
+                            log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
+                        }
+
+                        lock (DatabaseContext.DbLocker)
+                        {
+                            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                             {
-                                log_msg = $"incoming telegram message: {update.message.text}";
-                                Log.Info(TelegramBotTAG, log_msg);
-                                using (LogsContext log = new LogsContext())
-                                {
-                                    log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
-                                }
                                 db.TelegramMessages.Add(new TelegramMessageModel()
                                 {
                                     ChatId = update.message.chat.id,
@@ -219,40 +200,73 @@ namespace ab.Services
                                     Name = update.message.text
                                 });
                                 db.SaveChanges();
-                                if (telegramUser == null || telegramUser.TelegramId != update.message.from.id)
+                            }
+                        }
+
+
+                        if (telegramUser == null || telegramUser.TelegramId != update.message.from.id)
+                        {
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
                                     telegramUser = db.TelegramUsers.FirstOrDefault(x => x.TelegramId == update.message.from.id);
                                 }
-                                if (user == null || user.Id != telegramUser.LinkedUserId)
+                            }
+                        }
+                        if (user == null || user.Id != telegramUser.LinkedUserId)
+                        {
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
                                     user = telegramUser.LinkedUserId == default ? null : db.Users.FirstOrDefault(x => x.Id == telegramUser.LinkedUserId);
                                 }
+                            }
+                        }
 
-                                if (user?.AlarmSubscriber != true && user?.CommandsAllowed != true)
-                                {
-                                    continue;
-                                }
 
-                                string cmd = update.message.text.ToLower();
-                                string response_msg = string.Empty;
-                                if (cmd == "/hardwares")
+
+                        if (user?.AlarmSubscriber != true && user?.CommandsAllowed != true)
+                        {
+                            continue;
+                        }
+
+                        string cmd = update.message.text.ToLower();
+                        string response_msg = string.Empty;
+                        if (cmd == "/hardwares")
+                        {
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
                                     foreach (HardwareModel hw in db.Hardwares)
                                     {
                                         response_msg += $"{hw.Name} - /hw_{hw.Id}{System.Environment.NewLine}";
                                     }
                                 }
-                                else if (cmd == "/scripts" && user.CommandsAllowed)
+                            }
+                        }
+                        else if (cmd == "/scripts" && user.CommandsAllowed)
+                        {
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
                                     foreach (ScriptHardwareModel script in db.ScriptsHardware)
                                     {
                                         response_msg += $"{script.Name} - /script_{script.Id}{System.Environment.NewLine}";
                                     }
                                 }
-                                else if (view_script_regex.IsMatch(cmd) && user.CommandsAllowed)
+                            }
+                        }
+                        else if (view_script_regex.IsMatch(cmd) && user.CommandsAllowed)
+                        {
+                            Match match = view_script_regex.Match(cmd);
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
-                                    Match match = view_script_regex.Match(cmd);
-
                                     foreach (CommandScriptModel command in db.CommandsScript.Where(x => x.ScriptHardwareId == int.Parse(match.Groups[1].Value)).Include(x => x.PortExecutionCondition).ThenInclude(x => x.Hardware))
                                     {
                                         response_msg +=
@@ -261,272 +275,344 @@ namespace ab.Services
                                             $"{(command.PortExecutionConditionAllowingState == true ? "Вкл" : (command.PortExecutionConditionAllowingState == true ? "Выкл" : "Перекл"))}]" +
                                             $"{System.Environment.NewLine + System.Environment.NewLine}";
                                     }
-
-                                    response_msg += $"{System.Environment.NewLine}Старт - /script_run_{match.Groups[1].Value}";
                                 }
-                                else if (run_script_regex.IsMatch(cmd) && user.CommandsAllowed)
+                            }
+                            response_msg += $"{System.Environment.NewLine}Старт - /script_run_{match.Groups[1].Value}";
+                        }
+                        else if (run_script_regex.IsMatch(cmd) && user.CommandsAllowed)
+                        {
+                            int script_id = int.Parse(run_script_regex.Match(cmd).Groups[1].Value);
+                            ScriptHardwareModel scriptHardware = null;
+                            if (script_id > 0)
+                            {
+                                lock (DatabaseContext.DbLocker)
                                 {
-                                    int script_id = int.Parse(run_script_regex.Match(cmd).Groups[1].Value);
-                                    if (!db.ScriptsHardware.Any(x => x.Id == script_id))
+                                    using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                     {
-                                        response_msg += $"Скрипт не найден";
+                                        scriptHardware = db.ScriptsHardware.FirstOrDefault(x => x.Id == script_id);
                                     }
-                                    else
+                                }
+                            }
+                            if (scriptHardware == null)
+                            {
+                                response_msg += $"Скрипт не найден";
+                            }
+                            else
+                            {
+                                Random rnd = new Random();
+                                TaskScriptModel taskScript = new TaskScriptModel()
+                                {
+                                    Name = $"{rnd.Next(1, 13)}{rnd.Next(1, 7)}{rnd.Next(52)}",
+                                    ScriptHardwareId = script_id,
+                                    TaskInitiatorType = TaskInitiatorsTypes.Telegram,
+                                    TaskInitiatorId = update.message.from.id
+                                };
+                                lock (DatabaseContext.DbLocker)
+                                {
+                                    using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                     {
-                                        Random rnd = new Random();
-                                        int month = rnd.Next(1, 13);  // creates a number between 1 and 12
-                                        int dice = rnd.Next(1, 7);   // creates a number between 1 and 6
-                                        int card = rnd.Next(52);     // creates a number between 0 and 51
-                                        TaskScriptModel taskScript = new TaskScriptModel()
-                                        {
-                                            Name = $"{month}{dice}{card}",
-                                            ScriptHardwareId = script_id,
-                                            TaskInitiatorType = TaskInitiatorsTypes.Telegram,
-                                            TaskInitiatorId = update.message.from.id
-                                        };
                                         db.ScriptTasks.Add(taskScript);
                                         db.SaveChanges();
                                         response_msg += $"Токен подтверждения:{System.Environment.NewLine}/token_{taskScript.Id}_{taskScript.Name}";
                                     }
                                 }
-                                else if (cmd == "/logs")
+                            }
+                        }
+                        else if (cmd == "/logs")
+                        {
+                            response_msg += $"Статистика логов:{System.Environment.NewLine}";
+                        }
+                        else if (view_logs_regex.IsMatch(cmd))
+                        {
+                            response_msg += $"Просмотр логов:{System.Environment.NewLine}";
+                        }
+                        else if (get_harware_regex.IsMatch(cmd))
+                        {
+                            Match m = get_harware_regex.Match(cmd);
+                            HardwareModel hw = null;
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
-                                    response_msg += $"Статистика логов:{System.Environment.NewLine}";
+                                    hw = db.Hardwares.FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
                                 }
-                                else if (view_logs_regex.IsMatch(cmd))
-                                {
-                                    response_msg += $"Просмотр логов:{System.Environment.NewLine}";
-                                }
-                                else if (get_harware_regex.IsMatch(cmd))
-                                {
-                                    Match m = get_harware_regex.Match(cmd);
-                                    HardwareModel hw = db.Hardwares.Find(int.Parse(m.Groups[1].Value));
-                                    response_msg += $"\"{hw}\".{System.Environment.NewLine}";
+                            }
 
-                                    HttpWebRequest request = new HttpWebRequest(new Uri($"http://{hw.Address}/{hw.Password}/?cmd=all"));
-                                    request.Timeout = 5000;
+                            if (hw == null)
+                            {
+                                response_msg += $"Устройство не найдено в БД. id={m.Groups[1].Value}.{System.Environment.NewLine}";
+                            }
+                            else
+                            {
+                                HttpWebRequest request = new HttpWebRequest(new Uri($"http://{hw.Address}/{hw.Password}/?cmd=all"));
+                                request.Timeout = 5000;
 
-                                    try
+                                try
+                                {
+                                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                                     {
-                                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                                        if (response.StatusCode == HttpStatusCode.OK)
                                         {
-                                            if (response.StatusCode == HttpStatusCode.OK)
-                                            {
-                                                string responseFromServer = string.Empty;
+                                            string responseFromServer = string.Empty;
 
-                                                using (Stream dataStream = response.GetResponseStream())
-                                                using (StreamReader reader = new StreamReader(dataStream))
+                                            using (Stream dataStream = response.GetResponseStream())
+                                            using (StreamReader reader = new StreamReader(dataStream))
+                                            {
+                                                responseFromServer = reader.ReadToEnd();
+                                            }
+                                            if (string.IsNullOrEmpty(responseFromServer))
+                                            {
+                                                response_msg += "Пустой ответ устройства.";
+                                            }
+                                            else if (responseFromServer.ToLower() == "unauthorized")
+                                            {
+                                                response_msg += "Пароль, указаный в настройкх устройства не подошёл.";
+                                            }
+                                            else
+                                            {
+                                                string[] ports_array = responseFromServer.Split(";");
+                                                if (ports_array.Length == 0)
                                                 {
-                                                    responseFromServer = reader.ReadToEnd();
-                                                }
-                                                if (string.IsNullOrEmpty(responseFromServer))
-                                                {
-                                                    response_msg += "Пустой ответ устройства.";
-                                                }
-                                                else if (responseFromServer.ToLower() == "unauthorized")
-                                                {
-                                                    response_msg += "Пароль, указаный в настройкх устройства не подошёл.";
+                                                    response_msg += responseFromServer;
                                                 }
                                                 else
                                                 {
-                                                    string[] ports_array = responseFromServer.Split(";");
-                                                    if (ports_array.Length == 0)
+                                                    response_msg += $"Состояние портов:{System.Environment.NewLine}";
+                                                    int port_num = 0;
+                                                    PortHardwareModel portHardware = null;
+                                                    foreach (string port_state in ports_array)
                                                     {
-                                                        response_msg += responseFromServer;
-                                                    }
-                                                    else
-                                                    {
-                                                        response_msg += $"Состояние портов:{System.Environment.NewLine}";
-                                                        int port_num = 0;
-                                                        foreach (string port_state in ports_array)
+                                                        lock (DatabaseContext.DbLocker)
                                                         {
-                                                            PortHardwareModel portHardware = db.PortsHardwares.FirstOrDefault(x => x.HardwareId == hw.Id && x.PortNumb == port_num);
-                                                            if (portHardware == null)
+                                                            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                                             {
-                                                                portHardware = new PortHardwareModel() { HardwareId = hw.Id, PortNumb = port_num };
-                                                                db.PortsHardwares.Add(portHardware);
-                                                                db.SaveChanges();
+                                                                portHardware = db.PortsHardwares.FirstOrDefault(x => x.HardwareId == hw.Id && x.PortNumb == port_num);
                                                             }
-
-                                                            string separator = System.Environment.NewLine;
-                                                            if (string.IsNullOrWhiteSpace(portHardware.Name))
-                                                            {
-                                                                response_msg += $"P{port_num}";
-                                                            }
-                                                            else
-                                                            {
-                                                                response_msg += $"{System.Environment.NewLine}\"{portHardware.Name}\"(P{port_num})";
-                                                                separator += System.Environment.NewLine;
-                                                            }
-                                                            response_msg += $" => {port_state}";
-                                                            if (port_state.Length <= 3)
-                                                            {
-                                                                response_msg += $" - /port_{portHardware.Id}{separator}";
-                                                            }
-                                                            else
-                                                            {
-                                                                response_msg += $"{System.Environment.NewLine}/port_{portHardware.Id}{separator}";
-                                                            }
-                                                            port_num++;
                                                         }
+
+                                                        if (portHardware == null)
+                                                        {
+                                                            portHardware = new PortHardwareModel() { HardwareId = hw.Id, PortNumb = port_num };
+                                                            lock (DatabaseContext.DbLocker)
+                                                            {
+                                                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                                                                {
+                                                                    db.PortsHardwares.Add(portHardware);
+                                                                    db.SaveChanges();
+                                                                }
+                                                            }
+                                                        }
+
+                                                        string separator = System.Environment.NewLine;
+                                                        if (string.IsNullOrWhiteSpace(portHardware.Name))
+                                                        {
+                                                            response_msg += $"P{port_num}";
+                                                        }
+                                                        else
+                                                        {
+                                                            response_msg += $"{System.Environment.NewLine}\"{portHardware.Name}\"(P{port_num})";
+                                                            separator += System.Environment.NewLine;
+                                                        }
+                                                        response_msg += $" => {port_state}";
+                                                        if (port_state.Length <= 3)
+                                                        {
+                                                            response_msg += $" - /port_{portHardware.Id}{separator}";
+                                                        }
+                                                        else
+                                                        {
+                                                            response_msg += $"{System.Environment.NewLine}/port_{portHardware.Id}{separator}";
+                                                        }
+                                                        port_num++;
                                                     }
                                                 }
                                             }
-                                            else
-                                            {
-                                                response_msg += $"Ошибка выполнения запроса. StatusCode:\"{response.StatusCode}\"; StatusDescription:\"{response.StatusDescription}\"";
-                                            }
                                         }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        response_msg += $"Сбой обработки команды:{ex.Message}";
+                                        else
+                                        {
+                                            response_msg += $"Ошибка выполнения запроса. StatusCode:\"{response.StatusCode}\"; StatusDescription:\"{response.StatusDescription}\"";
+                                        }
                                     }
                                 }
-                                else if (get_port_regex.IsMatch(cmd))
+                                catch (Exception ex)
                                 {
-                                    Match m = get_port_regex.Match(cmd);
-                                    PortHardwareModel port_hw = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
-
-                                    if (string.IsNullOrWhiteSpace(port_hw.Name))
-                                    {
-                                        response_msg += $"Порт: P{port_hw.PortNumb}";
-                                    }
-                                    else
-                                    {
-                                        response_msg += $"Порт: \"{port_hw.Name} (P{port_hw.PortNumb})\"";
-                                    }
-
-                                    response_msg += $" (устр-во:{port_hw.Hardware.Name} - /hw_{port_hw.Hardware.Id}).{System.Environment.NewLine}";
-                                    HttpWebRequest request = new HttpWebRequest(new Uri($"http://{port_hw.Hardware.Address}/{port_hw.Hardware.Password}/?pt={port_hw.PortNumb}&cmd=get"));
-                                    request.Timeout = 5000;
-
-                                    try
-                                    {
-                                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                                        {
-                                            if (response.StatusCode == HttpStatusCode.OK)
-                                            {
-                                                string responseFromServer = string.Empty;
-
-                                                using (Stream dataStream = response.GetResponseStream())
-                                                using (StreamReader reader = new StreamReader(dataStream))
-                                                {
-                                                    responseFromServer = reader.ReadToEnd();
-                                                }
-                                                if (string.IsNullOrEmpty(responseFromServer))
-                                                {
-                                                    response_msg += "Пустой ответ устройства.";
-                                                }
-                                                else if (responseFromServer.ToLower() == "unauthorized")
-                                                {
-                                                    response_msg += "Пароль, указаный в настройкх устройства не подошёл.";
-                                                }
-                                                else
-                                                {
-                                                    response_msg += $"Состояние порта: {responseFromServer}; ";
-                                                    if (responseFromServer.ToLower() == "off" || responseFromServer.ToLower() == "on")
-                                                    {
-                                                        response_msg += $"Включить: /port_{port_hw.Id}_set_ON; Выключить: /port_{port_hw.Id}_set_OFF; ";
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                response_msg += $"Ошибка выполнения запроса. StatusCode:\"{response.StatusCode}\"; StatusDescription:\"{response.StatusDescription}\"";
-                                            }
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        response_msg += $"Сбой обработки команды:{ex.Message}";
-                                    }
+                                    response_msg += $"Сбой обработки команды:{ex.Message}";
                                 }
-                                else if (set_port_regex.IsMatch(cmd))
+                            }
+                        }
+                        else if (get_port_regex.IsMatch(cmd))
+                        {
+                            Match m = get_port_regex.Match(cmd);
+                            PortHardwareModel port_hw = null;
+
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
-                                    if (!user.CommandsAllowed)
-                                    {
-                                        response_msg = "У вас нет прав для упрвления портми";
-                                        goto sendTelegramMessage;
-                                    }
-                                    Match m = set_port_regex.Match(cmd);
-                                    PortHardwareModel port_hw = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
-                                    if (!port_hw.Hardware.CommandsAllowed)
-                                    {
-                                        response_msg = "Для устройства запрещены вызовы команд от удалённых пользователей";
-                                        goto sendTelegramMessage;
-                                    }
-                                    string setter = m.Groups[2].Value;
-                                    if (setter == "off")
-                                    {
-                                        response_msg += $"Попытка выключить порт: P{port_hw.PortNumb}; ";
-                                        setter = "0";
-                                    }
-                                    else if (setter == "on")
-                                    {
-                                        response_msg += $"Попытка включить порт: P{port_hw.PortNumb}; ";
-                                        setter = "1";
-                                    }
-                                    else if (Regex.IsMatch(setter, @"^\d+$"))
-                                    {
-                                        //response_msg += $"Попытка включить порт: P{port_hw.PortNumb}; ";
-                                    }
-                                    HttpWebRequest request = new HttpWebRequest(new Uri($"http://{port_hw.Hardware.Address}/{port_hw.Hardware.Password}/?cmd={port_hw.PortNumb}:{setter}"));
-                                    request.Timeout = 5000;
+                                    port_hw = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
+                                }
+                            }
 
-                                    try
-                                    {
-                                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                                        {
-                                            if (response.StatusCode == HttpStatusCode.OK)
-                                            {
-                                                string responseFromServer = string.Empty;
-
-                                                using (Stream dataStream = response.GetResponseStream())
-                                                using (StreamReader reader = new StreamReader(dataStream))
-                                                {
-                                                    responseFromServer = reader.ReadToEnd();
-                                                }
-                                                if (string.IsNullOrEmpty(responseFromServer))
-                                                {
-                                                    response_msg += "Пустой ответ устройства.";
-                                                }
-                                                else if (responseFromServer.ToLower() == "unauthorized")
-                                                {
-                                                    response_msg += "Пароль, указаный в настройкх устройства не подошёл.";
-                                                }
-                                                else
-                                                {
-                                                    response_msg += $"{responseFromServer}; ";
-                                                }
-                                            }
-                                            else
-                                            {
-                                                response_msg += $"Ошибка выполнения запроса. StatusCode:\"{response.StatusCode}\"; StatusDescription:\"{response.StatusDescription}\"";
-                                            }
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        response_msg += $"Сбой обработки команды:{ex.Message}";
-                                    }
+                            if (port_hw == null)
+                            {
+                                response_msg += $"Порт не найден в БД: id={m.Groups[1].Value}";
+                            }
+                            else
+                            {
+                                if (string.IsNullOrWhiteSpace(port_hw.Name))
+                                {
+                                    response_msg += $"Порт: P{port_hw.PortNumb}";
                                 }
                                 else
                                 {
-                                    response_msg = $"Доступные команда:{System.Environment.NewLine}" +
-                                        $"/hardwares - список устройств{System.Environment.NewLine}";
-
-                                    if (user.CommandsAllowed)
-                                    {
-                                        response_msg += $"/scripts - список скриптов{System.Environment.NewLine}";
-                                    }
-                                    response_msg += "/logs - просмотр логов";
+                                    response_msg += $"Порт: \"{port_hw.Name} (P{port_hw.PortNumb})\"";
                                 }
-                            sendTelegramMessage:
-                                telegramClient.sendMessage(update.message.from.id.ToString(), response_msg.Trim());
+
+                                response_msg += $" (устр-во:{port_hw.Hardware.Name} - /hw_{port_hw.Hardware.Id}).{System.Environment.NewLine}";
+                                HttpWebRequest request = new HttpWebRequest(new Uri($"http://{port_hw.Hardware.Address}/{port_hw.Hardware.Password}/?pt={port_hw.PortNumb}&cmd=get"));
+                                request.Timeout = 5000;
+
+                                try
+                                {
+                                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                                    {
+                                        if (response.StatusCode == HttpStatusCode.OK)
+                                        {
+                                            string responseFromServer = string.Empty;
+
+                                            using (Stream dataStream = response.GetResponseStream())
+                                            using (StreamReader reader = new StreamReader(dataStream))
+                                            {
+                                                responseFromServer = reader.ReadToEnd();
+                                            }
+                                            if (string.IsNullOrEmpty(responseFromServer))
+                                            {
+                                                response_msg += "Пустой ответ устройства.";
+                                            }
+                                            else if (responseFromServer.ToLower() == "unauthorized")
+                                            {
+                                                response_msg += "Пароль, указаный в настройкх устройства не подошёл.";
+                                            }
+                                            else
+                                            {
+                                                response_msg += $"Состояние порта: {responseFromServer}; ";
+                                                if (responseFromServer.ToLower() == "off" || responseFromServer.ToLower() == "on")
+                                                {
+                                                    response_msg += $"Включить: /port_{port_hw.Id}_set_ON; Выключить: /port_{port_hw.Id}_set_OFF; ";
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            response_msg += $"Ошибка выполнения запроса. StatusCode:\"{response.StatusCode}\"; StatusDescription:\"{response.StatusDescription}\"";
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    response_msg += $"Сбой обработки команды:{ex.Message}";
+                                }
                             }
+
                         }
+                        else if (set_port_regex.IsMatch(cmd))
+                        {
+                            if (!user.CommandsAllowed)
+                            {
+                                response_msg += "У вас нет прав для упрвления портми";
+                                goto sendTelegramMessage;
+                            }
+                            Match m = set_port_regex.Match(cmd);
+                            PortHardwareModel port_hw = null;
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                                {
+                                    port_hw = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
+                                }
+                            }
+                            if (port_hw == null)
+                            {
+                                response_msg += $"Порт не найден в БД: id={m.Groups[1].Value}";
+                            }
+                            else
+                            {
+
+                                if (!port_hw.Hardware.CommandsAllowed)
+                                {
+                                    response_msg = "Для устройства запрещены вызовы команд от удалённых пользователей";
+                                    goto sendTelegramMessage;
+                                }
+                                string setter = m.Groups[2].Value;
+                                if (setter == "off")
+                                {
+                                    response_msg += $"Попытка выключить порт: P{port_hw.PortNumb}; ";
+                                    setter = "0";
+                                }
+                                else if (setter == "on")
+                                {
+                                    response_msg += $"Попытка включить порт: P{port_hw.PortNumb}; ";
+                                    setter = "1";
+                                }
+                                else if (Regex.IsMatch(setter, @"^\d+$"))
+                                {
+                                    //response_msg += $"Попытка включить порт: P{port_hw.PortNumb}; ";
+                                }
+                                HttpWebRequest request = new HttpWebRequest(new Uri($"http://{port_hw.Hardware.Address}/{port_hw.Hardware.Password}/?cmd={port_hw.PortNumb}:{setter}"));
+                                request.Timeout = 5000;
+
+                                try
+                                {
+                                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                                    {
+                                        if (response.StatusCode == HttpStatusCode.OK)
+                                        {
+                                            string responseFromServer = string.Empty;
+
+                                            using (Stream dataStream = response.GetResponseStream())
+                                            using (StreamReader reader = new StreamReader(dataStream))
+                                            {
+                                                responseFromServer = reader.ReadToEnd();
+                                            }
+                                            if (string.IsNullOrEmpty(responseFromServer))
+                                            {
+                                                response_msg += "Пустой ответ устройства.";
+                                            }
+                                            else if (responseFromServer.ToLower() == "unauthorized")
+                                            {
+                                                response_msg += "Пароль, указаный в настройкх устройства не подошёл.";
+                                            }
+                                            else
+                                            {
+                                                response_msg += $"{responseFromServer}; ";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            response_msg += $"Ошибка выполнения запроса. StatusCode:\"{response.StatusCode}\"; StatusDescription:\"{response.StatusDescription}\"";
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    response_msg += $"Сбой обработки команды:{ex.Message}";
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            response_msg = $"Доступные команда:{System.Environment.NewLine}" +
+                                $"/hardwares - список устройств{System.Environment.NewLine}";
+
+                            if (user.CommandsAllowed)
+                            {
+                                response_msg += $"/scripts - список скриптов{System.Environment.NewLine}";
+                            }
+                            response_msg += "/logs - просмотр логов";
+                        }
+                    sendTelegramMessage: telegramClient.sendMessage(update.message.from.id.ToString(), response_msg.Trim());
                     }
+
                     telegramClient.offset = updates.Max(x => x.update_id);
                 }
                 if (TelegramBotSurveyInterval > 0)
