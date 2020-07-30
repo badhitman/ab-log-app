@@ -103,6 +103,7 @@
     <Compile Include="Model\PortHardwareModel.cs" />
     <Compile Include="Model\CommandScriptModel.cs" />
     <Compile Include="Model\ScriptHardwareModel.cs" />
+    <Compile Include="Model\TaskScriptModel.cs" />
     <Compile Include="Model\TelegramUserModel.cs" />
     <Compile Include="Model\TelegramMessageModel.cs" />
     <Compile Include="Model\UserModel.cs" />

@@ -131,6 +131,7 @@ namespace ab
                 _ = db.PortsHardwares.FirstOrDefault();
                 _ = db.ScriptsHardware.FirstOrDefault();
                 _ = db.CommandsScript.FirstOrDefault();
+                _ = db.ScriptTasks.FirstOrDefault();
             }
             catch (Exception ex)
             {

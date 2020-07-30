@@ -20,6 +20,7 @@ namespace ab.Services
         public DbSet<PortHardwareModel> PortsHardwares { get; set; }
         public DbSet<ScriptHardwareModel> ScriptsHardware { get; set; }
         public DbSet<CommandScriptModel> CommandsScript { get; set; }
+        public DbSet<TaskScriptModel> ScriptTasks { get; set; }
 
         public DatabaseContext(string databasePath)
         {

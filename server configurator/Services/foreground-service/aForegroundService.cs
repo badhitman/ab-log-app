@@ -79,6 +79,7 @@ namespace ab.Services
             Regex view_logs_regex = new Regex(@"^/logs_at_(\d+)$", RegexOptions.Compiled);
             Regex view_script_regex = new Regex(@"^/script_(\d+)$", RegexOptions.Compiled);
             Regex run_script_regex = new Regex(@"^/script_run_(\d+)$", RegexOptions.Compiled);
+            Regex confirm_token_regex = new Regex(@"^/token_(\d+)$", RegexOptions.Compiled);
 
             while (TelegramBotSurveyInterval > 0)
             {
@@ -262,6 +263,31 @@ namespace ab.Services
                                     }
 
                                     response_msg += $"{System.Environment.NewLine}Старт - /script_run_{match.Groups[1].Value}";
+                                }
+                                else if (run_script_regex.IsMatch(cmd) && user.CommandsAllowed)
+                                {
+                                    int script_id = int.Parse(run_script_regex.Match(cmd).Groups[1].Value);
+                                    if (!db.ScriptsHardware.Any(x => x.Id == script_id))
+                                    {
+                                        response_msg += $"Скрипт не найден";
+                                    }
+                                    else
+                                    {
+                                        Random rnd = new Random();
+                                        int month = rnd.Next(1, 13);  // creates a number between 1 and 12
+                                        int dice = rnd.Next(1, 7);   // creates a number between 1 and 6
+                                        int card = rnd.Next(52);     // creates a number between 0 and 51
+                                        TaskScriptModel taskScript = new TaskScriptModel()
+                                        {
+                                            Name = $"{month}{dice}{card}",
+                                            ScriptHardwareId = script_id,
+                                            TaskInitiatorType = TaskInitiatorsTypes.Telegram,
+                                            TaskInitiatorId = update.message.from.id
+                                        };
+                                        db.ScriptTasks.Add(taskScript);
+                                        db.SaveChanges();
+                                        response_msg += $"Токен подтверждения:{System.Environment.NewLine}/token_{taskScript.Id}_{taskScript.Name}";
+                                    }
                                 }
                                 else if (cmd == "/logs")
                                 {
