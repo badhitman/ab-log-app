@@ -5,7 +5,6 @@
 using ab.Model;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace ab.Services
 {
@@ -33,6 +32,10 @@ namespace ab.Services
 
         public LogRowModel AddLogRow(LogStatusesEnum logStatus, string Message, string tag)
         {
+            if (tag.StartsWith("●"))
+            {
+                tag = tag.Substring(1).TrimStart();
+            }
             LogRowModel logRow = new LogRowModel() { Status = logStatus, Name = Message, TAG = tag };
             lock (DbLocker)
             {

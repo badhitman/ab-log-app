@@ -15,7 +15,7 @@ namespace ab.Services
 {
     public class UsersListAdapter : RecyclerView.Adapter
     {
-        public readonly string TAG = "users-list-adapter";
+        public static readonly string TAG = "● users-list-adapter";
 
         public event EventHandler<int> ItemClick;
         Context mContext;

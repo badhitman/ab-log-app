@@ -12,7 +12,7 @@ namespace ab.Services
     [Service(Exported = true, Name = "com.xamarin.ab.mqtt")]
     public class ForegroundServiceMqtt : aForegroundService
     {
-        readonly string TAG = "foreground-service-mqtt";
+        public static new readonly string TAG = "● foreground-service-mqtt";
 
         public override IBinder OnBind(Intent intent)
         {

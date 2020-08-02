@@ -12,119 +12,140 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.Widget;
-using Microsoft.EntityFrameworkCore;
 using Android.Content;
 using Android.Util;
+using Microsoft.EntityFrameworkCore;
 
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class ScriptEditActivity : ScriptAddActivity
     {
-        public static new readonly string TAG = nameof(ScriptEditActivity);
+        public static new readonly string TAG = "● script-edit-activity";
 
-        AppCompatButton buttonDeleteScript;
-        AppCompatButton ButtonConfigScript;
-        AppCompatButton ButtonStartScript;
+        protected ScriptModel scriptHardware;
+
+        protected LinearLayoutCompat TopLayout;
+
+        AppCompatButton CommandsScript;
+        AppCompatButton StartScript;
+        AppCompatButton DeleteScript;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
-            int scriptId = Intent.Extras.GetInt(nameof(ScriptHardwareModel.Id), 0);
 
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    scriptHardware = db.ScriptsHardware.Include(x => x.TriggerPort).ThenInclude(x => x.Hardware).FirstOrDefault(x => x.Id == scriptId);
-                    ScriptName.Text = scriptHardware?.Name;
-                    if (scriptHardware.TriggerPort != null)
-                    {
-                        UpdatePortsListSpinner(scriptHardware.TriggerPort.HardwareId);
-                        FormEnableTrigger.Checked = true;
-                        int indexPosition = Hardwares.Keys.ToList().IndexOf(scriptHardware.TriggerPort.HardwareId);
-                        HardwareFormFieldSpinner.SetSelection(indexPosition);
-                        HardwareFormFieldSpinner.Enabled = true;
-
-                        indexPosition = Ports.Keys.ToList().IndexOf(scriptHardware.TriggerPort.Id);
-                        PortFormFieldSpinner.SetSelection(indexPosition);
-                        PortFormFieldSpinner.Enabled = true;
-
-                        string[] statuses = Resources.GetStringArray(Resource.Array.script_trigger_port_states_array);
-                        if (scriptHardware.TriggerPortState == true)
-                        {
-                            indexPosition = Array.IndexOf(statuses, GetString(Resource.String.abc_capital_on));
-                        }
-                        else if (scriptHardware.TriggerPortState == false)
-                        {
-                            indexPosition = Array.IndexOf(statuses, GetString(Resource.String.abc_capital_off));
-                        }
-                        else
-                        {
-                            indexPosition = Array.IndexOf(statuses, GetString(Resource.String.abc_capital_switch));
-                        }
-                        StateFormFieldSpinner.SetSelection(indexPosition);
-                        StateFormFieldSpinner.Enabled = true;
-                    }
+                    scriptHardware = db.Scripts.Include(x => x.Commands).Include(x => x.TriggerPort).FirstOrDefault(x => x.Id == Intent.Extras.GetInt(nameof(ScriptModel.Id), 0));
                 }
             }
 
-            CardHeader.Text = GetText(Resource.String.script_hardware_edit_title);
-            CardSubHeader.Text = GetText(Resource.String.script_hardware_edit_subtitle);
+            TopLayout = FindViewById<LinearLayoutCompat>(Resource.Id.script_top_layout);
+            FooterLayout = FindViewById<LinearLayoutCompat>(Resource.Id.script_footer_layout);
 
-            buttonDeleteScript = new AppCompatButton(this) { Text = GetText(Resource.String.delete_title) };
-            buttonDeleteScript.SetTextColor(Color.DarkRed);
-            buttonDeleteScript.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            FooterLayout.AddView(buttonDeleteScript);
+            CardTitle.Text = GetText(Resource.String.script_edit_title);
+            CardSubtitle.Text = GetText(Resource.String.script_edit_subtitle);
 
-            int count_commands = 0;
-            lock (DatabaseContext.DbLocker)
+            DeleteScript = new AppCompatButton(this) { Text = GetText(Resource.String.delete_title) };
+            DeleteScript.SetTextColor(Color.DarkRed);
+            DeleteScript.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            FooterLayout.AddView(DeleteScript);
+
+            ButtonOk.Tag = scriptHardware.Id;
+
+            CommandsScript = new AppCompatButton(this) { Text = $"{GetString(Resource.String.commands_title)} ({scriptHardware.Commands.Count})" };
+            CommandsScript.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            TopLayout.AddView(CommandsScript);
+
+            StartScript = new AppCompatButton(this)
             {
-                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                Text = GetText(Resource.String.run_the_script_title),
+                Enabled = scriptHardware.Commands.Count > 0
+            };
+            StartScript.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+
+
+            TopLayout.AddView(StartScript);
+
+            ScriptName.Text = scriptHardware.Name;
+            if (scriptHardware.TriggerPort != null)
+            {
+                AutorunTrigger.Checked = true;
+                PortTrigger.Enabled = true;
+                HardwareTrigger.Enabled = true;
+                StateTrigger.Enabled = true;
+
+                int indexPosition = Hardwares.Keys.ToList().IndexOf(scriptHardware.TriggerPort.HardwareId);
+                HardwareTrigger.SetSelection(indexPosition);
+
+                PortsList_UpdateSpinner(scriptHardware.TriggerPort.HardwareId, ref PortTrigger, scriptHardware.TriggerPort.Id);//, ref Ports
+
+                string[] statuses = Resources.GetStringArray(Resource.Array.script_trigger_port_states_array);
+                if (scriptHardware.TriggerPortState == true)
                 {
-                    count_commands = db.CommandsScript.Where(x => x.ScriptHardwareId == scriptHardware.Id).Count();
+                    indexPosition = Array.IndexOf(statuses, GetString(Resource.String.abc_capital_on));
                 }
+                else if (scriptHardware.TriggerPortState == false)
+                {
+                    indexPosition = Array.IndexOf(statuses, GetString(Resource.String.abc_capital_off));
+                }
+                else
+                {
+                    indexPosition = Array.IndexOf(statuses, GetString(Resource.String.abc_capital_switch));
+                }
+                StateTrigger.SetSelection(indexPosition);
             }
-            ButtonConfigScript = new AppCompatButton(this) { Text = $"{GetText(Resource.String.commands_title)} ({count_commands})" };
-            ButtonConfigScript.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            TopLayout.AddView(ButtonConfigScript);
-
-            ButtonStartScript = new AppCompatButton(this) { Text = GetText(Resource.String.run_the_script_title) };
-            ButtonStartScript.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            if (count_commands == 0)
-            {
-                ButtonStartScript.Enabled = false;
-                ButtonStartScript.SetTextColor(Color.Gray);
-            }
-            else
-            {
-                ButtonStartScript.SetTextColor(Color.Indigo);
-            }
-            TopLayout.AddView(ButtonStartScript);
         }
 
         protected override void OnResume()
         {
             Log.Debug(TAG, "OnResume");
             base.OnResume();
-            buttonDeleteScript.Click += ButtonDeleteScript_Click;
-            ButtonConfigScript.Click += ButtonConfigScript_Click;
-            ButtonStartScript.Click += ButtonStartScript_Click;
+
+            CommandsScript.Click += ButtonConfigScript_Click;
+            StartScript.Click += ButtonStartScript_Click;
+            DeleteScript.Click += ButtonDeleteScript_Click;
+
+            int count_commands = 0;
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+                    count_commands = db.Commands.Where(x => x.ScriptId == scriptHardware.Id).Count();
+                }
+            }
+            CommandsScript.Text = $"{GetText(Resource.String.commands_title)} ({count_commands})";
+
+            if (count_commands == 0)
+            {
+                StartScript.Enabled = false;
+                StartScript.SetTextColor(Color.Gray);
+            }
+            else
+            {
+                StartScript.Enabled = true;
+                StartScript.SetTextColor(Color.Indigo);
+            }
         }
 
         protected override void OnPause()
         {
             Log.Debug(TAG, "OnPause");
             base.OnPause();
-            buttonDeleteScript.Click -= ButtonDeleteScript_Click;
-            ButtonConfigScript.Click -= ButtonConfigScript_Click;
-            ButtonStartScript.Click -= ButtonStartScript_Click;
+
+            CommandsScript.Click -= ButtonConfigScript_Click;
+            StartScript.Click -= ButtonStartScript_Click;
+            DeleteScript.Click -= ButtonDeleteScript_Click;
         }
 
         private void ButtonConfigScript_Click(object sender, EventArgs e)
         {
             Log.Debug(TAG, "ButtonConfigScript_Click");
+
             Intent intent = new Intent(this, typeof(CommandsListActivity));
             intent.PutExtra(nameof(scriptHardware.Id), scriptHardware.Id);
             StartActivity(intent);
@@ -132,29 +153,73 @@ namespace ab
 
         private void ButtonStartScript_Click(object sender, EventArgs e)
         {
+            string errMsg = ReadView(scriptHardware.Id);
 
+            if (!string.IsNullOrWhiteSpace(errMsg))
+            {
+                errMsg += $"ButtonStartScript_Click - {errMsg}";
+                Log.Error(TAG, errMsg);
+                using (LogsContext logs = new LogsContext())
+                {
+                    logs.AddLogRow(LogStatusesEnum.Error, errMsg, TAG);
+                }
+                CardSubtitle.Text = errMsg;
+                CardSubtitle.SetTextColor(Color.Red);
+                Toast.MakeText(this, errMsg, ToastLength.Short).Show();
+                return;
+            }
+
+            TaskModel task;
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+                    task = new TaskModel()
+                    {
+                        Name = "http trigger",
+                        TaskInitiatorType = TaskInitiatorsTypes.Manual,
+                        TaskInitiatorId = (sender as AppCompatButton).Id,
+                        ScriptId = scriptHardware.Id
+                    };
+                    task.FinishedAt = task.CreatedAt;
+                    db.Tasks.Add(task);
+                    db.SaveChanges();
+                }
+            }
+            aForegroundService.RunScriptAction(task);
+        }
+
+        protected override string ReadView(int scriptId)
+        {
+            string errMsg = base.ReadView(scriptId);
+            if (scriptHardware.Name != ScriptName.Text)
+            {
+                errMsg += $"{GetString(Resource.String.saving_is_required)}";
+            }
+            return errMsg;
         }
 
         private void ButtonDeleteScript_Click(object sender, EventArgs e)
         {
             Log.Debug(TAG, "ButtonDeleteScript_Click");
-            CardHeader.Text = GetText(Resource.String.delete_script_card_title);
 
-            CardSubHeader.Text = GetText(Resource.String.delete_script_card_sub_title);
-            CardSubHeader.SetTextColor(Color.IndianRed);
+            CardTitle.Text = GetText(Resource.String.delete_script_card_title);
+
+            CardSubtitle.Text = GetText(Resource.String.delete_script_card_sub_title);
+            CardSubtitle.SetTextColor(Color.IndianRed);
 
             ScriptName.Enabled = false;
 
-            CardButtonOk.Enabled = false;
-            CardButtonOk.Text = GetText(Resource.String.ok_mute_button_with_remove_script);
+            ButtonOk.Enabled = false;
+            ButtonOk.Text = GetText(Resource.String.ok_mute_button_with_remove_script);
 
-            buttonDeleteScript.Enabled = false;
-            buttonDeleteScript.SetTextColor(Color.Gray);
-            buttonDeleteScript.Click -= ButtonDeleteScript_Click;
+            DeleteScript.Enabled = false;
+            DeleteScript.SetTextColor(Color.Gray);
+            DeleteScript.Click -= ButtonDeleteScript_Click;
 
-            ButtonConfigScript.Enabled = false;
-            ButtonConfigScript.SetTextColor(Color.Gray);
-            ButtonConfigScript.Click -= ButtonConfigScript_Click;
+            CommandsScript.Enabled = false;
+            CommandsScript.SetTextColor(Color.Gray);
+            CommandsScript.Click -= ButtonConfigScript_Click;
 
 
             AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = GetText(Resource.String.footer_text_with_remove_script), TextSize = 15 };
@@ -171,8 +236,8 @@ namespace ab
                 {
                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                     {
-                        ScriptHardwareModel script = db.ScriptsHardware.Find(scriptHardware.Id);
-                        db.ScriptsHardware.Remove(script);
+                        ScriptModel script = db.Scripts.Find(scriptHardware.Id);
+                        db.Scripts.Remove(script);
                         db.SaveChanges();
 
                         StartActivity(typeof(ScriptsListActivity));

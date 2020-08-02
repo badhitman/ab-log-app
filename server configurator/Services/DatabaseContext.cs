@@ -17,10 +17,11 @@ namespace ab.Services
         public DbSet<CloudEmailMessageModel> CloudMessages { get; set; }
         public DbSet<TelegramMessageModel> TelegramMessages { get; set; }
         public DbSet<TelegramUserModel> TelegramUsers { get; set; }
-        public DbSet<PortHardwareModel> PortsHardwares { get; set; }
-        public DbSet<ScriptHardwareModel> ScriptsHardware { get; set; }
-        public DbSet<CommandScriptModel> CommandsScript { get; set; }
-        public DbSet<TaskScriptModel> ScriptTasks { get; set; }
+        public DbSet<PortModel> Ports { get; set; }
+        public DbSet<ScriptModel> Scripts { get; set; }
+        public DbSet<CommandModel> Commands { get; set; }
+        public DbSet<TaskModel> Tasks { get; set; }
+        public DbSet<ReportModel> Reports { get; set; }
 
         public DatabaseContext(string databasePath)
         {
@@ -41,7 +42,7 @@ namespace ab.Services
             modelBuilder.Entity<HardwareModel>().HasAlternateKey(u => u.Name);
             modelBuilder.Entity<HardwareModel>().HasAlternateKey(u => u.Address);
 
-            modelBuilder.Entity<PortHardwareModel>().HasAlternateKey(u => new { u.HardwareId, u.PortNumb });
+            modelBuilder.Entity<PortModel>().HasAlternateKey(u => new { u.HardwareId, u.PortNumb });
 
             //modelBuilder.Entity<ScriptHardwareModel>().HasAlternateKey(u => u.Name);
             //modelBuilder.Entity<ComandScriptModel>().HasAlternateKey(u => u.Name);

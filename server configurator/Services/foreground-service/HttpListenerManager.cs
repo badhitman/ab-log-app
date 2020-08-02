@@ -18,7 +18,8 @@ namespace ab.Services
 {
     public class HttpListenerManager : IForegroundService
     {
-        readonly string TAG = "http-manager";
+        public static readonly string TAG = "● http-listener-manager";
+
         private readonly HttpListener httpServer;
         readonly LogsContext logsDB = new LogsContext();
         public IPAddress ipAddress => Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];
@@ -46,8 +47,9 @@ namespace ab.Services
 
         public void StopForegroundService()
         {
-            Log.Debug(TAG, "StopForegroundService()");
-            logsDB.AddLogRow(LogStatusesEnum.Trac, "StopForegroundService()", TAG);
+            string msg = "StopForegroundService()";
+            Log.Debug(TAG, msg);
+            logsDB.AddLogRow(LogStatusesEnum.Trac, msg, TAG);
 
             httpServer.Stop();
             httpServer.Prefixes.Clear();
@@ -111,7 +113,7 @@ namespace ab.Services
             {
                 if (Regex.IsMatch(pt, @"^\d+$"))
                 {
-                    PortHardwareModel portHardware = null;
+                    PortModel portHardware = null;
                     int pt_num_int = 0;
                     pt_num_int = int.Parse(pt);
                     if (pt_num_int > 0 && hardware != null)
@@ -120,7 +122,41 @@ namespace ab.Services
                         {
                             using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                             {
-                                portHardware = db.PortsHardwares.FirstOrDefault(x => x.HardwareId == hardware.Id && x.PortNumb == pt_num_int);
+                                portHardware = db.Ports.FirstOrDefault(x => x.HardwareId == hardware.Id && x.PortNumb == pt_num_int);
+                            }
+                        }
+                        if (portHardware != null)
+                        {
+                            List<ScriptModel> scripts_triggers = null;
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                                {
+                                    scripts_triggers = db.Scripts.Where(x => x.TriggerPortId == portHardware.Id).Include(x => x.Commands).ToList();
+                                }
+                            }
+                            if (scripts_triggers != null && scripts_triggers.Count > 0)
+                            {
+                                foreach (ScriptModel trigger_script in scripts_triggers)
+                                {
+                                    TaskModel task;
+                                    lock (DatabaseContext.DbLocker)
+                                    {
+                                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                                        {
+                                            task = new TaskModel()
+                                            {
+                                                Name = "http trigger",
+                                                TaskInitiatorType = TaskInitiatorsTypes.Trigger,
+                                                TaskInitiatorId = hardware.Id,
+                                                ScriptId = trigger_script.Id
+                                            };
+                                            db.Tasks.Add(task);
+                                            db.SaveChanges();
+                                        }
+                                    }
+                                    aForegroundService.RunScriptAction(task);
+                                }
                             }
                         }
                     }

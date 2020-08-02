@@ -22,18 +22,18 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class CommandEditActivity : CommandAddActivity
     {
-        public static new readonly string TAG = nameof(CommandEditActivity);
+        public static new readonly string TAG = "● command-edit-activity";
 
+        CommandModel command = null;
 
-        CommandScriptModel command = null;
-
-        AppCompatButton buttonDeleteCommand;
+        AppCompatButton DeleteCommand;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Log.Debug(TAG, "OnCreate");
             base.OnCreate(savedInstanceState);
-            int CommandId = Intent.Extras.GetInt(nameof(CommandScriptModel.Id), 0);
+
+            int CommandId = Intent.Extras.GetInt(nameof(CommandModel.Id), 0);
 
             if (CommandId > 0)
             {
@@ -41,156 +41,102 @@ namespace ab
                 {
                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                     {
-                        command = db.CommandsScript.Include(x => x.ScriptHardware).Include(x => x.PortExecutionCondition).ThenInclude(x => x.Hardware).FirstOrDefault(x => x.Id == CommandId);
+                        command = db.Commands.Include(x => x.Script).Include(x => x.PortExecutionCondition).ThenInclude(x => x.Hardware).FirstOrDefault(x => x.Id == CommandId);
                     }
                 }
             }
+            AbstractSettingsManage.Command = command;
+            List<string> commands_types_array = new List<string>(Resources.GetStringArray(Resource.Array.commands_types_array));
 
-            if (command == null)
+            switch (command.TypeCommand)
             {
-                CardSubHeader.Text = GetText(Resource.String.err_title_2);
-                TopLayout.Enabled = false;
-                BottomLayout.Enabled = false;
-                FooterLayout.Enabled = false;
-                FormEnableTrigger.Enabled = false;
-                CardButtonOk.Enabled = false;
-                return;
+                case TypesCommands.Port:
+                    TypesCommand.SetSelection(commands_types_array.IndexOf(GetString(Resource.String.command_type_array_item_port)));
+                    break;
+                case TypesCommands.Controller:
+                    TypesCommand.SetSelection(commands_types_array.IndexOf(GetString(Resource.String.command_type_array_item_controller)));
+                    break;
+                case TypesCommands.Exit:
+                    TypesCommand.SetSelection(commands_types_array.IndexOf(GetString(Resource.String.command_type_array_item_transit)));
+                    break;
             }
 
-            ScriptId = command.ScriptHardwareId;
+            ScriptId = command.ScriptId;
 
-            buttonDeleteCommand = new AppCompatButton(this) { Text = GetText(Resource.String.delete_title) };
-            buttonDeleteCommand.SetTextColor(Color.DarkRed);
-            buttonDeleteCommand.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
-            FooterLayout.AddView(buttonDeleteCommand);
+            DeleteCommand = new AppCompatButton(this) { Text = GetText(Resource.String.delete_title) };
+            DeleteCommand.SetTextColor(Color.DarkRed);
+            DeleteCommand.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
+            FooterLayout.AddView(DeleteCommand);
 
-            CardHeader.Text = command.ScriptHardware.ToString();
-            CardSubHeader.Text = command.ToString();
-            appCompatEditTextPauseBeforeStarting.Text = command.PauseBeforeExecution.ToString();
-            appCompatCheckBoxHiddenCommand.Checked = command.Hidden;
+            HiddenCommandCheckBox.Checked = command.Hidden;
+            CardTitle.Text = command.Script.ToString();
+            CardSubtitle.Text = command.ToString();
+            PauseSecondsBeforeStarting.Text = command.PauseBeforeExecution.ToString();
 
+            if (command.PortExecutionCondition != null)
+            {
+                RequiredCondition.Checked = true;
+
+                HardwareCondition.Enabled = true;
+                HardwareCondition.SetSelection(Hardwares.Keys.ToList().IndexOf(command.PortExecutionCondition.HardwareId));
+
+                PortCondition.Enabled = true;
+                PortCondition.SetSelection(Ports.Keys.ToList().IndexOf(command.PortExecutionCondition.Id));
+
+                StateCondition.Enabled = true;
+                StateCondition.SetSelection(GetIndexPortState(command.PortExecutionConditionAllowingState, new List<string>(Resources.GetStringArray(Resource.Array.required_condition_port_states_array))));
+            }
         }
 
         protected override void OnResume()
         {
             Log.Debug(TAG, "OnResume");
             base.OnResume();
-            buttonDeleteCommand.Click += ButtonDeleteCommands_Click;
 
-            List<string> types_command = new List<string>(Resources.GetStringArray(Resource.Array.commands_types_array));
-            switch (command.TypeCommand)
-            {
-                case TypesCommands.Controller:
-                    appCompatSpinnerTypesCommand.SetSelection(types_command.IndexOf(GetString(Resource.String.command_type_array_item_controller)));
-                    TypesCommand_SpinnerItemSelected(null, null);
-
-                    SettingsManageController settingsController = SettingsManageKit as SettingsManageController;
-                    settingsController.controllers.SetSelection(Hardwares.Keys.ToList().IndexOf(command.Execution));
-                    settingsController.command.Text = command.ExecutionParametr?.ToString();
-                    break;
-                case TypesCommands.Port:
-                    appCompatSpinnerTypesCommand.SetSelection(types_command.IndexOf(GetString(Resource.String.command_type_array_item_port)));
-                    TypesCommand_SpinnerItemSelected(null, null);
-
-                    SettingsManagePort settingsPort = SettingsManageKit as SettingsManagePort;
-                    PortHardwareModel port = null;
-                    lock (DatabaseContext.DbLocker)
-                    {
-                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                        {
-                            port = db.PortsHardwares.FirstOrDefault(x => x.Id == command.Execution);
-                        }
-                    }
-                    settingsPort.controllers.SetSelection(Hardwares.Keys.ToList().IndexOf(port.HardwareId));
-                    settingsPort.ports.SetSelection(settingsPort.CommandsPorts.Keys.ToList().IndexOf(port.Id));
-
-                    List<string> port_states_list = new List<string>(Resources.GetStringArray(Resource.Array.script_trigger_port_states_array));
-                    settingsPort.states.SetSelection(GetIndexPortState(command.ExecutionParametr));
-                    break;
-                case TypesCommands.Exit:
-                    appCompatSpinnerTypesCommand.SetSelection(types_command.IndexOf(GetString(Resource.String.command_type_array_item_transit)));
-                    TypesCommand_SpinnerItemSelected(null, null);
-
-                    SettingsManageTransfer settingsTransfer = SettingsManageKit as SettingsManageTransfer;
-
-                    CommandScriptModel item_command = null;
-                    lock (DatabaseContext.DbLocker)
-                    {
-                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                        {
-                            item_command = db.CommandsScript.Include(x => x.ScriptHardware).FirstOrDefault(x => x.Id == command.Execution);
-                        }
-                    }
-                    settingsTransfer.scriptes.SetSelection(settingsTransfer.ScriptsList.Keys.ToList().IndexOf(item_command.ScriptHardwareId));
-                    settingsTransfer.steps.SetSelection(settingsTransfer.StepsScriptsList.Keys.ToList().IndexOf(item_command.Id));
-                    break;
-            }
-
-            if (command.PortExecutionCondition != null)
-            {
-                FormEnableTrigger.Checked = true;
-
-                HardwareFormFieldSpinner.Enabled = true;
-                HardwareFormFieldSpinner.SetSelection(Hardwares.Keys.ToList().IndexOf(command.PortExecutionCondition.HardwareId));
-
-                //UpdatePortsListSpinner(command.PortExecutionCondition.HardwareId);
-                PortFormFieldSpinner.Enabled = true;
-                //int i = PortFormFieldSpinner.SelectedItemPosition;
-                //i = Ports.Keys.ToList().IndexOf(command.PortExecutionCondition.Id);
-                //PortFormFieldSpinner.SetSelection(Ports.Keys.ToList().IndexOf(command.PortExecutionCondition.Id));
-                selected_port_id = command.PortExecutionCondition.Id;
-                //i = PortFormFieldSpinner.SelectedItemPosition;
-                //Log.Debug(TAG, $"set port: id:{command.PortExecutionCondition.Id} / position in spinner:{i}");
-                StateFormFieldSpinner.Enabled = true;
-                //var v = GetIndexPortState(command.ExecutionParametr);
-                StateFormFieldSpinner.SetSelection(GetIndexPortState(command.PortExecutionConditionAllowingState, new List<string>(Resources.GetStringArray(Resource.Array.script_trigger_port_states_array))));
-            }
+            DeleteCommand.Click += ButtonDeleteCommands_Click;
         }
 
         protected override void OnPause()
         {
             Log.Debug(TAG, "OnPause");
             base.OnPause();
-            buttonDeleteCommand.Click -= ButtonDeleteCommands_Click;
+            DeleteCommand.Click -= ButtonDeleteCommands_Click;
         }
 
-        protected override void CardButton_Click(object sender, EventArgs e)
+        protected override void ButtonOk_Click(object sender, EventArgs e)
         {
             Log.Debug(TAG, "CardButton_Click");
-            if (!PreCardButton_Click(sender))
-            {
-                return;
-            }
+
             command = ReadFormToObject(command);
 
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    db.CommandsScript.Update(command);
+                    db.Commands.Update(command);
                     db.SaveChanges();
                 }
             }
 
             Intent intent = new Intent(this, typeof(CommandsListActivity));
-            intent.PutExtra(nameof(ScriptHardwareModel.Id), command.ScriptHardwareId);
+            intent.PutExtra(nameof(ScriptModel.Id), command.ScriptId);
             StartActivity(intent);
         }
 
         private void ButtonDeleteCommands_Click(object sender, EventArgs e)
         {
             Log.Debug(TAG, "ButtonDeleteCommands_Click");
-            CardHeader.Text = GetText(Resource.String.delete_command_card_title);
+            CardTitle.Text = GetText(Resource.String.delete_command_card_title);
 
-            CardSubHeader.Text = GetText(Resource.String.delete_command_card_sub_title);
-            CardSubHeader.SetTextColor(Color.IndianRed);
+            CardSubtitle.Text = GetText(Resource.String.delete_command_card_sub_title);
+            CardSubtitle.SetTextColor(Color.IndianRed);
 
-            CardButtonOk.Enabled = false;
-            CardButtonOk.Text = GetText(Resource.String.ok_mute_button_with_remove_command);
+            ButtonOk.Enabled = false;
+            ButtonOk.Text = GetText(Resource.String.ok_mute_button_with_remove_command);
 
-            buttonDeleteCommand.Enabled = false;
-            buttonDeleteCommand.SetTextColor(Color.Gray);
-            buttonDeleteCommand.Click -= ButtonDeleteCommands_Click;
+            DeleteCommand.Enabled = false;
+            DeleteCommand.SetTextColor(Color.Gray);
+            DeleteCommand.Click -= ButtonDeleteCommands_Click;
 
             AppCompatTextView appCompatTextView = new AppCompatTextView(this) { Text = GetText(Resource.String.footer_text_with_remove_command), TextSize = 15 };
             appCompatTextView.SetTextColor(Color.Red);
@@ -206,11 +152,11 @@ namespace ab
                 {
                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                     {
-                        db.CommandsScript.Remove(command);
+                        db.Commands.Remove(command);
                         db.SaveChanges();
 
                         Intent CancelIntent = new Intent(this, typeof(CommandsListActivity));
-                        CancelIntent.PutExtra(nameof(CommandScriptModel.Id), ScriptId);
+                        CancelIntent.PutExtra(nameof(CommandModel.Id), ScriptId);
                         StartActivity(CancelIntent);
                     }
                 }

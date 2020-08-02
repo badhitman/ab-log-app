@@ -17,6 +17,8 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class HardwareAddActivity : AbstractActivity
     {
+        public static new readonly string TAG = "● hardware-add-activity";
+
         protected override int ViewId => Resource.Layout.hardware_activity;
         protected override int ToolbarId => Resource.Id.hardware_toolbar;
         protected override int DrawerLayoutId => Resource.Id.hardware_drawer_layout;

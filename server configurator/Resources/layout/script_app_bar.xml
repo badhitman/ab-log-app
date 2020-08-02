@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/hardware_system_settings_toolbar"
+            android:id="@+id/script_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -20,7 +20,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        layout="@layout/hardware_system_settings_content" />
+    <include layout="@layout/script_content" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

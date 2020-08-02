@@ -11,7 +11,7 @@ namespace ab.Services
 {
     public class UserListItemViewHolder : AbstractCommunicationViewHolder
     {
-        public new readonly string TAG = "users-list-adapter";
+        public static new readonly string TAG = "● user-list-item-view-holder";
 
         //public TextView Email { get; private set; }
         //public TextView Phone { get; private set; }

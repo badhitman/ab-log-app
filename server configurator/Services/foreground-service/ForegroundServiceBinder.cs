@@ -10,7 +10,8 @@ namespace ab.Services
 {
     public class ForegroundServiceBinder : Binder, IForegroundService
     {
-        readonly string TAG = "foreground service binder";
+        public static readonly string TAG = "● service-binder";
+
         public ServicesActivity myActivity { get; set; }
         public aForegroundService Service { get; private set; }
         LogsContext logsDB = new LogsContext();
@@ -41,6 +42,7 @@ namespace ab.Services
         public void StopForegroundService()
         {
             Log.Debug(TAG, "StopForegroundService()");
+
             if (Service == null)
             {
                 string msg = "Can't stop foreground service. Service is null";

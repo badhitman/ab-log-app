@@ -13,7 +13,6 @@ using MailKit.Security;
 using MimeKit;
 using System;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -22,6 +21,8 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class CloudActivity : AbstractActivity
     {
+        public static new readonly string TAG = "● cloud-activity";
+
         protected override int ViewId => Resource.Layout.cloud_activity;
         protected override int ToolbarId => Resource.Id.cloud_toolbar;
         protected override int DrawerLayoutId => Resource.Id.cloud_drawer_layout;

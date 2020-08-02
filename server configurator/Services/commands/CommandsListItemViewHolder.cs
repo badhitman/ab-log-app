@@ -11,6 +11,8 @@ namespace ab.Services
 {
     public class CommandsListItemViewHolder : RecyclerView.ViewHolder
     {
+        public static readonly string TAG = "● commands-list-item-view-holder";
+
         public int CommandId { get; set; }
         //
         public TextView Name { get; private set; }

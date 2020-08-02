@@ -20,7 +20,7 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class HardwareEditActivity : HardwareAddActivity
     {
-        public new readonly string TAG = "hardware-edit-activity";
+        public static new readonly string TAG = "● hardware-edit-activity";
 
         protected int hardwareId;
         AppCompatButton buttonDeleteHardware;
@@ -30,6 +30,7 @@ namespace ab
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Log.Debug(TAG, "OnCreate");
+
             base.OnCreate(savedInstanceState);
             int hardware_id = Intent.Extras.GetInt(nameof(HardwareModel.Id), 0);
             if (hardware_id < 1)

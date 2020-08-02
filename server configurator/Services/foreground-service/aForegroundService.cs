@@ -5,7 +5,6 @@
 using ab.Model;
 using Android.App;
 using Android.Content;
-using Android.Nfc;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
@@ -15,7 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using TelegramBot.TelegramMetadata.AvailableTypes;
@@ -27,8 +25,8 @@ namespace ab.Services
 {
     public abstract class aForegroundService : Service, IForegroundService
     {
-        readonly string TAG = "service";
-        readonly string TelegramBotTAG = "telegram-bot";
+        public static readonly string TAG = "● abstract-foreground-service";
+        public static readonly string TelegramBotTAG = "● telegram-bot";
 
         public const int SERVICE_RUNNING_NOTIFICATION_ID = 10000;
         LogsContext logsDB = new LogsContext();
@@ -79,23 +77,14 @@ namespace ab.Services
             Regex view_logs_regex = new Regex(@"^/logs_at_(\d+)$", RegexOptions.Compiled);
             Regex view_script_regex = new Regex(@"^/script_(\d+)$", RegexOptions.Compiled);
             Regex run_script_regex = new Regex(@"^/script_run_(\d+)$", RegexOptions.Compiled);
-            Regex confirm_token_regex = new Regex(@"^/token_(\d+)$", RegexOptions.Compiled);
+            Regex confirm_token_regex = new Regex(@"^/token_(\d+)_(\d+)$", RegexOptions.Compiled);
 
             while (TelegramBotSurveyInterval > 0)
             {
                 Log.Debug(TelegramBotTAG, " ~ request telegram updates");
                 Update[] updates = null;
-                try
-                {
-                    updates = telegramClient.getUpdates().Result;
-                }
-                catch (AggregateException err)
-                {
-                    foreach (var errInner in err.InnerExceptions)
-                    {
-                        Log.Error(TAG, errInner.Message); //this will call ToString() on the inner execption and get you message, stacktrace and you could perhaps drill down further into the inner exception of it if necessary 
-                    }
-                }
+                updates = telegramClient.getUpdates(5).Result;
+
                 if (updates == null)
                 {
                     log_msg = "telegramClient.getUpdates() == null";
@@ -106,6 +95,7 @@ namespace ab.Services
                     }
                     return;
                 }
+
                 if (updates.Length > 0)
                 {
                     log_msg = $"incoming telegram updates: {updates.Length} items";
@@ -176,8 +166,6 @@ namespace ab.Services
                         }
                     }
 
-
-
                     foreach (Update update in updates)
                     {
                         log_msg = $"incoming telegram message: {update.message.text}";
@@ -247,27 +235,27 @@ namespace ab.Services
                                 }
                             }
                         }
-                        else if (cmd == "/scripts" && user.CommandsAllowed)
+                        else if (user.CommandsAllowed && cmd == "/scripts")
                         {
                             lock (DatabaseContext.DbLocker)
                             {
                                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
-                                    foreach (ScriptHardwareModel script in db.ScriptsHardware)
+                                    foreach (ScriptModel script in db.Scripts)
                                     {
                                         response_msg += $"{script.Name} - /script_{script.Id}{System.Environment.NewLine}";
                                     }
                                 }
                             }
                         }
-                        else if (view_script_regex.IsMatch(cmd) && user.CommandsAllowed)
+                        else if (user.CommandsAllowed && view_script_regex.IsMatch(cmd))
                         {
                             Match match = view_script_regex.Match(cmd);
                             lock (DatabaseContext.DbLocker)
                             {
                                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
-                                    foreach (CommandScriptModel command in db.CommandsScript.Where(x => x.ScriptHardwareId == int.Parse(match.Groups[1].Value)).Include(x => x.PortExecutionCondition).ThenInclude(x => x.Hardware))
+                                    foreach (CommandModel command in db.Commands.Where(x => x.ScriptId == int.Parse(match.Groups[1].Value)).Include(x => x.PortExecutionCondition).ThenInclude(x => x.Hardware))
                                     {
                                         response_msg +=
                                             $"{command.Name} - {(command.PauseBeforeExecution > 0 ? $"[предв.пауза {command.PauseBeforeExecution} сек.]; " : "")}" +
@@ -279,17 +267,17 @@ namespace ab.Services
                             }
                             response_msg += $"{System.Environment.NewLine}Старт - /script_run_{match.Groups[1].Value}";
                         }
-                        else if (run_script_regex.IsMatch(cmd) && user.CommandsAllowed)
+                        else if (user.CommandsAllowed && run_script_regex.IsMatch(cmd))
                         {
                             int script_id = int.Parse(run_script_regex.Match(cmd).Groups[1].Value);
-                            ScriptHardwareModel scriptHardware = null;
+                            ScriptModel scriptHardware = null;
                             if (script_id > 0)
                             {
                                 lock (DatabaseContext.DbLocker)
                                 {
                                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                     {
-                                        scriptHardware = db.ScriptsHardware.FirstOrDefault(x => x.Id == script_id);
+                                        scriptHardware = db.Scripts.FirstOrDefault(x => x.Id == script_id);
                                     }
                                 }
                             }
@@ -300,10 +288,10 @@ namespace ab.Services
                             else
                             {
                                 Random rnd = new Random();
-                                TaskScriptModel taskScript = new TaskScriptModel()
+                                TaskModel taskScript = new TaskModel()
                                 {
                                     Name = $"{rnd.Next(1, 13)}{rnd.Next(1, 7)}{rnd.Next(52)}",
-                                    ScriptHardwareId = script_id,
+                                    ScriptId = script_id,
                                     TaskInitiatorType = TaskInitiatorsTypes.Telegram,
                                     TaskInitiatorId = update.message.from.id
                                 };
@@ -311,11 +299,54 @@ namespace ab.Services
                                 {
                                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                     {
-                                        db.ScriptTasks.Add(taskScript);
+                                        db.Tasks.Add(taskScript);
                                         db.SaveChanges();
                                         response_msg += $"Токен подтверждения:{System.Environment.NewLine}/token_{taskScript.Id}_{taskScript.Name}";
                                     }
                                 }
+                            }
+                        }
+                        else if (user.CommandsAllowed && confirm_token_regex.IsMatch(cmd))
+                        {
+                            Match match = confirm_token_regex.Match(cmd);
+                            int tokenId = int.Parse(match.Groups[1].Value);
+                            string tokenSecret = match.Groups[2].Value;
+                            TaskModel taskScript = null;
+                            lock (DatabaseContext.DbLocker)
+                            {
+                                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                                {
+                                    db.Tasks.RemoveRange(db.Tasks.Where(x => x.FinishedAt < x.CreatedAt && x.CreatedAt.AddMinutes(1) < DateTime.Now));
+                                    db.SaveChanges();
+
+                                    taskScript = db.Tasks
+                                        .Include(x => x.Script)
+                                        .ThenInclude(x => x.Commands)
+                                        .ThenInclude(x => x.PortExecutionCondition)
+                                        .ThenInclude(x => x.Hardware)
+                                        .FirstOrDefault(
+                                        x => x.Id == tokenId &&
+                                        x.Name == tokenSecret &&
+                                        x.TaskInitiatorType == TaskInitiatorsTypes.Telegram &&
+                                        x.TaskInitiatorId == update.message.from.id &&
+                                        x.CreatedAt > x.FinishedAt);
+
+                                    if (taskScript == null)
+                                    {
+                                        response_msg += "Токен подтверждения запуска команды не найден. Попробуйте заново запустить скрипт и воспользуйтесь новым токеном.";
+                                    }
+                                    else
+                                    {
+                                        taskScript.FinishedAt = taskScript.CreatedAt;
+                                        db.SaveChanges();
+                                        response_msg += $"Скрипт \"{taskScript.Script}\" запущен.";
+                                    }
+                                }
+                            }
+                            if (taskScript != null)
+                            {
+                                Thread RunScriptThread = new Thread(RunScriptAction) { IsBackground = false };
+                                RunScriptThread.Start(taskScript);
                             }
                         }
                         else if (cmd == "/logs")
@@ -379,25 +410,25 @@ namespace ab.Services
                                                 {
                                                     response_msg += $"Состояние портов:{System.Environment.NewLine}";
                                                     int port_num = 0;
-                                                    PortHardwareModel portHardware = null;
+                                                    PortModel portHardware = null;
                                                     foreach (string port_state in ports_array)
                                                     {
                                                         lock (DatabaseContext.DbLocker)
                                                         {
                                                             using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                                             {
-                                                                portHardware = db.PortsHardwares.FirstOrDefault(x => x.HardwareId == hw.Id && x.PortNumb == port_num);
+                                                                portHardware = db.Ports.FirstOrDefault(x => x.HardwareId == hw.Id && x.PortNumb == port_num);
                                                             }
                                                         }
 
                                                         if (portHardware == null)
                                                         {
-                                                            portHardware = new PortHardwareModel() { HardwareId = hw.Id, PortNumb = port_num };
+                                                            portHardware = new PortModel() { HardwareId = hw.Id, PortNumb = port_num };
                                                             lock (DatabaseContext.DbLocker)
                                                             {
                                                                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                                                 {
-                                                                    db.PortsHardwares.Add(portHardware);
+                                                                    db.Ports.Add(portHardware);
                                                                     db.SaveChanges();
                                                                 }
                                                             }
@@ -442,13 +473,13 @@ namespace ab.Services
                         else if (get_port_regex.IsMatch(cmd))
                         {
                             Match m = get_port_regex.Match(cmd);
-                            PortHardwareModel port_hw = null;
+                            PortModel port_hw = null;
 
                             lock (DatabaseContext.DbLocker)
                             {
                                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
-                                    port_hw = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
+                                    port_hw = db.Ports.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
                                 }
                             }
 
@@ -522,12 +553,12 @@ namespace ab.Services
                                 goto sendTelegramMessage;
                             }
                             Match m = set_port_regex.Match(cmd);
-                            PortHardwareModel port_hw = null;
+                            PortModel port_hw = null;
                             lock (DatabaseContext.DbLocker)
                             {
                                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                                 {
-                                    port_hw = db.PortsHardwares.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
+                                    port_hw = db.Ports.Include(x => x.Hardware).FirstOrDefault(x => x.Id == int.Parse(m.Groups[1].Value));
                                 }
                             }
                             if (port_hw == null)
@@ -622,6 +653,262 @@ namespace ab.Services
                 else
                 {
                     return;
+                }
+            }
+        }
+
+        public static void RunScriptAction(object sender)
+        {
+            TaskModel task = sender as TaskModel;
+            List<CommandModel> commands = task.Script.Commands;
+
+            for (int i = 0; i < commands.Count; i++)
+            {
+                CommandModel command = commands[i];
+                if (command.Hidden)
+                {
+                    continue;
+                }
+                if (command.PauseBeforeExecution > 0)
+                {
+                    Thread.Sleep((int)command.PauseBeforeExecution * 1000);
+                }
+
+                if (command.PortExecutionCondition != null)
+                {
+                    HttpWebRequest request = new HttpWebRequest(new Uri($"http://{command.PortExecutionCondition.Hardware.Address}/{command.PortExecutionCondition.Hardware.Password}/?pt={command.PortExecutionCondition.PortNumb}&cmd=get"));
+                    request.Timeout = 5000;
+
+                    try
+                    {
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        {
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                string responseFromServer = string.Empty;
+
+                                using (Stream dataStream = response.GetResponseStream())
+                                using (StreamReader reader = new StreamReader(dataStream))
+                                {
+                                    responseFromServer = reader.ReadToEnd();
+                                }
+                                if (string.IsNullOrEmpty(responseFromServer))
+                                {
+
+                                }
+                                else if (responseFromServer.ToLower() == "unauthorized")
+                                {
+
+                                }
+                                else
+                                {
+                                    if ((command.PortExecutionConditionAllowingState == true && responseFromServer.ToLower() != "on") ||
+                                        (command.PortExecutionConditionAllowingState == false && responseFromServer.ToLower() != "off"))
+                                    {
+                                        continue;
+                                    }
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+
+                if (command.TypeCommand == TypesCommands.Exit)
+                {
+                    if (command.Execution < 1)
+                    {
+                        CloseTask(task, "Завершено по команде выхода");
+                        break;
+                    }
+
+                    int inc_index = commands.FindIndex(x => x.Id == command.Execution);
+                    if (inc_index >= 0)
+                    {
+                        i = inc_index - 1;
+                        continue;
+                    }
+                    else
+                    {
+                        command = null;
+                        lock (DatabaseContext.DbLocker)
+                        {
+                            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                            {
+                                command = db.Commands.Include(x => x.Script).ThenInclude(x => x.Commands).FirstOrDefault(x => x.Id == command.Execution);
+                            }
+                        }
+                        if (command == null)
+                        {
+                            CloseTask(task, $"Завершено из-за оибки. Команда перехода не найдена: {command.Execution}");
+                            break;
+                        }
+
+                        i = commands.FindIndex(x => x.Id == command.Execution) - 1;
+                        continue;
+                    }
+                }
+                else if (command.TypeCommand == TypesCommands.Controller)
+                {
+                    HardwareModel hw = null;
+                    lock (DatabaseContext.DbLocker)
+                    {
+                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                        {
+                            hw = db.Hardwares.FirstOrDefault(x => x.Id == command.Execution);
+                        }
+                    }
+
+                    if (hw == null)
+                    {
+                        CloseTask(task, $"Завершено из-за оибки. Контроллер не найден в БД: {command.Execution}");
+                        break;
+                    }
+                    else if (!hw.CommandsAllowed)
+                    {
+
+                    }
+                    else
+                    {
+                        HttpWebRequest request = new HttpWebRequest(new Uri($"http://{hw.Address}/{hw.Password}/?cmd={command.ExecutionParametr}"));
+                        request.Timeout = 5000;
+
+                        try
+                        {
+                            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                            {
+                                if (response.StatusCode == HttpStatusCode.OK)
+                                {
+                                    string responseFromServer = string.Empty;
+
+                                    using (Stream dataStream = response.GetResponseStream())
+                                    using (StreamReader reader = new StreamReader(dataStream))
+                                    {
+                                        responseFromServer = reader.ReadToEnd();
+                                    }
+                                    if (string.IsNullOrEmpty(responseFromServer))
+                                    {
+
+                                    }
+                                    else if (responseFromServer.ToLower() == "unauthorized")
+                                    {
+
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+                else if (command.TypeCommand == TypesCommands.Port)
+                {
+                    PortModel port = null;
+                    lock (DatabaseContext.DbLocker)
+                    {
+                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                        {
+                            port = db.Ports.Include(x => x.Hardware).FirstOrDefault(x => x.Id == command.Execution);
+                        }
+                    }
+
+                    if (port == null)
+                    {
+                        CloseTask(task, $"Завершено из-за оибки. Порт не найден в БД: {command.Execution}");
+                        break;
+                    }
+
+                    string command_url = $"http://{port.Hardware.Address}/{port.Hardware.Password}/?cmd={port.PortNumb}:";
+
+                    if (command.ExecutionParametr.ToLower() == "true")
+                    {
+                        command_url += "1";
+                    }
+                    else if (command.ExecutionParametr.ToLower() == "false")
+                    {
+                        command_url += "0";
+                    }
+                    else
+                    {
+                        command_url += "2";
+                    }
+                    HttpWebRequest request = new HttpWebRequest(new Uri(command_url));
+                    request.Timeout = 5000;
+
+                    try
+                    {
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        {
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                string responseFromServer = string.Empty;
+
+                                using (Stream dataStream = response.GetResponseStream())
+                                using (StreamReader reader = new StreamReader(dataStream))
+                                {
+                                    responseFromServer = reader.ReadToEnd();
+                                }
+                                if (string.IsNullOrEmpty(responseFromServer))
+                                {
+
+                                }
+                                else if (responseFromServer.ToLower() == "unauthorized")
+                                {
+
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+        }
+
+        private static void CloseTask(TaskModel task, string name)
+        {
+            if (task == null)
+                return;
+
+            if (name != null)
+            {
+                task.Name = string.IsNullOrWhiteSpace(name) ? string.Empty : name;
+            }
+
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+                    task.FinishedAt = DateTime.Now;
+                    db.Tasks.Update(task);
+                    db.SaveChanges();
                 }
             }
         }

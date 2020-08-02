@@ -12,13 +12,12 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ab.Services
 {
     public class TelegramUsersListAdapter : RecyclerView.Adapter
     {
-        public readonly string TAG = "telegram-users-list-adapter";
+        public static readonly string TAG = "● telegram-users-list-adapter";
 
         public static Dictionary<int, string> LinkedUsers;
 
@@ -68,7 +67,7 @@ namespace ab.Services
 
                     if (LinkedUsers.ContainsKey(row.LinkedUserId))
                     {
-                        telegramUsersViewHolder.LinkedUserSpinner.SetSelection(LinkedUsers.Keys.IndexOf(row.LinkedUserId));
+                        telegramUsersViewHolder.LinkedUserSpinner.SetSelection(LinkedUsers.Keys.ToList().IndexOf(row.LinkedUserId));
                     }
                     else
                     {

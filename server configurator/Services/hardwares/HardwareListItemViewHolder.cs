@@ -11,7 +11,7 @@ namespace ab.Services
 {
     public class HardwareListItemViewHolder : AbstractCommunicationViewHolder
     {
-        public static new readonly string TAG = "hardware-list-item-view-holder";
+        public static new readonly string TAG = "● hardware-list-item-view-holder";
 
         public TextView Address { get; private set; }
 
@@ -22,6 +22,7 @@ namespace ab.Services
         public HardwareListItemViewHolder(View itemView, Action<int> listener) : base(itemView, listener)
         {
             Log.Debug(TAG, "~ constructor");
+
             Address = itemView.FindViewById<TextView>(Resource.Id.hardware_address_list_item);
         }
     }

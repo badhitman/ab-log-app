@@ -15,6 +15,8 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class ScriptsListActivity : AbstractListActivity
     {
+        public static new readonly string TAG = "● scripts-list-activity";
+
         protected override int ViewId => Resource.Layout.scripts_list_activity;
         protected override int ToolbarId => Resource.Id.scripts_list_toolbar;
         protected override int DrawerLayoutId => Resource.Id.scripts_list_drawer_layout;
@@ -31,17 +33,16 @@ namespace ab
             mRecyclerView = FindViewById<RecyclerView>(Resource.Id.scripts_list);
 
             mLayoutManager = new LinearLayoutManager(this);
-            mRecyclerView.SetLayoutManager(mLayoutManager);
-
             mAdapter = new ScriptsListAdapter(this);
-
-            mRecyclerView.SetAdapter(mAdapter);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
             mAdapter.ItemClick += OnItemClick;
+
+            mRecyclerView.SetLayoutManager(mLayoutManager);
+            mRecyclerView.SetAdapter(mAdapter);
         }
 
         protected override void OnPause()
@@ -58,7 +59,7 @@ namespace ab
         void OnItemClick(object sender, int scriptId)
         {
             Intent intent = new Intent(this, typeof(ScriptEditActivity));
-            intent.PutExtra(nameof(ScriptHardwareModel.Id), scriptId);
+            intent.PutExtra(nameof(ScriptModel.Id), scriptId);
             StartActivity(intent);
         }
     }

@@ -56,7 +56,7 @@
   <string name="delete_user_card_sub_title">Request delete remote user account from database!</string>
   <string name="delete_user_card_header">Remove user</string>
   <string name="footer_text_with_remove_user">Wanted! Deleting user? This action cannot be undone!</string>
-
+  <string name="error_empty_name_script">Error empty Name script</string>
   <string name="alarms_title">Alarms *</string>
   <string name="alarm_short_label">{a} *</string>
   <string name="interpretation_alarm_for_hardware">*  sending alarms to users</string>
@@ -153,10 +153,10 @@
   <string name="telegram_bot_is_not_configured_title">Telegram bot is not configured</string>
   <string name="mqtt_protocol_is_not_supported">The MQTT Protocol is not fully supported. Messages in the broker are recorded in the application logs, but are not processed in any way</string>
 
-  <string name="script_hardware_creating_title">Create a script</string>
-  <string name="script_hardware_adding_subtitle">Creating a batch task</string>
-  <string name="script_hardware_edit_title">Edit a script</string>
-  <string name="script_hardware_edit_subtitle">Modify a batch task</string>
+  <string name="script_creating_title">Create a script</string>
+  <string name="script_adding_subtitle">Creating a batch task</string>
+  <string name="script_edit_title">Edit a script</string>
+  <string name="script_edit_subtitle">Modify a batch task</string>
   <string name="autorun_trigger_title">Autorun/Trigger</string>
   <string name="hardware_title">Hardware</string>
   <string name="port_title">Port</string>
@@ -170,7 +170,7 @@
     <item>@string/abc_capital_switch</item>
   </string-array>
 
-  <string-array name="script_trigger_port_states_crop_array">
+  <string-array name="required_condition_port_states_array">
     <item>@string/abc_capital_on</item>
     <item>@string/abc_capital_off</item>
   </string-array>
@@ -181,16 +181,16 @@
   <string name="delete_script_card_sub_title">Request to delete a batch job from the database!</string>
   <string name="ok_mute_button_with_remove_script">deleting the script ...</string>
   <string name="footer_text_with_remove_script">Attention! Deleting a batch task script? This action cannot be undone!</string>
-  <string name="command_script_creating_title">Creating a command</string>
-  <string name="command_script_adding_subtitle">New command for the batch script</string>
-  <string name="command_script_requirement_title">Condition for completion</string>
+  <string name="command_creating_title">Creating a command</string>
+  <string name="command_adding_subtitle">New command for the batch script</string>
+  <string name="command_requirement_condition_title">Condition for completion</string>
   <string name="type_command_script_title">Type of command to run</string>
 
   <string name="delete_command_card_title">Deleting a command</string>
   <string name="delete_command_card_sub_title">Request to delete a command from the database!</string>
   <string name="ok_mute_button_with_remove_command">deleting a command ...</string>
   <string name="footer_text_with_remove_command">Attention! Deleting a batch task command? This action cannot be undone!</string>
-  
+
   <string name="command_type_array_item_port">Man. port</string>
   <string name="command_type_array_item_controller">Com. controller</string>
   <string name="command_type_array_item_transit">Exit/Transition</string>
@@ -199,7 +199,7 @@
     <item>@string/command_type_array_item_controller</item>
     <item>@string/command_type_array_item_transit</item>
   </string-array>
-  
+
   <string name="pause_title">Pause</string>
   <string name="sec_short_title">sec.</string>
   <string name="pause_before_executing_info">Pre-pause before execution</string>
@@ -219,4 +219,6 @@
   <string name="error_controller_port_was_not_found_in_the_database_title">Error! The controller port was not found in the database</string>
   <string name="error_no_controller_selected_title">Error! No controller selected. Identifier (key) of the object</string>
   <string name="error_not_specified_the_command_controller_title">Error! Not specified, the command controller</string>
+
+  <string name="name_batch_task_title">Name of the batch task</string>
 </resources>

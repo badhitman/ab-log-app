@@ -16,57 +16,22 @@ namespace ab
 {
     public abstract class aSpecialScript : AbstractActivity
     {
-        public static new readonly string TAG = nameof(aSpecialScript);
+        public static new readonly string TAG = "● abstract-special-script";
 
-        protected override int ViewId => Resource.Layout.script_hardware_activity;
-        protected override int ToolbarId => Resource.Id.script_hardware_toolbar;
-        protected override int DrawerLayoutId => Resource.Id.script_hardware_drawer_layout;
-        protected override int NavId => Resource.Id.script_hardware_nav_view;
+        public Dictionary<int, string> Hardwares;
+        public Dictionary<int, string> Ports;
 
-        public static Dictionary<int, string> Hardwares;
-        public static Dictionary<int, string> Ports;
+        protected AppCompatTextView CardTitle;
+        protected AppCompatTextView CardSubtitle;
 
-        protected int selected_port_id = 0;
+        protected LinearLayoutCompat FooterLayout;
 
-        protected AppCompatTextView CardHeader;
-        protected AppCompatTextView CardSubHeader;
-
-        protected LinearLayout TopLayout;
-        protected LinearLayout BottomLayout;
-        protected LinearLayout FooterLayout;
-
-        protected Switch FormEnableTrigger;
-        protected AppCompatSpinner HardwareFormFieldSpinner;
-        protected AppCompatSpinner PortFormFieldSpinner;
-        protected AppCompatSpinner StateFormFieldSpinner;
-
-        protected ArrayAdapter adapterPortStatuses;
-
-        protected AppCompatButton CardButtonOk;
-        protected AppCompatButton CardButtonCancel;
+        protected AppCompatButton ButtonOk;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(savedInstanceState);
             Log.Debug(TAG, "OnCreate");
-
-            CardHeader = FindViewById<AppCompatTextView>(Resource.Id.script_card_title);
-            CardSubHeader = FindViewById<AppCompatTextView>(Resource.Id.script_card_subtitle);
-
-            TopLayout = FindViewById<LinearLayout>(Resource.Id.script_top_layout);
-            BottomLayout = FindViewById<LinearLayout>(Resource.Id.script_bottom_layout);
-            FooterLayout = FindViewById<LinearLayout>(Resource.Id.script_footer_layout);
-
-            FormEnableTrigger = FindViewById<Switch>(Resource.Id.switchAutorunScriptTrigger);
-            HardwareFormFieldSpinner = FindViewById<AppCompatSpinner>(Resource.Id.spinnerScriptHardwareTrigger);
-            HardwareFormFieldSpinner.Enabled = false;
-            PortFormFieldSpinner = FindViewById<AppCompatSpinner>(Resource.Id.spinnerScriptPortTrigger);
-            PortFormFieldSpinner.Enabled = false;
-            StateFormFieldSpinner = FindViewById<AppCompatSpinner>(Resource.Id.spinnerScriptStateTrigger);
-            StateFormFieldSpinner.Enabled = false;
-
-            CardButtonOk = FindViewById<AppCompatButton>(Resource.Id.script_button_ok);
-            CardButtonCancel = FindViewById<AppCompatButton>(Resource.Id.cancel_button_ok);
+            base.OnCreate(savedInstanceState);
 
             Hardwares = new Dictionary<int, string>();
 
@@ -80,75 +45,65 @@ namespace ab
                     }
                 }
             }
-
-            UpdateHardwaresListSpinner(HardwareFormFieldSpinner);
-
-            adapterPortStatuses = ArrayAdapter<string>.CreateFromResource(this, Resource.Array.script_trigger_port_states_array, Android.Resource.Layout.SimpleSpinnerItem);
-            adapterPortStatuses.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            StateFormFieldSpinner.Adapter = adapterPortStatuses;
         }
 
         protected override void OnResume()
         {
             Log.Debug(TAG, "OnResume");
             base.OnResume();
-            CardButtonOk.Click += CardButton_Click;
-            CardButtonCancel.Click += CardButton_Click;
-            FormEnableTrigger.CheckedChange += FormEnableToggler_CheckedChange;
 
-            HardwareFormFieldSpinner.ItemSelected += HardwareSpinner_ItemSelected;
+            ButtonOk.Click += ButtonOk_Click;
         }
 
         protected override void OnPause()
         {
             Log.Debug(TAG, "OnPause");
             base.OnPause();
-            CardButtonOk.Click -= CardButton_Click;
-            CardButtonCancel.Click -= CardButton_Click;
-            FormEnableTrigger.CheckedChange -= FormEnableToggler_CheckedChange;
 
-            HardwareFormFieldSpinner.ItemSelected -= HardwareSpinner_ItemSelected;
+            ButtonOk.Click -= ButtonOk_Click;
         }
 
-        protected void UpdateHardwaresListSpinner(AppCompatSpinner appCompatSpinnerHardwares)
+        public void HardwaresListSpinnerLoad(ref AppCompatSpinner appCompatSpinnerHardwares, int selected_hardware_id = 0)
         {
+            Log.Debug(TAG, $"HardwaresListSpinnerLoad(selected_hardware_id={selected_hardware_id})");
+
             ArrayAdapter<string> adapterHardwares = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem, Hardwares.Values.ToList());
             adapterHardwares.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             appCompatSpinnerHardwares.Adapter = adapterHardwares;
-        }
-
-        protected void HardwareSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            AppCompatSpinner spinner = (AppCompatSpinner)sender;
-            Log.Debug(TAG, $"HardwareSpinner_ItemSelected(spinner id:{spinner.Id})");
-
-            int hardware_id = Hardwares.Keys.ElementAt(e.Position);
-            UpdatePortsListSpinner(hardware_id);
-        }
-
-        protected void UpdatePortsListSpinner(int hardware_id = 0)
-        {
-            Log.Debug(TAG, $"UpdatePortsListSpinner({hardware_id})");
-            Ports = new Dictionary<int, string>();
-            if (hardware_id > 0)
+            if (selected_hardware_id > 0)
             {
-                lock (DatabaseContext.DbLocker)
+                appCompatSpinnerHardwares.SetSelection(Hardwares.Keys.ToList().IndexOf(selected_hardware_id));
+            }
+        }
+
+        protected void PortsList_UpdateSpinner(int hardware_id, ref AppCompatSpinner portsSpinner, int selected_port_id = 0)
+        {
+            Log.Debug(TAG, $"PortsList_UpdateSpinner(hardware_id={hardware_id})");
+
+            if (portsSpinner.SelectedItemPosition > -1 && selected_port_id == 0 && Ports?.Count > 0)
+            {
+                selected_port_id = Ports.Keys.ToList()[portsSpinner.SelectedItemPosition];
+            }
+
+            Ports = new Dictionary<int, string>();
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                    foreach (PortModel portHardware in db.Ports.Where(x => x.HardwareId == hardware_id))
                     {
-                        foreach (PortHardwareModel portHardware in db.PortsHardwares.Where(x => x.HardwareId == hardware_id))
-                        {
-                            Ports.Add(portHardware.Id, portHardware.ToString());
-                        }
+                        Ports.Add(portHardware.Id, portHardware.ToString());
                     }
                 }
             }
+
             ArrayAdapter<string> adapterPorts = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem, Ports.Values.ToList());
             adapterPorts.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            PortFormFieldSpinner.Adapter = adapterPorts;
+            portsSpinner.Adapter = adapterPorts;
+
             if (selected_port_id > 0)
             {
-                PortFormFieldSpinner.SetSelection(Ports.Keys.ToList().IndexOf(selected_port_id));
+                portsSpinner.SetSelection(Ports.Keys.ToList().IndexOf(selected_port_id));
             }
         }
 
@@ -171,9 +126,9 @@ namespace ab
         protected int GetIndexPortState(string port_state_as_string)
         {
             Log.Debug(TAG, $"GetIndexPortState({port_state_as_string})");
+
             List<string> port_states_list = new List<string>(Resources.GetStringArray(Resource.Array.script_trigger_port_states_array));
-            bool port_state;
-            if (string.IsNullOrWhiteSpace(port_state_as_string) || !bool.TryParse(port_state_as_string, out port_state))
+            if (string.IsNullOrWhiteSpace(port_state_as_string) || !bool.TryParse(port_state_as_string, out bool port_state))
             {
                 return port_states_list.IndexOf(GetString(Resource.String.abc_capital_switch));
             }
@@ -181,24 +136,7 @@ namespace ab
             return GetIndexPortState(port_state, port_states_list);
         }
 
-        private void FormEnableToggler_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
-        {
-            Log.Debug(TAG, $"FormEnableToggler_CheckedChange - {e.IsChecked}");
-            if (e.IsChecked)
-            {
-                HardwareFormFieldSpinner.Enabled = true;
-                PortFormFieldSpinner.Enabled = true;
-                StateFormFieldSpinner.Enabled = true;
-            }
-            else
-            {
-                HardwareFormFieldSpinner.Enabled = false;
-                PortFormFieldSpinner.Enabled = false;
-                StateFormFieldSpinner.Enabled = false;
-            }
-        }
-
-        protected abstract void CardButton_Click(object sender, EventArgs e);
-        protected abstract string ReadView();
+        protected abstract void ButtonOk_Click(object sender, EventArgs e);
+        protected abstract string ReadView(int scriptId = 0);
     }
 }

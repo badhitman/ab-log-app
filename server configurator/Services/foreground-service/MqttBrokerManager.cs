@@ -6,17 +6,15 @@ using ab.Model;
 using Android.Util;
 using MQTTnet;
 using MQTTnet.Server;
-using System.Linq;
 using System.Net;
 using System.Text;
-using TelegramBotMin;
-using Xamarin.Essentials;
 
 namespace ab.Services
 {
     public class MqttBrokerManager : IForegroundService
     {
-        static readonly string TAG = "mqtt-manager";
+        public static readonly string TAG = "● mqtt-broker-manager";
+
         private readonly IMqttServer mqttServer;
         LogsContext logsDB = new LogsContext();
         public IPAddress ipAddress => Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];
@@ -34,6 +32,7 @@ namespace ab.Services
             string msg = $"StartForegroundService(port={service_port})";
             Log.Debug(TAG, msg);
             logsDB.AddLogRow(LogStatusesEnum.Trac, msg, TAG);
+
             MqttBrokerPort = service_port;
 
             MqttServerOptionsBuilder optionsBuilder = new MqttServerOptionsBuilder()
@@ -66,37 +65,6 @@ namespace ab.Services
             string PayloadTest = Encoding.UTF8.GetString(message_context.ApplicationMessage.Payload);
             
             logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={PayloadTest}", TAG);
-            //string bot_message = $"В топике \"{message_context.ApplicationMessage.Topic}\" новое MQTT сообщение: {PayloadTest}";
-            //string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);
-            //if (!string.IsNullOrWhiteSpace(token))
-            //{
-            //    TelegramClientCore telegramClient = new TelegramClientCore(token);
-            //    if (telegramClient?.Me != null)
-            //    {
-            //        lock (DatabaseContext.DbLocker)
-            //        {
-            //            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-            //            {
-            //                foreach (UserModel user in db.Users.Where(x => x.AlarmSubscriber))
-            //                {
-            //                    foreach (TelegramUserModel telegramUser in db.TelegramUsers.Where(xx => xx.LinkedUserId == user.Id))
-            //                    {
-            //                        telegramClient.sendMessage(telegramUser.TelegramId.ToString(), bot_message.Trim());
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            //.WithApplicationMessageInterceptor(context =>
-            //{
-            //    if (context.ApplicationMessage.Topic != mqtt_broker_topic)
-            //    {
-            //        context.AcceptPublish = false;
-            //        return;
-            //        //context.ApplicationMessage.Payload = Encoding.UTF8.GetBytes("The server injected payload.");
-            //    }
-            //});
         }
 
         private void MqttSubscriptionInterceptor(MqttSubscriptionInterceptorContext subscription_context)

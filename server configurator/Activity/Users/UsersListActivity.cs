@@ -16,7 +16,7 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class UsersListActivity : AbstractListActivity
     {
-        public new readonly string TAG = "users-list-activity";
+        public static new readonly string TAG = "● users-list-activity";
 
         protected override int ViewId => Resource.Layout.users_list_activity;
         protected override int ToolbarId => Resource.Id.users_list_toolbar;

@@ -18,7 +18,7 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class TelegramBotActivity : AbstractActivity
     {
-        public new readonly string TAG = "telegram-bot-activity";
+        public static new readonly string TAG = "● telegram-bot-activity";
 
         protected override int ViewId => Resource.Layout.telegram_activity;
         protected override int ToolbarId => Resource.Id.telegram_toolbar;

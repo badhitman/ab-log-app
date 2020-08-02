@@ -27,7 +27,7 @@ namespace ab.Model
         Exit
     }
 
-    public class CommandScriptModel : abstractEF
+    public class CommandModel : abstractEF
     {
         /// <summary>
         /// Тип команды
@@ -41,8 +41,8 @@ namespace ab.Model
         /// <summary>
         /// Родительский скрипт-владелец
         /// </summary>
-        public ScriptHardwareModel ScriptHardware { get; set; }
-        public int ScriptHardwareId { get; set; }
+        public ScriptModel Script { get; set; }
+        public int ScriptId { get; set; }
 
         /// <summary>
         /// Пауза перед выполнением команды. Пауза выдерживается средствами самого сервера, а не управляющего блока.
@@ -59,7 +59,7 @@ namespace ab.Model
         /// <summary>
         /// Порт для проверки для принятия решения: выполнять команду или пропустить
         /// </summary>
-        public PortHardwareModel PortExecutionCondition { get; set; }
+        public PortModel PortExecutionCondition { get; set; }
         public int? PortExecutionConditionId { get; set; }
         /// <summary>
         /// Требуемое состояние порта для того что бы команда была выполнена.

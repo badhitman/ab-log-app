@@ -2,13 +2,8 @@
 // © https://github.com/badhitman 
 ////////////////////////////////////////////////
 
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using System;
+using System.Collections.Generic;
 
 namespace ab.Model
 {
@@ -31,7 +26,7 @@ namespace ab.Model
         Telegram
     }
 
-    public class TaskScriptModel : abstractEF
+    public class TaskModel : abstractEF
     {
         public TaskInitiatorsTypes TaskInitiatorType { get; set; }
 
@@ -41,8 +36,9 @@ namespace ab.Model
 
         public DateTime FinishedAt { get; set; } = DateTime.MinValue;
 
-        public ScriptHardwareModel ScriptHardware { get; set; }
+        public ScriptModel Script { get; set; }
+        public int ScriptId { get; set; }
 
-        public int ScriptHardwareId { get; set; }
+        public List<ReportModel> Reports { get; set; }
     }
 }

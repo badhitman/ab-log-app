@@ -13,6 +13,8 @@ namespace ab.Services
 {
     public class CommandsListAdapter : RecyclerView.Adapter
     {
+        public static readonly string TAG = "● commands-list-adapter";
+
         public event EventHandler<int> ItemClick;
         public event EventHandler<int> MoveOrderingCommand;
 
@@ -26,7 +28,7 @@ namespace ab.Services
                 lock (DatabaseContext.DbLocker)
                 {
                     using DatabaseContext db = new DatabaseContext(gs.DatabasePathBase);
-                    return db.CommandsScript.Where(x => x.ScriptHardwareId == ScriptId).Count();
+                    return db.Commands.Where(x => x.ScriptId == ScriptId).Count();
                 }
             }
         }
@@ -54,7 +56,7 @@ namespace ab.Services
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    CommandScriptModel command = db.CommandsScript.Where(x => x.ScriptHardwareId == ScriptId).OrderBy(x => x.Ordering).Skip(position).FirstOrDefault();
+                    CommandModel command = db.Commands.Where(x => x.ScriptId == ScriptId).OrderBy(x => x.Ordering).Skip(position).FirstOrDefault();
                     commandListItemViewHolder.CommandId = command.Id;
                     //
                     commandListItemViewHolder.Name.Text = command.Name;

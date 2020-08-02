@@ -15,10 +15,12 @@ namespace ab.Services
 {
     public class ScriptsListAdapter : RecyclerView.Adapter
     {
+        public static readonly string TAG = "● scripts-list-adapter";
+
         public event EventHandler<int> ItemClick;
         Context mContext;
 
-        public override int ItemCount { get { lock (DatabaseContext.DbLocker) { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.ScriptsHardware.Count(); } } } }
+        public override int ItemCount { get { lock (DatabaseContext.DbLocker) { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.Scripts.Count(); } } } }
 
         public ScriptsListAdapter(Context _mContext)
         {
@@ -38,7 +40,7 @@ namespace ab.Services
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    ScriptHardwareModel script = db.ScriptsHardware.Skip(position).Include(x => x.TriggerPort).ThenInclude(x => x.Hardware).FirstOrDefault();
+                    ScriptModel script = db.Scripts.Skip(position).Include(x => x.TriggerPort).ThenInclude(x => x.Hardware).FirstOrDefault();
                     scriptListItemViewHolder.ScriptId = script.Id;
                     //
                     scriptListItemViewHolder.Name.Text = script.Name;

@@ -4,7 +4,7 @@
 
 namespace ab.Model
 {
-    public class PortHardwareModel : abstractEF
+    public class PortModel : abstractEF
     {
         public int HardwareId { get; set; }
         public HardwareModel Hardware { get; set; }

@@ -1,6 +1,7 @@
 ﻿////////////////////////////////////////////////
 // © https://github.com/badhitman 
 ////////////////////////////////////////////////
+
 using System;
 using Android.OS;
 using Android.Util;
@@ -10,12 +11,14 @@ namespace ab
 {
     public abstract class AbstractListActivity : AbstractActivity
     {
-        public new readonly string TAG = "abstract-list-activity";
+        public static new readonly string TAG = "● abstract-list-activity";
+
         protected abstract int ButtonAdd { get; }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Log.Debug(TAG, "OnCreate");
+
             base.OnCreate(savedInstanceState);
             FloatingActionButton ButtonAddAction = FindViewById<FloatingActionButton>(ButtonAdd);
             ButtonAddAction.Click += ButtonAddOnClick;

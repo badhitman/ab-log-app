@@ -10,10 +10,10 @@ namespace ab.Services
 {
     public class MyWebViewClient : WebViewClient
     {
+        public static readonly string TAG = "● web-client";
+
         public delegate void ShouldUrlLoadingHandler(string url);
         public event ShouldUrlLoadingHandler ShouldUrlLoading;
-
-        static string TAG = nameof(MyWebViewClient);
 
         public static string WebPathBase
         {
@@ -47,7 +47,7 @@ namespace ab.Services
         public override bool ShouldOverrideUrlLoading(WebView view, string url)
         {
             Log.Debug(TAG, $"ShouldOverrideUrlLoading - {url}");
-            if(ShouldUrlLoading == null)
+            if (ShouldUrlLoading == null)
             {
                 return base.ShouldOverrideUrlLoading(view, url);
             }
@@ -60,7 +60,7 @@ namespace ab.Services
         {
             string url = request.Url.ToString();
             Log.Debug(TAG, $"ShouldOverrideUrlLoading - {url}");
-            if(ShouldUrlLoading == null)
+            if (ShouldUrlLoading == null)
             {
                 return base.ShouldOverrideUrlLoading(view, request);
             }

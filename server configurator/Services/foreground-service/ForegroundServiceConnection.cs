@@ -10,7 +10,8 @@ namespace ab.Services
 {
     public class ForegroundServiceConnection : Java.Lang.Object, IServiceConnection, IForegroundService
     {
-        string TAG { get; }
+        public static readonly string TAG = "● service-connection";
+
         ServicesActivity myActivity;
         public bool IsConnected { get; private set; }
         public ForegroundServiceBinder Binder { get; private set; }

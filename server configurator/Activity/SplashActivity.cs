@@ -22,11 +22,11 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true)]
     public class SplashActivity : AppCompatActivity
     {
+        public static readonly string TAG = "● start-splash";
+
         public static bool reWriteDataBase { get; } = false;
         public override void OnBackPressed() { }
         private LinearLayout main_splash;
-
-        static string TAG = "start-splash";
 
         static bool isRunning = false;
         static List<string> LoadingTracert = new List<string>();
@@ -128,10 +128,11 @@ namespace ab
                 _ = db.Hardwares.FirstOrDefault();
                 _ = db.CloudMessages.FirstOrDefault();
                 _ = db.TelegramUsers.FirstOrDefault();
-                _ = db.PortsHardwares.FirstOrDefault();
-                _ = db.ScriptsHardware.FirstOrDefault();
-                _ = db.CommandsScript.FirstOrDefault();
-                _ = db.ScriptTasks.FirstOrDefault();
+                _ = db.Ports.FirstOrDefault();
+                _ = db.Scripts.FirstOrDefault();
+                _ = db.Commands.FirstOrDefault();
+                _ = db.Tasks.FirstOrDefault();
+                _ = db.Reports.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -170,26 +171,26 @@ namespace ab
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Дом", Address = "192.168.2.114", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "Двор", Address = "192.168.1.6", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
                 await db.SaveChangesAsync();
+
                 for (int i = 0; i < 38; i++)
                 {
-                    await db.PortsHardwares.AddRangeAsync(new PortHardwareModel() { HardwareId = 1, PortNumb = i }, new PortHardwareModel() { HardwareId = 2, PortNumb = i });
+                    await db.Ports.AddRangeAsync(new PortModel() { HardwareId = 2, PortNumb = i }, new PortModel() { HardwareId = 1, PortNumb = i });
                     await db.SaveChangesAsync();
                 }
             }
 
-            if (await db.ScriptsHardware.CountAsync() == 0)
+            if (await db.Scripts.CountAsync() == 0)
             {
-                await db.ScriptsHardware.AddAsync(new ScriptHardwareModel { Name = "Утро", TriggerPortState = true, TriggerPortId = 1 });
-                await db.ScriptsHardware.AddAsync(new ScriptHardwareModel { Name = "Ушёл из дома", TriggerPortState = null });
+                await db.Scripts.AddAsync(new ScriptModel { Name = "Утро", TriggerPortState = true, TriggerPortId = 1 });
+                await db.Scripts.AddAsync(new ScriptModel { Name = "Ушёл из дома", TriggerPortState = null });
                 await db.SaveChangesAsync();
             }
 
-
-            if (await db.CommandsScript.CountAsync() == 0)
+            if (await db.Commands.CountAsync() == 0)
             {
-                int scriptHardwareId = (await db.ScriptsHardware.FirstAsync()).Id;
-                await db.CommandsScript.AddAsync(new CommandScriptModel { Name = "Выключить уличный свет", Ordering = 1, TypeCommand = TypesCommands.Controller, ScriptHardwareId = scriptHardwareId, Execution = 2, ExecutionParametr = "15:0;10:0" });
-                await db.CommandsScript.AddAsync(new CommandScriptModel { Name = "Включить полив", Ordering = 2, TypeCommand = TypesCommands.Port, ScriptHardwareId = scriptHardwareId, Execution = 30, ExecutionParametr = "on" });
+                int scriptHardwareId = (await db.Scripts.FirstAsync()).Id;
+                await db.Commands.AddAsync(new CommandModel { Name = "Выключить уличный свет", Ordering = 1, TypeCommand = TypesCommands.Controller, ScriptId = scriptHardwareId, Execution = 2, ExecutionParametr = "15:0;10:0" });
+                await db.Commands.AddAsync(new CommandModel { Name = "Включить полив", Ordering = 2, TypeCommand = TypesCommands.Port, ScriptId = scriptHardwareId, Execution = 30, ExecutionParametr = "on" });
                 await db.SaveChangesAsync();
             }
 #endif

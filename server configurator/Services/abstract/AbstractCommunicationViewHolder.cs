@@ -12,7 +12,7 @@ namespace ab.Services
 {
     public abstract class AbstractCommunicationViewHolder : RecyclerView.ViewHolder
     {
-        public static readonly string TAG = "abstract-communication-view-holder";
+        public static readonly string TAG = "● abstract-communication-view-holder";
 
         protected abstract int NameId { get; }
         protected abstract int AlarmId { get; }

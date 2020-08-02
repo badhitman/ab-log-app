@@ -26,7 +26,7 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class HardwareSystemSettingsActivity : AbstractActivity
     {
-        static new readonly string TAG = nameof(HardwareSystemSettingsActivity);
+        public static readonly string TAG = "● hardware-system-settings-activity";
 
         protected override int ViewId => Resource.Layout.hardware_system_settings_activity;
         protected override int ToolbarId => Resource.Id.hardware_system_settings_toolbar;
@@ -115,7 +115,7 @@ namespace ab
 
                 if (!string.IsNullOrEmpty(pn))
                 {
-                    PortHardwareModel portHardware = GetPortHardware(pn);
+                    PortModel portHardware = GetPortHardware(pn);
                     if (portHardware == null)
                     {
                         return;
@@ -128,7 +128,7 @@ namespace ab
                         {
                             using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                             {
-                                db.PortsHardwares.Update(portHardware);
+                                db.Ports.Update(portHardware);
                                 db.SaveChanges();
                             }
                         }
@@ -511,7 +511,7 @@ namespace ab
                 {
                     onload_js = MyWebViewClient.onload_pt_js;
 
-                    PortHardwareModel portHardware = GetPortHardware(pt);
+                    PortModel portHardware = GetPortHardware(pt);
                     if (portHardware == null)
                     {
                         return;
@@ -682,24 +682,24 @@ namespace ab
             HardwareSystemSettingsLayout.AddView(webView);
         }
 
-        private PortHardwareModel GetPortHardware(string port)
+        private PortModel GetPortHardware(string port)
         {
             Log.Debug(TAG, $"GetPortHardware - {port}");
 
             int port_num = int.Parse(port);
-            PortHardwareModel portHardware = hardware.Ports.FirstOrDefault(x => x.PortNumb == port_num);
+            PortModel portHardware = hardware.Ports.FirstOrDefault(x => x.PortNumb == port_num);
             if (portHardware == null)
             {
                 lock (DatabaseContext.DbLocker)
                 {
                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                     {
-                        portHardware = new PortHardwareModel()
+                        portHardware = new PortModel()
                         {
                             HardwareId = hardware.Id,
                             PortNumb = port_num
                         };
-                        db.PortsHardwares.Add(portHardware);
+                        db.Ports.Add(portHardware);
                         try
                         {
                             db.SaveChanges();

@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////
 
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using ab.Model;
 using ab.Services;
 using Android.App;
@@ -10,13 +12,14 @@ using Android.Content;
 using Android.OS;
 using Android.Util;
 using AndroidX.RecyclerView.Widget;
+using Xamarin.Essentials;
 
 namespace ab
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class HardwaresListActivity : AbstractListActivity
     {
-        public new readonly string TAG = "hardwares-list-activity";
+        public static new readonly string TAG = "● hardwares-list-activity";
 
         protected override int ViewId => Resource.Layout.hardwares_list_activity;
         protected override int ToolbarId => Resource.Id.hardwares_list_toolbar;

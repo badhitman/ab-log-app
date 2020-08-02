@@ -15,16 +15,16 @@ namespace ab.Services
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            LogViewHolder vh = holder as LogViewHolder;
+            LogViewHolder logViewHolder = holder as LogViewHolder;
             lock (LogsContext.DbLocker)
             {
                 using (LogsContext db = new LogsContext())
                 {
                     LogRowModel row = db.Logs.OrderByDescending(x => x.CreatedAt).Skip(position).FirstOrDefault();
-                    vh.LogMessageTextMessage.Text = row.Name;
-                    vh.LogMessageDateTimeStamp.Text = row.CreatedAt.ToString();
-                    vh.LogMessageStatus.Text = row.Status.ToString();
-                    vh.LogMessageTag.Text = row.TAG.ToString();
+                    logViewHolder.LogMessageTextMessage.Text = row.Name;
+                    logViewHolder.LogMessageDateTimeStamp.Text = row.CreatedAt.ToString();
+                    logViewHolder.LogMessageStatus.Text = row.Status.ToString();
+                    logViewHolder.LogMessageTag.Text = row.TAG.ToString();
                 }
             }
         }
@@ -33,8 +33,8 @@ namespace ab.Services
         {
             View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.log_list_item, parent, false);
 
-            LogViewHolder vh = new LogViewHolder(itemView);
-            return vh;
+            LogViewHolder logViewHolder = new LogViewHolder(itemView);
+            return logViewHolder;
         }
     }
 }

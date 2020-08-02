@@ -15,7 +15,7 @@ namespace ab.Services
 {
     public class HardwaresListAdapter : RecyclerView.Adapter
     {
-        public readonly string TAG = "hardwares-list-adapter";
+        public static readonly string TAG = "● hardwares-list-adapter";
 
         public event EventHandler<int> ItemClick;
         Context mContext;
@@ -25,18 +25,21 @@ namespace ab.Services
         public HardwaresListAdapter(Context context)
         {
             Log.Debug(TAG, "~ constructor");
+
             mContext = context;
         }
 
         void OnClick(int hardware_id)
         {
             Log.Debug(TAG, $"OnClick - hardware_id:{hardware_id}");
+
             ItemClick?.Invoke(this, hardware_id);
         }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             Log.Debug(TAG, $"OnBindViewHolder - position:{position}");
+
             HardwareListItemViewHolder hardwareViewHolder = holder as HardwareListItemViewHolder;
             lock (DatabaseContext.DbLocker)
             {
@@ -64,6 +67,7 @@ namespace ab.Services
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
             Log.Debug(TAG, $"OnCreateViewHolder");
+
             View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.hardwares_list_item, parent, false);
             HardwareListItemViewHolder hardwareViewHolder = new HardwareListItemViewHolder(itemView, OnClick);
             return hardwareViewHolder;

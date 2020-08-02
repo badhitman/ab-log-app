@@ -1,36 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/script_app_bar"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/script_hardware_app_bar"
-    android:padding="5dp">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="2dp">
+        android:padding="5dp">
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="6dp">
 
-            <TextView
-                android:text="@string/script_hardware_creating_title"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:text="@string/script_creating_title"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/script_card_title" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,16 +42,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"/>
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingHorizontal="6dp">
 
-            <TextView
-                android:text="@string/script_hardware_adding_subtitle"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:text="@string/script_adding_subtitle"
                 android:id="@+id/script_card_subtitle"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
@@ -59,49 +59,59 @@
                 android:autoLink="web"
                 android:layout_marginBottom="10dp"/>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/script_top_layout">
+                android:id="@+id/script_top_layout" />
 
-            </LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:text="@string/name_batch_task_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-            <Switch
+            <androidx.appcompat.widget.AppCompatEditText
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextScriptName" />
+
+            <androidx.appcompat.widget.SwitchCompat
                 android:layout_marginTop="10dp"
-                    android:text="Enable form"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:checked="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/switchAutorunScriptTrigger" />
+                android:text="@string/autorun_trigger_title"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:checked="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switchAutorunTriggerScript" />
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:orientation="horizontal"
                 android:minWidth="25px"
                 android:minHeight="25px"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_marginRight="5dp"
                     android:text="@string/hardware_title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical" />
 
-                <Spinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:minHeight="35dp"
                     android:enabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:prompt="@string/hardware_title"
-                    android:id="@+id/spinnerScriptHardwareTrigger"
+                    android:id="@+id/spinnerScriptTriggerHardware"
                     android:background="#ffcfd8dc" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_marginVertical="2dp"
                 android:orientation="horizontal"
                 android:minWidth="25px"
@@ -109,77 +119,63 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_marginRight="5dp"
                     android:text="@string/port_title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical" />
 
-                <Spinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:minHeight="35dp"
                     android:enabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:prompt="@string/port_title"
-                    android:id="@+id/spinnerScriptPortTrigger"
+                    android:id="@+id/spinnerScriptTriggerPort"
                     android:background="#ffcfd8dc" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:orientation="horizontal"
                 android:minWidth="25px"
                 android:minHeight="25px"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_marginRight="5dp"
                     android:text="@string/state_title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical" />
 
-                <Spinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:minHeight="35dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:prompt="@string/state_title"
-                    android:id="@+id/spinnerScriptStateTrigger"
+                    android:id="@+id/spinnerScriptTriggerState"
                     android:background="#ffcfd8dc" />
 
-            </LinearLayout>
-            
-                <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/script_bottom_layout">
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </LinearLayout>
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:text="@string/ok_title"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/script_button_ok" />
 
-        <Button
-            android:text="@string/cancel_title"
-            android:layout_marginBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/cancel_button_ok" />
-
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/script_footer_layout"/>
+            android:id="@+id/script_footer_layout" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>

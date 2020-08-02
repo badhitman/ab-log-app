@@ -20,7 +20,7 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class UserEditActivity : UserCreateActivity
     {
-        public new readonly string TAG = "user-edit-activity";
+        public static new readonly string TAG = "● user-edit-activity";
 
         protected override int ViewId => Resource.Layout.user_activity;
         protected int userId;
@@ -28,6 +28,7 @@ namespace ab
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Log.Debug(TAG, "OnCreate");
+
             base.OnCreate(savedInstanceState);
             UserFooterLayout = FindViewById<LinearLayout>(Resource.Id.user_footer_layout);
             int user_id = Intent.Extras.GetInt(nameof(UserModel.Id), 0);

@@ -13,6 +13,8 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class LogsActivity : AbstractActivity
     {
+        public static new readonly string TAG = "● logs-activity";
+
         protected override int ViewId => Resource.Layout.logs_list_activity;
         protected override int ToolbarId => Resource.Id.logs_toolbar;
         protected override int DrawerLayoutId => Resource.Id.logs_drawer_layout;

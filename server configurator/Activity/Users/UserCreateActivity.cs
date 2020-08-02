@@ -17,6 +17,8 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class UserCreateActivity : AbstractActivity
     {
+        public static new readonly string TAG = "● user-create-activity";
+
         protected override int ViewId => Resource.Layout.user_activity;
         protected override int ToolbarId => Resource.Id.user_toolbar;
         protected override int DrawerLayoutId => Resource.Id.user_drawer_layout;

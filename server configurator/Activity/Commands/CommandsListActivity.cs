@@ -18,6 +18,8 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", NoHistory = true)]
     public class CommandsListActivity : AbstractListActivity
     {
+        public static new readonly string TAG = "● commands-list-activity";
+
         protected override int ViewId => Resource.Layout.commands_list_activity;
         protected override int ToolbarId => Resource.Id.commands_list_toolbar;
         protected override int ButtonAdd => Resource.Id.commands_list_add_button;
@@ -25,7 +27,7 @@ namespace ab
         protected override int NavId => Resource.Id.commands_list_app_nav_view;
 
         protected TextView commands_list_card_sub_header;
-        ScriptHardwareModel script;
+        ScriptModel script;
 
         RecyclerView mRecyclerView;
         RecyclerView.LayoutManager mLayoutManager;
@@ -35,12 +37,12 @@ namespace ab
         {
             base.OnCreate(savedInstanceState);
             commands_list_card_sub_header = FindViewById<TextView>(Resource.Id.commands_list_card_sub_header);
-            int scriptHardwareId = Intent.Extras.GetInt(nameof(ScriptHardwareModel.Id), 0);
+            int scriptHardwareId = Intent.Extras.GetInt(nameof(ScriptModel.Id), 0);
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    script = db.ScriptsHardware.Include(x => x.CommandsScripts).FirstOrDefault(x => x.Id == scriptHardwareId);
+                    script = db.Scripts.Include(x => x.Commands).FirstOrDefault(x => x.Id == scriptHardwareId);
                 }
             }
             commands_list_card_sub_header.Text = $"[{script.Name}]";
@@ -70,31 +72,31 @@ namespace ab
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    CommandScriptModel command = db.CommandsScript.Find(command_id);
+                    CommandModel command = db.Commands.Find(command_id);
                     if (button.Id == Resource.Id.UpCommandOrdering)
                     {
-                        if (db.CommandsScript.Any(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering < command.Ordering))
+                        if (db.Commands.Any(x => x.ScriptId == command.ScriptId && x.Ordering < command.Ordering))
                         {
-                            int exchange_order = db.CommandsScript.Where(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering < command.Ordering).Max(x=>x.Ordering);
-                            CommandScriptModel command2 = db.CommandsScript.FirstOrDefault(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering== exchange_order);
+                            int exchange_order = db.Commands.Where(x => x.ScriptId == command.ScriptId && x.Ordering < command.Ordering).Max(x=>x.Ordering);
+                            CommandModel command2 = db.Commands.FirstOrDefault(x => x.ScriptId == command.ScriptId && x.Ordering== exchange_order);
                             command2.Ordering = command.Ordering;
                             command.Ordering = exchange_order;
                             //
-                            db.CommandsScript.UpdateRange(command, command2);
+                            db.Commands.UpdateRange(command, command2);
                             db.SaveChanges();
                             //mAdapter.NotifyAll();
                         }
                     }
                     else
                     {
-                        if (db.CommandsScript.Any(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering > command.Ordering))
+                        if (db.Commands.Any(x => x.ScriptId == command.ScriptId && x.Ordering > command.Ordering))
                         {
-                            int exchange_order = db.CommandsScript.Where(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering > command.Ordering).Min(x => x.Ordering);
-                            CommandScriptModel command2 = db.CommandsScript.FirstOrDefault(x => x.ScriptHardwareId == command.ScriptHardwareId && x.Ordering == exchange_order);
+                            int exchange_order = db.Commands.Where(x => x.ScriptId == command.ScriptId && x.Ordering > command.Ordering).Min(x => x.Ordering);
+                            CommandModel command2 = db.Commands.FirstOrDefault(x => x.ScriptId == command.ScriptId && x.Ordering == exchange_order);
                             command2.Ordering = command.Ordering;
                             command.Ordering = exchange_order;
                             //
-                            db.CommandsScript.UpdateRange(command, command2);
+                            db.Commands.UpdateRange(command, command2);
                             db.SaveChanges();
                             //mAdapter.Notify();
                         }
@@ -110,7 +112,7 @@ namespace ab
         private void OnItemClick(object sender, int CommandId)
         {
             Intent CancelIntent = new Intent(this, typeof(CommandEditActivity));
-            CancelIntent.PutExtra(nameof(CommandScriptModel.Id), CommandId);
+            CancelIntent.PutExtra(nameof(CommandModel.Id), CommandId);
             StartActivity(CancelIntent);
         }
 

@@ -55,7 +55,7 @@
   <string name="delete_user_card_sub_title">Запрос удаления пользователя из базы данных!</string>
   <string name="delete_user_card_header">Удалить пользователя</string>
   <string name="footer_text_with_remove_user">Внимание! Удаление пользователя? Данное действие невозможно будет отменить!</string>
-
+  <string name="error_empty_name_script">Ошибка! пустое Имя скрипта</string>
   <string name="alarms_title">Информирование *</string>
   <string name="alarm_short_label">{i} *</string>
   <string name="interpretation_alarm_for_hardware">*  отправка уведомлений пользователям</string>
@@ -142,10 +142,10 @@
   <string name="telegram_bot_is_not_configured_title">Telegram bot не настроен</string>
   <string name="mqtt_protocol_is_not_supported">Протокол MQTT не поддерживается в полном объёме. Сообщения в брокере записываются в логи приложения, но никак не обрабатываются</string>
 
-  <string name="script_hardware_creating_title">Создать скрипт</string>
-  <string name="script_hardware_adding_subtitle">Создание пакетного задания</string>
-  <string name="script_hardware_edit_title">Редактировать скрипт</string>
-  <string name="script_hardware_edit_subtitle">Изменение пакетного задания</string>
+  <string name="script_creating_title">Создать скрипт</string>
+  <string name="script_adding_subtitle">Создание пакетного задания</string>
+  <string name="script_edit_title">Редактировать скрипт</string>
+  <string name="script_edit_subtitle">Изменение пакетного задания</string>
   <string name="autorun_trigger_title">Автозапуск/Триггер</string>
   <string name="hardware_title">Устройство</string>
   <string name="port_title">Порт</string>
@@ -158,9 +158,9 @@
   <string name="delete_script_card_sub_title">Запрос удаления пакетного задания из базы данных!</string>
   <string name="ok_mute_button_with_remove_script">удаление скрипта ...</string>
   <string name="footer_text_with_remove_script">Внимание! Удаление скрипта пакетного задания? Данное действие невозможно отменить!</string>
-  <string name="command_script_creating_title">Создание команды</string>
-  <string name="command_script_adding_subtitle">Новая команда для скрипта пкетного здания</string>
-  <string name="command_script_requirement_title">Условие для выполнения</string>
+  <string name="command_creating_title">Создание команды</string>
+  <string name="command_adding_subtitle">Новая команда для скрипта пкетного здания</string>
+  <string name="command_requirement_condition_title">Условие для выполнения</string>
   <string name="type_command_script_title">Тип выполняемой команды</string>
 
   <string name="delete_command_card_title">Удаление команды</string>
@@ -191,4 +191,6 @@
   <string name="error_controller_port_was_not_found_in_the_database_title">Ошибка! Порт контроллер не найден в БД</string>
   <string name="error_no_controller_selected_title">Ошибка! Не выбран контроллер. Идентификатор (ключ) объекта</string>
   <string name="error_not_specified_the_command_controller_title">Ошибка! Не указана команда контроллера</string>
+
+  <string name="name_batch_task_title">Наименование пакетного задания</string>
 </resources>

@@ -12,19 +12,21 @@ namespace ab.Services
     [Service(Exported = true, Name = "com.xamarin.ab.http")]
     public class ForegroundServiceHttp : aForegroundService
     {
-        readonly string TAG = "foreground-service-http";
+        public static new readonly string TAG = "● http-service";
 
         public override IBinder OnBind(Intent intent)
         {
             Log.Debug(TAG, "OnBind");
+
             Binder = new ForegroundServiceBinder(this);
             return Binder;
         }
 
         public override void OnCreate()
         {
-            base.OnCreate();
             Log.Info(TAG, "OnCreate");
+
+            base.OnCreate();
 
             ForegroundServiceManager = new HttpListenerManager();
         }

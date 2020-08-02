@@ -11,7 +11,7 @@ namespace ab.Model
         public string Address { get; set; }
         public string Password { get; set; }
 
-        public List<PortHardwareModel> Ports { get; set; }
+        public List<PortModel> Ports { get; set; }
 
         public override string ToString()
         {

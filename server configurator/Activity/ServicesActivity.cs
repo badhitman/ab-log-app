@@ -17,7 +17,7 @@ namespace ab
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class ServicesActivity : AbstractActivity
     {
-        static readonly string TAG = typeof(ServicesActivity).Name;
+        public static new readonly string TAG = "● services-activity";
 
         protected override int ViewId => Resource.Layout.services_activity;
         protected override int ToolbarId => Resource.Id.services_toolbar;
