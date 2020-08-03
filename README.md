@@ -39,6 +39,22 @@
 
 ![screenshot-4](./screenshots/screenshot-4.png)
 
+# Начало работы
+
+Вопервых следует внеси информацию об устройствах. Пункт основного меню: **MegaD-2516**
+
+![screenshot-5](./screenshots/screenshot-5.png)
+
+
+
+
+
+
+
+
+
+
+
 ![управляющие контроллеры](./screenshots/hardwares.png)
 
 ![удалённые пользователи](./screenshots/users.png)
