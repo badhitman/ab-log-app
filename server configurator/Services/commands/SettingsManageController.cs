@@ -19,30 +19,35 @@ namespace ab.Services
 
         public SettingsManageController(CommandAddActivity command_add_activity, AppCompatSpinner controllers, EditText commandText)
         {
+            Log.Debug(TAG, "~ constructor");
+
             command_add_activity.HardwaresListSpinnerLoad(ref controllers);
             ParentActivity = command_add_activity;
 
             Controllers = controllers;
             CommandText = commandText;
 
+            if (Command != null)
+            {
+                CommandText.Text = Command.ExecutionParametr;
+            }
+
             OnResume();
-        }
-
-        public override void OnResume()
-        {
-            Controllers.ItemSelected += Controllers_ItemSelected;
-            CommandText.TextChanged += CommandText_TextChanged;
-        }
-
-        public override void OnPause()
-        {
-            Controllers.ItemSelected -= Controllers_ItemSelected;
-            CommandText.TextChanged -= CommandText_TextChanged;
         }
 
         private void Controllers_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            ParentActivity.command_executer_id = ParentActivity.Hardwares.Keys.ElementAt(e.Position);
+            int hardware_id = ParentActivity.Hardwares.Keys.ElementAt(e.Position);
+
+            if (Command.Execution != hardware_id)
+            {
+                CommandText.Text = Command.ExecutionParametr;
+                Controllers.SetSelection(ParentActivity.Hardwares.Keys.ToList().IndexOf(Command.Execution));
+                return;
+            }
+            Command = null;
+
+            ParentActivity.command_executer_id = hardware_id;
             HardwareModel hw = null;
             if (ParentActivity.command_executer_id > 0)
             {
@@ -67,6 +72,18 @@ namespace ab.Services
         private void CommandText_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
             ParentActivity.command_executer_parameter = CommandText.Text.Trim();
+        }
+
+        public override void OnResume()
+        {
+            Controllers.ItemSelected += Controllers_ItemSelected;
+            CommandText.TextChanged += CommandText_TextChanged;
+        }
+
+        public override void OnPause()
+        {
+            Controllers.ItemSelected -= Controllers_ItemSelected;
+            CommandText.TextChanged -= CommandText_TextChanged;
         }
     }
 }

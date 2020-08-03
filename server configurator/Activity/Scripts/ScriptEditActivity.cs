@@ -186,6 +186,7 @@ namespace ab
                     db.SaveChanges();
                 }
             }
+            task.Script = scriptHardware;
             aForegroundService.RunScriptAction(task);
         }
 

@@ -25,6 +25,7 @@ namespace ab.Services
 
         public SettingsManageTransfer(CommandAddActivity commandAddActivity, AppCompatSpinner scriptes, AppCompatSpinner steps)
         {
+            Log.Debug(TAG, "~ constructor");
             ParentActivity = commandAddActivity;
 
             Scriptes = scriptes;
@@ -49,29 +50,31 @@ namespace ab.Services
             ArrayAdapter<string> adapterScriptes = new ArrayAdapter<string>(ParentActivity, Android.Resource.Layout.SimpleSpinnerItem, ScriptsList.Values.ToList());
             adapterScriptes.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             Scriptes.Adapter = adapterScriptes;
-            if (SelectedItemPosition >= 0)
-            {
-                Scriptes.SetSelection(SelectedItemPosition);
-            }
 
             OnResume();
-        }
-
-        public override void OnResume()
-        {
-            Scriptes.ItemSelected += Scriptes_ItemSelected;
-            Steps.ItemSelected += Steps_ItemSelected;
-        }
-
-        public override void OnPause()
-        {
-            Scriptes.ItemSelected -= Scriptes_ItemSelected;
-            Steps.ItemSelected -= Steps_ItemSelected;
         }
 
         private void Scriptes_ItemSelected(object sender, Android.Widget.AdapterView.ItemSelectedEventArgs e)
         {
             int script_id = ScriptsList.Keys.ElementAt(e.Position);
+
+            if (Command != null)
+            {
+                CommandModel command = null;
+                lock (DatabaseContext.DbLocker)
+                {
+                    using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                    {
+                        command = db.Commands.FirstOrDefault(x => x.Id == Command.Execution);
+                    }
+                }
+                if (command.ScriptId != script_id)
+                {
+                    Scriptes.SetSelection(ScriptsList.Keys.ToList().IndexOf(command.ScriptId));
+                    return;
+                }
+            }
+
             StepsList = new Dictionary<int, string>();
 
             if (script_id == 0)
@@ -104,7 +107,27 @@ namespace ab.Services
 
         private void Steps_ItemSelected(object sender, Android.Widget.AdapterView.ItemSelectedEventArgs e)
         {
-            ParentActivity.command_executer_id = StepsList.Keys.ElementAt(e.Position);
+            int step_id = StepsList.Keys.ElementAt(e.Position);
+            if (Command?.Execution != step_id)
+            {
+                Steps.SetSelection(StepsList.Keys.ToList().IndexOf(Command.Execution));
+                return;
+            }
+            Command = null;
+
+            ParentActivity.command_executer_id = step_id;
+        }
+
+        public override void OnResume()
+        {
+            Scriptes.ItemSelected += Scriptes_ItemSelected;
+            Steps.ItemSelected += Steps_ItemSelected;
+        }
+
+        public override void OnPause()
+        {
+            Scriptes.ItemSelected -= Scriptes_ItemSelected;
+            Steps.ItemSelected -= Steps_ItemSelected;
         }
     }
 }

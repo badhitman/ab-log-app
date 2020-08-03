@@ -45,6 +45,7 @@ namespace ab
                     }
                 }
             }
+
             AbstractSettingsManage.Command = command;
             List<string> commands_types_array = new List<string>(Resources.GetStringArray(Resource.Array.commands_types_array));
 
@@ -81,7 +82,8 @@ namespace ab
                 HardwareCondition.SetSelection(Hardwares.Keys.ToList().IndexOf(command.PortExecutionCondition.HardwareId));
 
                 PortCondition.Enabled = true;
-                PortCondition.SetSelection(Ports.Keys.ToList().IndexOf(command.PortExecutionCondition.Id));
+                PortsList_UpdateSpinner(command.PortExecutionCondition.HardwareId, ref PortCondition, command.PortExecutionCondition.Id);
+                //PortCondition.SetSelection(Ports.Keys.ToList().IndexOf(command.PortExecutionCondition.Id));
 
                 StateCondition.Enabled = true;
                 StateCondition.SetSelection(GetIndexPortState(command.PortExecutionConditionAllowingState, new List<string>(Resources.GetStringArray(Resource.Array.required_condition_port_states_array))));

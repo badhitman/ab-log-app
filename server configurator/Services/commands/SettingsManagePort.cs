@@ -2,6 +2,7 @@
 // © https://github.com/badhitman 
 ////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ab.Model;
@@ -20,7 +21,7 @@ namespace ab.Services
 
         public AppCompatSpinner Controllers { get; private set; }
         public AppCompatSpinner Ports { get; private set; }
-        public AppCompatSpinner States { get; private set; }        
+        public AppCompatSpinner States { get; private set; }
 
         public SettingsManagePort(CommandAddActivity command_add_activity, AppCompatSpinner controllers, AppCompatSpinner ports, AppCompatSpinner states)
         {
@@ -33,34 +34,49 @@ namespace ab.Services
             Ports = ports;
             States = states;
 
-            ArrayAdapter adapterPortStatuses = ArrayAdapter<string>.CreateFromResource(ParentActivity, Resource.Array.script_trigger_port_states_array, Android.Resource.Layout.SimpleSpinnerItem);
+            string[] script_trigger_port_states_array = ParentActivity.Resources.GetStringArray(Resource.Array.script_trigger_port_states_array);
+            ArrayAdapter adapterPortStatuses = new ArrayAdapter<string>(ParentActivity, Android.Resource.Layout.SimpleSpinnerItem, script_trigger_port_states_array);
             adapterPortStatuses.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             States.Adapter = adapterPortStatuses;
 
+            if (Command != null)
+            {
+                if(Command.ExecutionParametr == "true")
+                {
+                    States.SetSelection(Array.IndexOf(script_trigger_port_states_array, ParentActivity.GetString(Resource.String.abc_capital_on)));
+                }
+                else if(Command.ExecutionParametr == "false")
+                {
+                    States.SetSelection(Array.IndexOf(script_trigger_port_states_array, ParentActivity.GetString(Resource.String.abc_capital_off)));
+                }
+                else
+                {
+                    States.SetSelection(Array.IndexOf(script_trigger_port_states_array, ParentActivity.GetString(Resource.String.abc_capital_switch)));
+                }
+            }
+
             OnResume();
-        }
-
-        public override void OnResume()
-        {
-            Log.Debug(TAG, "OnResume");
-
-            Controllers.ItemSelected += ControllerSelect;
-            Ports.ItemSelected += PortSelect;
-            States.ItemSelected += StateSelect;
-        }
-
-        public override void OnPause()
-        {
-            Log.Debug(TAG, "OnPause");
-
-            Controllers.ItemSelected -= ControllerSelect;
-            Ports.ItemSelected -= PortSelect;
-            States.ItemSelected -= StateSelect;
         }
 
         public void ControllerSelect(object sender, AdapterView.ItemSelectedEventArgs e)
         {
             int hardware_id = ParentActivity.Hardwares.Keys.ElementAt(e.Position);
+            if (Command != null)
+            {
+                PortModel port = null;
+                lock (DatabaseContext.DbLocker)
+                {
+                    using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                    {
+                        port = db.Ports.FirstOrDefault(x => x.Id == Command.Execution);
+                    }
+                }
+                if (port.HardwareId != hardware_id)
+                {
+                    Controllers.SetSelection(ParentActivity.Hardwares.Keys.ToList().IndexOf(port.HardwareId));
+                    return;
+                }
+            }
 
             PortsList = new Dictionary<int, string>();
 
@@ -94,7 +110,16 @@ namespace ab.Services
 
         public void PortSelect(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            ParentActivity.command_executer_id = PortsList.Keys.ElementAt(e.Position);
+            int port_id = PortsList.Keys.ElementAt(e.Position);
+
+            if (Command?.Execution != port_id)
+            {
+                Ports.SetSelection(PortsList.Keys.ToList().IndexOf(Command.Execution));
+                return;
+            }
+            Command = null;
+
+            ParentActivity.command_executer_id = port_id;
 
             PortModel port = null;
             if (ParentActivity.command_executer_id > 0)
@@ -121,6 +146,7 @@ namespace ab.Services
         {
             string selected_state = ParentActivity.Resources.GetStringArray(Resource.Array.script_trigger_port_states_array)[e.Position];
             Log.Debug(TAG, $"StateSelect(); for command; selected_state:{selected_state}; Position:{e.Position};");
+
             if (selected_state == ParentActivity.GetString(Resource.String.abc_capital_on))
             {
                 ParentActivity.command_executer_parameter = true;
@@ -133,6 +159,24 @@ namespace ab.Services
             {
                 ParentActivity.command_executer_parameter = null;
             }
+        }
+
+        public override void OnResume()
+        {
+            Log.Debug(TAG, "OnResume");
+
+            Controllers.ItemSelected += ControllerSelect;
+            Ports.ItemSelected += PortSelect;
+            States.ItemSelected += StateSelect;
+        }
+
+        public override void OnPause()
+        {
+            Log.Debug(TAG, "OnPause");
+
+            Controllers.ItemSelected -= ControllerSelect;
+            Ports.ItemSelected -= PortSelect;
+            States.ItemSelected -= StateSelect;
         }
     }
 }

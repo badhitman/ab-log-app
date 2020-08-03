@@ -890,6 +890,7 @@ namespace ab.Services
                     }
                 }
             }
+            CloseTask(task, "Скрипт выполнен");
         }
 
         private static void CloseTask(TaskModel task, string name)

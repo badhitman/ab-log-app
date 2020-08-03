@@ -102,7 +102,7 @@ namespace ab
             SettingsManageKit?.OnResume();
             RequiredCondition.CheckedChange += RequiredCondition_CheckedChange;
             HardwareCondition.ItemSelected += HardwareCondition_ItemSelected;
-            TypesCommand.ItemSelected += TypesCommand_SpinnerItemSelected;
+            TypesCommand.ItemSelected += TypesCommand_ItemSelected;
         }
 
         private void HardwareCondition_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
@@ -118,21 +118,50 @@ namespace ab
             SettingsManageKit?.OnPause();
             RequiredCondition.CheckedChange -= RequiredCondition_CheckedChange;
             HardwareCondition.ItemSelected -= HardwareCondition_ItemSelected;
-            TypesCommand.ItemSelected -= TypesCommand_SpinnerItemSelected;
+            TypesCommand.ItemSelected -= TypesCommand_ItemSelected;
         }
 
-        protected void TypesCommand_SpinnerItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
+        protected void TypesCommand_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
             //command_executer_id = -1;
             //command_executer_parameter = null;
+            int Position = TypesCommand.SelectedItemPosition;
+            selected_type_command_name = Resources.GetStringArray(Resource.Array.commands_types_array)[Position];
+
+            string command_type_array_item_port = GetString(Resource.String.command_type_array_item_port);
+            string command_type_array_item_controller = GetString(Resource.String.command_type_array_item_controller);
+            string command_type_array_item_transfer = GetString(Resource.String.command_type_array_item_transit);
+
+            if (AbstractSettingsManage.Command != null)
+            {
+                switch (AbstractSettingsManage.Command.TypeCommand)
+                {
+                    case TypesCommands.Port:
+                        command_type_array_item_port = GetString(Resource.String.command_type_array_item_port);
+                        if (selected_type_command_name != command_type_array_item_port)
+                        {
+                            return;
+                        }
+                        break;
+                    case TypesCommands.Controller:
+                        if (selected_type_command_name != command_type_array_item_controller)
+                        {
+                            return;
+                        }
+                        break;
+                    case TypesCommands.Exit:
+                        if (selected_type_command_name != command_type_array_item_transfer)
+                        {
+                            return;
+                        }
+                        break;
+                }
+            }
+
+            Log.Debug(TAG, $"TypesCommand_ItemSelected({selected_type_command_name}) - Position:{Position}");
             CommandConfigForm.RemoveAllViews();
 
-            int Position = TypesCommand.SelectedItemPosition;
-
-            selected_type_command_name = Resources.GetStringArray(Resource.Array.commands_types_array)[Position];
-            Log.Debug(TAG, $"TypesCommand_SpinnerItemSelected({selected_type_command_name}) - Position:{Position}");
-
-            if (selected_type_command_name == GetString(Resource.String.command_type_array_item_port))
+            if (selected_type_command_name == command_type_array_item_port)
             {
                 SelectedTypeCommand = TypesCommands.Port;
                 about_selected_command.Text = GetString(Resource.String.about_selected_command_port_title);
@@ -145,7 +174,7 @@ namespace ab
 
                 SettingsManageKit = new SettingsManagePort(this, Controllers, Ports, States);
             }
-            else if (selected_type_command_name == GetString(Resource.String.command_type_array_item_controller))
+            else if (selected_type_command_name == command_type_array_item_controller)
             {
                 SelectedTypeCommand = TypesCommands.Controller;
                 about_selected_command.Text = GetString(Resource.String.about_selected_command_controller_title);
@@ -175,7 +204,7 @@ namespace ab
 
         private void RequiredCondition_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
         {
-            Log.Debug(TAG, $"AutorunTrigger_CheckedChange - {e.IsChecked}");
+            Log.Debug(TAG, $"RequiredCondition_CheckedChange - {e.IsChecked}");
 
             if (e.IsChecked)
             {
