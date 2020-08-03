@@ -180,6 +180,7 @@
   <string name="about_selected_command_port_title">Укажите контроллер, порт и требуемое состояние</string>
   <string name="about_selected_command_controller_title">Укажите контроллер и команду для отправки. Например: 8:0;5:1;12:89</string>
   <string name="about_selected_command_transit_title">Укажите скрипт перехода и команду в скрипте. Выполнение текущего скрипта будет передано другому скрипту</string>
+  
   <string name="controller_title">Контроллер</string>
   <string name="type_command_title">Тип команды</string>
   <string name="script_title">Скрипт</string>
@@ -193,4 +194,6 @@
   <string name="error_not_specified_the_command_controller_title">Ошибка! Не указана команда контроллера</string>
 
   <string name="name_batch_task_title">Наименование пакетного задания</string>
+  <string name="curl_address_title">Адрес запроса (абсолютный)</string>
+  <string name="post_data_curl_title">POST параметры (необязательно)</string>
 </resources>

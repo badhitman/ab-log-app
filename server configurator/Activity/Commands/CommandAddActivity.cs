@@ -132,31 +132,31 @@ namespace ab
             string command_type_array_item_controller = GetString(Resource.String.command_type_array_item_controller);
             string command_type_array_item_transfer = GetString(Resource.String.command_type_array_item_transit);
 
-            if (AbstractSettingsManage.Command != null)
-            {
-                switch (AbstractSettingsManage.Command.TypeCommand)
-                {
-                    case TypesCommands.Port:
-                        command_type_array_item_port = GetString(Resource.String.command_type_array_item_port);
-                        if (selected_type_command_name != command_type_array_item_port)
-                        {
-                            return;
-                        }
-                        break;
-                    case TypesCommands.Controller:
-                        if (selected_type_command_name != command_type_array_item_controller)
-                        {
-                            return;
-                        }
-                        break;
-                    case TypesCommands.Exit:
-                        if (selected_type_command_name != command_type_array_item_transfer)
-                        {
-                            return;
-                        }
-                        break;
-                }
-            }
+            //if (AbstractSettingsManage.Command != null)
+            //{
+            //    switch (AbstractSettingsManage.Command.TypeCommand)
+            //    {
+            //        case TypesCommands.Port:
+            //            command_type_array_item_port = GetString(Resource.String.command_type_array_item_port);
+            //            if (selected_type_command_name != command_type_array_item_port)
+            //            {
+            //                return;
+            //            }
+            //            break;
+            //        case TypesCommands.Controller:
+            //            if (selected_type_command_name != command_type_array_item_controller)
+            //            {
+            //                return;
+            //            }
+            //            break;
+            //        case TypesCommands.Exit:
+            //            if (selected_type_command_name != command_type_array_item_transfer)
+            //            {
+            //                return;
+            //            }
+            //            break;
+            //    }
+            //}
 
             Log.Debug(TAG, $"TypesCommand_ItemSelected({selected_type_command_name}) - Position:{Position}");
             CommandConfigForm.RemoveAllViews();
@@ -186,7 +186,7 @@ namespace ab
 
                 SettingsManageKit = new SettingsManageController(this, Controllers, CommandText);
             }
-            else
+            else if (selected_type_command_name == command_type_array_item_transfer)
             {
                 SelectedTypeCommand = TypesCommands.Exit;
                 about_selected_command.Text = GetString(Resource.String.about_selected_command_transit_title);
@@ -197,6 +197,10 @@ namespace ab
                 AppCompatSpinner Steps = CommandConfigFormBody.FindViewById<AppCompatSpinner>(Resource.Id.spinnerCommandStepScript);
 
                 SettingsManageKit = new SettingsManageTransfer(this, Scriptes, Steps);
+            }
+            else
+            {
+
             }
 
             CommandConfigForm.AddView(CommandConfigFormBody);

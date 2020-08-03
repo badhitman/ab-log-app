@@ -11,6 +11,7 @@ using Android.Util;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -345,8 +346,14 @@ namespace ab.Services
                             }
                             if (taskScript != null)
                             {
-                                Thread RunScriptThread = new Thread(RunScriptAction) { IsBackground = false };
-                                RunScriptThread.Start(taskScript);
+                                BackgroundWorker bw = new BackgroundWorker();
+                                bw.DoWork += new DoWorkEventHandler(RunScriptAction);
+                                bw.ProgressChanged += (object sender, ProgressChangedEventArgs e) => { };
+                                bw.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e)=> { };
+                                bw.RunWorkerAsync(taskScript);
+
+                                //Thread RunScriptThread = new Thread(RunScriptAction) { IsBackground = false };
+                                //RunScriptThread.Start(taskScript);
                             }
                         }
                         else if (cmd == "/logs")
@@ -657,9 +664,11 @@ namespace ab.Services
             }
         }
 
-        public static void RunScriptAction(object sender)
+        public static void RunScriptAction(object sender, DoWorkEventArgs e)
         {
-            TaskModel task = sender as TaskModel;
+            BackgroundWorker bw = sender as BackgroundWorker;
+            TaskModel task = (TaskModel)e.Argument;
+
             List<CommandModel> commands = task.Script.Commands;
 
             for (int i = 0; i < commands.Count; i++)

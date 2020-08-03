@@ -15,6 +15,8 @@ using AndroidX.AppCompat.Widget;
 using Android.Content;
 using Android.Util;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.ComponentModel;
 
 namespace ab
 {
@@ -187,7 +189,26 @@ namespace ab
                 }
             }
             task.Script = scriptHardware;
-            aForegroundService.RunScriptAction(task);
+
+            BackgroundWorker bw = new BackgroundWorker();            
+            bw.DoWork += new DoWorkEventHandler(aForegroundService.RunScriptAction);
+            bw.ProgressChanged += Bw_ProgressChanged;
+            bw.RunWorkerCompleted += Bw_RunWorkerCompleted;
+            bw.RunWorkerAsync(task);
+
+            //Thread RunScriptThread = new Thread(aForegroundService.RunScriptAction) { IsBackground = false };            
+            //RunScriptThread.Start(task);
+        }
+
+        private void Bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            
+            //throw new NotImplementedException();
+        }
+
+        private void Bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //throw new NotImplementedException();
         }
 
         protected override string ReadView(int scriptId)

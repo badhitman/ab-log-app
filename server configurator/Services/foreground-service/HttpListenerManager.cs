@@ -7,6 +7,8 @@ using Android.Util;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -114,9 +116,9 @@ namespace ab.Services
                 if (Regex.IsMatch(pt, @"^\d+$"))
                 {
                     PortModel portHardware = null;
-                    int pt_num_int = 0;
+                    int pt_num_int = -1;
                     pt_num_int = int.Parse(pt);
-                    if (pt_num_int > 0 && hardware != null)
+                    if (pt_num_int > -1 && hardware != null)
                     {
                         lock (DatabaseContext.DbLocker)
                         {
@@ -127,6 +129,8 @@ namespace ab.Services
                         }
                         if (portHardware != null)
                         {
+                            Log.Debug(TAG, "Поиск триггера");
+
                             List<ScriptModel> scripts_triggers = null;
                             lock (DatabaseContext.DbLocker)
                             {
@@ -137,8 +141,62 @@ namespace ab.Services
                             }
                             if (scripts_triggers != null && scripts_triggers.Count > 0)
                             {
+                                Log.Debug(TAG, $"Нaйдено триггеров: {scripts_triggers.Count}");
                                 foreach (ScriptModel trigger_script in scripts_triggers)
                                 {
+                                    string url_request_port_state = $"http://{hardware.Address}/{hardware.Password}/?pt={pt}&cmd=get";
+                                    Log.Debug(TAG, $"Зпрос состояния порта: {url_request_port_state}");
+
+                                    HttpWebRequest request_port_state = new HttpWebRequest(new Uri(url_request_port_state))
+                                    {
+                                        Timeout = 5000
+                                    };
+                                    try
+                                    {
+                                        using (HttpWebResponse response_port_state = (HttpWebResponse)request_port_state.GetResponse())
+                                        {
+                                            if (response_port_state.StatusCode == HttpStatusCode.OK)
+                                            {
+                                                string responseFromServer = string.Empty;
+
+                                                using (Stream dataStream = response_port_state.GetResponseStream())
+                                                using (StreamReader reader = new StreamReader(dataStream))
+                                                {
+                                                    responseFromServer = reader.ReadToEnd();
+                                                }
+                                                if (string.IsNullOrEmpty(responseFromServer))
+                                                {
+                                                    //"Пустой ответ устройства.";
+                                                    continue;
+                                                }
+                                                else if (responseFromServer.ToLower() == "unauthorized")
+                                                {
+                                                    //"Пароль, указаный в настройкх устройства не подошёл.";
+                                                    continue;
+                                                }
+                                                else
+                                                {
+                                                    Log.Debug(TAG, $"Cостояние порта: {responseFromServer}");
+                                                    if ((trigger_script.TriggerPortState == true && !responseFromServer.ToLower().StartsWith("on/")) || (trigger_script.TriggerPortState == false && responseFromServer.ToLower().StartsWith("off/")))
+                                                    {
+                                                        continue;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //$"Ошибка выполнения запроса. StatusCode:\"{response.StatusCode}\"; StatusDescription:\"{response.StatusDescription}\"";
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        //$"Сбой обработки команды:{ex.Message}";
+                                        continue;
+                                    }
+
+
                                     TaskModel task;
                                     lock (DatabaseContext.DbLocker)
                                     {
@@ -155,7 +213,12 @@ namespace ab.Services
                                             db.SaveChanges();
                                         }
                                     }
-                                    aForegroundService.RunScriptAction(task);
+
+                                    BackgroundWorker bw = new BackgroundWorker();
+                                    bw.DoWork += new DoWorkEventHandler(aForegroundService.RunScriptAction);
+                                    bw.ProgressChanged += (object sender, ProgressChangedEventArgs e) => { };
+                                    bw.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e) => { };
+                                    bw.RunWorkerAsync(task);
                                 }
                             }
                         }
@@ -262,8 +325,6 @@ namespace ab.Services
                     }
                 }
             }
-
-
 
             string log_msg = $"incoming http request (from > {remote_ip_address}): {request.Url.Query}";
             //log_msg = "telegramClient?.Me == null";

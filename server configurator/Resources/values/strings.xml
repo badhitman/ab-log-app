@@ -194,6 +194,7 @@
   <string name="command_type_array_item_port">Man. port</string>
   <string name="command_type_array_item_controller">Com. controller</string>
   <string name="command_type_array_item_transit">Exit/Transition</string>
+  
   <string-array name="commands_types_array">
     <item>@string/command_type_array_item_port</item>
     <item>@string/command_type_array_item_controller</item>
@@ -208,6 +209,7 @@
   <string name="about_selected_command_port_title">Specify the controller, port, and required state</string>
   <string name="about_selected_command_controller_title">Specify the controller and the command to send. For example: 8:0;5:1;12:89</string>
   <string name="about_selected_command_transit_title">Specify the transition script and the command in the script. Execution of the current script will be passed to another script</string>
+  
   <string name="controller_title">Controller</string>
   <string name="type_command_title">Type command</string>
   <string name="script_title">Script</string>
@@ -221,4 +223,6 @@
   <string name="error_not_specified_the_command_controller_title">Error! Not specified, the command controller</string>
 
   <string name="name_batch_task_title">Name of the batch task</string>
+  <string name="curl_address_title">The address of the request (absolute)</string>
+  <string name="post_data_curl_title">POST parameters (optional)</string>
 </resources>
