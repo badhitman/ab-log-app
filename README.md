@@ -35,7 +35,7 @@
 
 ![screenshot-3](./screenshots/screenshot-3.png)
 
->> некоторые переменные хранятся в **[Xamarin.Essentials: Preferences](https://docs.microsoft.com/en-gb/xamarin/essentials/preferences?tabs=android)**
+> некоторые переменные хранятся в **[Xamarin.Essentials: Preferences](https://docs.microsoft.com/en-gb/xamarin/essentials/preferences?tabs=android)**
 
 ![управляющие контроллеры](./screenshots/hardwares.png)
 
