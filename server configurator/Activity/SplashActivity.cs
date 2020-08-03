@@ -168,8 +168,8 @@ namespace ab
                 log_msg = GetText(Resource.String.load_demo_hardwares);
                 logsDB.AddLogRow(LogStatusesEnum.Trac, log_msg, TAG);
                 AddSplashText(log_msg);
-                await db.Hardwares.AddAsync(new HardwareModel { Name = "Дом", Address = "192.168.2.114", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
-                await db.Hardwares.AddAsync(new HardwareModel { Name = "Двор", Address = "192.168.1.6", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
+                await db.Hardwares.AddAsync(new HardwareModel { Name = "DEMO 2", Address = "192.168.2.114", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
+                await db.Hardwares.AddAsync(new HardwareModel { Name = "DEMO 1", Address = "192.168.0.14", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
                 await db.SaveChangesAsync();
 
                 for (int i = 0; i < 38; i++)
