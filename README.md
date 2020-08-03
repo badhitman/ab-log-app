@@ -47,6 +47,8 @@
 
 ![screenshot-6](./screenshots/screenshot-6.png)
 
+![screenshot-7](./screenshots/screenshot-7.png)
+
 
 
 
