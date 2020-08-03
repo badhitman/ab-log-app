@@ -37,6 +37,8 @@
 
 > некоторые переменные хранятся в **[Xamarin.Essentials: Preferences](https://docs.microsoft.com/en-gb/xamarin/essentials/preferences?tabs=android)**
 
+![screenshot-4](./screenshots/screenshot-4.png)
+
 ![управляющие контроллеры](./screenshots/hardwares.png)
 
 ![удалённые пользователи](./screenshots/users.png)
