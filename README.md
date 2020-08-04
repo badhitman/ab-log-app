@@ -120,6 +120,8 @@
 
 ![screenshot-17](./screenshots/screenshot-17.png)
 
+![screenshot-18](./screenshots/screenshot-18.png)
+
 ## TelegramBot
 
 После ввода пользователей, следует настроить сопряжение с Telegram (пункт вспомогательного меню "TelegramBot").

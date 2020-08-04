@@ -31,18 +31,15 @@ namespace ab.Services
             Scriptes = scriptes;
             Steps = steps;
 
-            int SelectedItemPosition = Scriptes.SelectedItemPosition;
-
             ScriptsList = new Dictionary<int, string>() { { 0, ParentActivity.GetString(Resource.String.completing_the_script_title) } };
-            int math_index = 0;
+
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
                     db.Scripts.ToList().ForEach(x =>
                     {
-                        ScriptsList.Add(x.Id, $"{(math_index == SelectedItemPosition ? "→ " : " ")}{x}");
-                        math_index++;
+                        ScriptsList.Add(x.Id, $"{(x.Id == Command?.Script.Id ? "→ " : "")}{x}");
                     });
                 }
             }
