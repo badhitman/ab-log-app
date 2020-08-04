@@ -196,4 +196,6 @@
   <string name="name_batch_task_title">Наименование пакетного задания</string>
   <string name="curl_address_title">Адрес запроса (абсолютный)</string>
   <string name="post_data_curl_title">POST параметры (необязательно)</string>
+
+  <string name="palette_system_colors_title">Палитра системных цветов:</string>
 </resources>

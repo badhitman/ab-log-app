@@ -30,7 +30,7 @@
                 android:text="01.01.1990 13:45"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:minWidth="25px"
                 android:minHeight="25px"
                 android:id="@+id/log_list_item_message_date_time_stamp"
@@ -43,7 +43,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/log_list_item_message_status"
-                android:paddingLeft="12dp" />
+                android:paddingLeft="12dp"
+                android:textAllCaps="true"
+                android:textStyle="bold" />
 
             <TextView
                 android:text="tag"

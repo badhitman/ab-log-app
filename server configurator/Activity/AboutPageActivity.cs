@@ -7,7 +7,10 @@ using Android.App;
 using Android.Graphics;
 using Android.OS;
 using Android.Widget;
+using AndroidX.AppCompat.Widget;
+using System;
 using System.IO;
+using System.Reflection;
 
 namespace ab
 {
@@ -39,6 +42,23 @@ namespace ab
             TextView textViewLogsDatabaseFilePath = new TextView(this) { Text = LogsContext.DatabasePathLogs };
             textViewLogsDatabaseFilePath.SetTextColor(Color.DarkGray);
             linearLayoutAddingInfo.AddView(textViewLogsDatabaseFilePath);
+
+#if DEBUG
+            LinearLayout PaletteSystemColors = LayoutInflater.Inflate(Resource.Layout.PaletteSystemColors, linearLayoutAddingInfo, false) as LinearLayout;
+            
+            Type colorType = typeof(Color);
+            
+            PropertyInfo[] propInfos = colorType.GetProperties(BindingFlags.Static | BindingFlags.DeclaredOnly | BindingFlags.Public);
+            foreach (PropertyInfo propInfo in propInfos)
+            {
+                TextView textViewColor = new TextView(this) { Text = propInfo.Name };
+                
+                Color color = (Color)propInfo.GetValue(null);
+                textViewColor.SetTextColor(color);
+                PaletteSystemColors.AddView(textViewColor);
+            }
+            linearLayoutAddingInfo.AddView(PaletteSystemColors);
+#endif
         }
     }
 }

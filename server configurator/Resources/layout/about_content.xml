@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="3dp"
-    android:id="@+id/about_card_view"
-    app:contentPadding="5dp"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/about_app_bar">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:text="@string/about_title"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/about_card_header"
-            android:foregroundGravity="center"
-            android:gravity="center_horizontal"
-            android:typeface="serif"
-            android:layout_marginBottom="10dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/about_app_information"
-            android:autoLink="all"
-            android:layout_gravity="start" />
+        android:layout_height="match_parent"
+        android:layout_margin="3dp"
+        android:id="@+id/about_card_view"
+        app:contentPadding="5dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:showIn="@layout/about_app_bar">
 
         <LinearLayout
             android:orientation="vertical"
-            android:minWidth="25px"
-            android:minHeight="25px"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/linearLayoutAddingInfo" />
+            android:layout_height="match_parent">
 
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+            <TextView
+                android:text="@string/about_title"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/about_card_header"
+                android:foregroundGravity="center"
+                android:gravity="center_horizontal"
+                android:typeface="serif"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/about_app_information"
+                android:autoLink="all"
+                android:layout_gravity="start" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/linearLayoutAddingInfo" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</ScrollView>

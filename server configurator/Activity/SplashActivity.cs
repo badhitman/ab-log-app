@@ -77,7 +77,7 @@ namespace ab
             //await logsDB.Database.EnsureCreatedAsync();
             try
             {
-                logsDB.AddLogRow(LogStatusesEnum.Trac, GetText(Resource.String.start_app_msg), TAG);
+                logsDB.AddLogRow(LogStatusesEnum.Info, GetText(Resource.String.start_app_msg), TAG);
             }
             catch (DbUpdateException ex)
             {
@@ -92,6 +92,7 @@ namespace ab
                 }
                 await logsDB.Database.EnsureDeletedAsync();
                 await logsDB.Database.EnsureCreatedAsync();
+                logsDB.AddLogRow(LogStatusesEnum.Error, err_message, TAG);
                 logsDB.AddLogRow(LogStatusesEnum.Trac, GetText(Resource.String.start_app_msg), TAG);
 
                 RunOnUiThread(() =>
@@ -111,7 +112,7 @@ namespace ab
             {
                 log_msg = GetText(Resource.String.deleting_main_database_file);
 
-                logsDB.AddLogRow(LogStatusesEnum.Trac, log_msg, TAG);
+                logsDB.AddLogRow(LogStatusesEnum.Warn, log_msg, TAG);
                 AddSplashText(log_msg);
                 File.Delete(gs.DatabasePathBase);
             }
@@ -157,7 +158,7 @@ namespace ab
             if (await db.Users.CountAsync() == 0)
             {
                 log_msg = GetText(Resource.String.load_demo_users);
-                logsDB.AddLogRow(LogStatusesEnum.Trac, log_msg, TAG);
+                logsDB.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
                 AddSplashText(log_msg);
                 await db.Users.AddAsync(new UserModel { Name = "Tom", Email = "tom@gmail.com", Phone = "+79995554422", AlarmSubscriber = true, CommandsAllowed = true });
                 await db.Users.AddAsync(new UserModel { Name = "Alice", Email = "alice@gmail.com", Phone = "+75556664411", AlarmSubscriber = false, CommandsAllowed = true });
@@ -166,7 +167,7 @@ namespace ab
             if (await db.Hardwares.CountAsync() == 0)
             {
                 log_msg = GetText(Resource.String.load_demo_hardwares);
-                logsDB.AddLogRow(LogStatusesEnum.Trac, log_msg, TAG);
+                logsDB.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
                 AddSplashText(log_msg);
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "DEMO 2", Address = "192.168.2.114", Password = "sec", AlarmSubscriber = true, CommandsAllowed = true });
                 await db.Hardwares.AddAsync(new HardwareModel { Name = "DEMO 1", Address = "192.168.0.14", Password = "sec", AlarmSubscriber = false, CommandsAllowed = true });
@@ -288,7 +289,7 @@ namespace ab
             }
 
             log_msg = GetText(Resource.String.finish_initializing_application);
-            logsDB.AddLogRow(LogStatusesEnum.Trac, log_msg, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
             AddSplashText(log_msg);
             isCompleted = true;
             StartActivity(new Intent(Application.Context, typeof(HardwaresListActivity)));

@@ -4,6 +4,7 @@
 
 using System.Linq;
 using ab.Model;
+using Android.Graphics;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
 
@@ -22,8 +23,23 @@ namespace ab.Services
                 {
                     LogRowModel row = db.Logs.OrderByDescending(x => x.CreatedAt).Skip(position).FirstOrDefault();
                     logViewHolder.LogMessageTextMessage.Text = row.Name;
-                    logViewHolder.LogMessageDateTimeStamp.Text = row.CreatedAt.ToString();
-                    logViewHolder.LogMessageStatus.Text = row.Status.ToString();
+                    logViewHolder.LogMessageDateTimeStamp.Text = row.CreatedAt.ToString("dd MMM HH:mm:ss");
+                    logViewHolder.LogMessageStatus.Text = row.Status.ToString().Substring(0,1);
+                    switch(row.Status)
+                    {
+                        case LogStatusesEnum.Error:
+                            logViewHolder.LogMessageStatus.SetTextColor(Color.Red);
+                            break;
+                        case LogStatusesEnum.Warn:
+                            logViewHolder.LogMessageStatus.SetTextColor(Color.Orange);
+                            break;
+                        case LogStatusesEnum.Info:
+                            logViewHolder.LogMessageStatus.SetTextColor(Color.SeaGreen);
+                            break;
+                        case LogStatusesEnum.Trac:
+                            logViewHolder.LogMessageStatus.SetTextColor(Color.Gray);
+                            break;
+                    }
                     logViewHolder.LogMessageTag.Text = row.TAG.ToString();
                 }
             }

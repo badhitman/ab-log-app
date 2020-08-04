@@ -225,4 +225,6 @@
   <string name="name_batch_task_title">Name of the batch task</string>
   <string name="curl_address_title">The address of the request (absolute)</string>
   <string name="post_data_curl_title">POST parameters (optional)</string>
+
+  <string name="palette_system_colors_title">A palette of system colors:</string>
 </resources>

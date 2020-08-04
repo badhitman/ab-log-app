@@ -39,7 +39,7 @@ namespace ab.Services
         {
             string msg = $"StartForegroundService(port={service_port})";
             Log.Debug(TAG, msg);
-            logsDB.AddLogRow(LogStatusesEnum.Trac, msg, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Info, msg, TAG);
 
             HttpListenerPort = service_port;
             httpServer.Prefixes.Add($"http://*:{service_port}/");
@@ -51,7 +51,7 @@ namespace ab.Services
         {
             string msg = "StopForegroundService()";
             Log.Debug(TAG, msg);
-            logsDB.AddLogRow(LogStatusesEnum.Trac, msg, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Info, msg, TAG);
 
             httpServer.Stop();
             httpServer.Prefixes.Clear();
@@ -62,21 +62,24 @@ namespace ab.Services
             HttpListener listener = (HttpListener)result.AsyncState;
             if (!listener.IsListening)
             {
+                string err_msg = "!listener.IsListening";
+                Log.Debug(TAG, err_msg);
+                logsDB.AddLogRow(LogStatusesEnum.Error, err_msg, TAG);
                 return;
             }
             // Call EndGetContext to complete the asynchronous operation.
             HttpListenerContext context = listener.EndGetContext(result);
             HttpListenerRequest request = context.Request;
+            string remote_ip_address = request.RemoteEndPoint.Address.ToString();
 
-            string s_request = $"ListenerCallback() - request: {request.Url}";
+            string s_request = $"ListenerCallback() - request: {request.Url} from > {remote_ip_address}";
             Log.Debug(TAG, s_request);
-            logsDB.AddLogRow(LogStatusesEnum.Trac, s_request, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Info, s_request, TAG);
 
             // Obtain a response object.
             HttpListenerResponse response = context.Response;
 
             Android.Net.Uri uri = Android.Net.Uri.Parse(request.Url.ToString());
-            string remote_ip_address = request.RemoteEndPoint.Address.ToString();
 
             string pt = uri.GetQueryParameter("pt");
             string dir = uri.GetQueryParameter("dir");
@@ -328,11 +331,11 @@ namespace ab.Services
 
             string log_msg = $"incoming http request (from > {remote_ip_address}): {request.Url.Query}";
             //log_msg = "telegramClient?.Me == null";
-            Log.Info(TAG, log_msg);
-            using (LogsContext log = new LogsContext())
-            {
-                log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
-            }
+            //Log.Info(TAG, log_msg);
+            //using (LogsContext log = new LogsContext())
+            //{
+            //    log.AddLogRow(LogStatusesEnum.Info, log_msg, TAG);
+            //}
 
             // Construct a response.
             string responseString = "Hello world!";

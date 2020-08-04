@@ -31,7 +31,7 @@ namespace ab.Services
         {
             string msg = $"StartForegroundService(port={service_port})";
             Log.Debug(TAG, msg);
-            logsDB.AddLogRow(LogStatusesEnum.Trac, msg, TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Info, msg, TAG);
 
             MqttBrokerPort = service_port;
 
@@ -49,14 +49,14 @@ namespace ab.Services
         public async void StopForegroundService()
         {
             Log.Debug(TAG, "StopForegroundService()");
-            logsDB.AddLogRow(LogStatusesEnum.Trac, "StopForegroundService()", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Info, "StopForegroundService()", TAG);
             await mqttServer.StopAsync();
         }
 
         public void MqttConnectionValidator(MqttConnectionValidatorContext connection_context)
         {
             Log.Debug(TAG, "MqttConnectionValidator");
-            logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttConnectionValidator - ClientId={connection_context.ClientId} Username={connection_context.Username}", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Info, $"MqttConnectionValidator - ClientId={connection_context.ClientId} Username={connection_context.Username}", TAG);
         }
 
         public void MqttMessageInterceptor(MqttApplicationMessageInterceptorContext message_context)
@@ -64,13 +64,13 @@ namespace ab.Services
             Log.Debug(TAG, "MqttMessageInterceptor");
             string PayloadTest = Encoding.UTF8.GetString(message_context.ApplicationMessage.Payload);
             
-            logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={PayloadTest}", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Info, $"MqttMessageInterceptor - ClientId={message_context.ClientId} Topic={message_context.ApplicationMessage.Topic} Payload={PayloadTest}", TAG);
         }
 
         private void MqttSubscriptionInterceptor(MqttSubscriptionInterceptorContext subscription_context)
         {
             Log.Debug(TAG, "MqttSubscriptionInterceptor");
-            logsDB.AddLogRow(LogStatusesEnum.Trac, $"MqttSubscriptionInterceptor - ClientId={subscription_context.ClientId} Topic={subscription_context.TopicFilter.Topic}", TAG);
+            logsDB.AddLogRow(LogStatusesEnum.Info, $"MqttSubscriptionInterceptor - ClientId={subscription_context.ClientId} Topic={subscription_context.TopicFilter.Topic}", TAG);
         }
     }
 }
