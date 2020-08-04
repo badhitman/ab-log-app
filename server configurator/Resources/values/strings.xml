@@ -215,6 +215,7 @@
   <string name="script_title">Script</string>
   <string name="step_title">Step</string>
   <string name="completing_the_script_title">↖ Completing the script</string>
+  <string name="exit_title">Exit</string>
   <string name="err_selected_device_was_not_found_title">The selected device was not found</string>
   <string name="err_selected_port_was_not_found_title">The selected port was not found</string>
   <string name="error_controller_port_is_not_selected_title">Error! The controller port is not selected. Identifier (key) of the object</string>

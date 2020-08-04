@@ -34,7 +34,7 @@ namespace ab
         protected AppCompatSpinner PortTrigger;
         protected AppCompatSpinner StateTrigger;
 
-        
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -140,9 +140,9 @@ namespace ab
                     using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                     {
                         scriptHardware = db.Scripts.FirstOrDefault(x => x.Id == obj_id);
-
                     }
                 }
+                scriptHardware.Name = ScriptName.Text.Trim();
             }
             if (scriptHardware == null)
             {

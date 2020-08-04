@@ -14,9 +14,6 @@ namespace ab.Model
         public override string ToString()
         {
             string email_name = Name;
-#if DEBUG
-            email_name = $"#{Id}; {email_name}";
-#endif
             return base.ToString();
         }
     }

@@ -186,6 +186,7 @@
   <string name="script_title">Скрипт</string>
   <string name="step_title">Шаг</string>
   <string name="completing_the_script_title">↖ Завершение выполнения скрипта</string>
+  <string name="exit_title">Выход</string>
   <string name="err_selected_device_was_not_found_title">Выбранное устройство не найдено</string>
   <string name="err_selected_port_was_not_found_title">Выбранный порт не найден</string>
   <string name="error_controller_port_is_not_selected_title">Ошибка! Не выбран порт контроллера. Идентификатор (ключ) объекта</string>

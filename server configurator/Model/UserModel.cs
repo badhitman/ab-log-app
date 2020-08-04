@@ -25,9 +25,6 @@ namespace ab.Model
                 ret_name = $"{ret_name} [t:{Phone}]";
             }
 
-#if DEBUG
-            ret_name = $"#{Id}; {ret_name}";
-#endif
             return ret_name;
         }
     }

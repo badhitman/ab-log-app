@@ -45,9 +45,6 @@ namespace ab.Model
             {
                 script_name += $" [tg:{TriggerPort}]";
             }
-#if DEBUG
-            script_name = $"#{Id}; {script_name}";
-#endif
             return script_name;
         }
     }

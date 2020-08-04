@@ -68,7 +68,8 @@ namespace ab.Services
                         command = db.Commands.FirstOrDefault(x => x.Id == Command.Execution);
                     }
                 }
-                if (command.ScriptId != script_id)
+
+                if (command != null && command.ScriptId != script_id)
                 {
                     Scriptes.SetSelection(ScriptsList.Keys.ToList().IndexOf(command.ScriptId));
                     return;
@@ -79,12 +80,16 @@ namespace ab.Services
 
             if (script_id == 0)
             {
+                ParentActivity.command_executer_id = 0;
                 ArrayAdapter adapterSteps = new ArrayAdapter<string>(ParentActivity, Android.Resource.Layout.SimpleSpinnerItem, Array.Empty<string>());
                 adapterSteps.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
                 Steps.Adapter = adapterSteps;
+                Steps.Enabled = false;
+                Command = null;
             }
             else
             {
+                Steps.Enabled = true;
                 ScriptModel scriptHardware = null;
                 lock (DatabaseContext.DbLocker)
                 {
@@ -108,7 +113,7 @@ namespace ab.Services
         private void Steps_ItemSelected(object sender, Android.Widget.AdapterView.ItemSelectedEventArgs e)
         {
             int step_id = StepsList.Keys.ElementAt(e.Position);
-            if (Command?.Execution != step_id)
+            if (Command != null && Command?.Execution != step_id)
             {
                 Steps.SetSelection(StepsList.Keys.ToList().IndexOf(Command.Execution));
                 return;

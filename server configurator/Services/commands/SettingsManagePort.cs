@@ -112,7 +112,7 @@ namespace ab.Services
         {
             int port_id = PortsList.Keys.ElementAt(e.Position);
 
-            if (Command?.Execution != port_id)
+            if (Command != null && Command.Execution != port_id)
             {
                 Ports.SetSelection(PortsList.Keys.ToList().IndexOf(Command.Execution));
                 return;

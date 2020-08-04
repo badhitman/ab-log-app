@@ -22,9 +22,6 @@ namespace ab.Model
             {
                 port_name = $"{Name} (P{PortNumb})";
             }
-#if DEBUG
-            port_name = $"#{Id}; {port_name}";
-#endif
             return port_name;
         }
     }

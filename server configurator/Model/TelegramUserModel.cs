@@ -18,9 +18,6 @@ namespace ab.Model
             string full_name = string.IsNullOrWhiteSpace(Name) ? "" : $"Name: {Name}; ";
             string user_name = string.IsNullOrWhiteSpace(UserName) ? "" : $"User: @{UserName}; ";
             string ret_name = $"{full_name}{user_name} tid: {TelegramId};";
-#if DEBUG
-            ret_name = $"#{Id}; {ret_name}";
-#endif
             return ret_name;
         }
     }

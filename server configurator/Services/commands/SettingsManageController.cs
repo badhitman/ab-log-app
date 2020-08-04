@@ -39,7 +39,7 @@ namespace ab.Services
         {
             int hardware_id = ParentActivity.Hardwares.Keys.ElementAt(e.Position);
 
-            if (Command.Execution != hardware_id)
+            if (Command != null && Command.Execution != hardware_id)
             {
                 CommandText.Text = Command.ExecutionParametr;
                 Controllers.SetSelection(ParentActivity.Hardwares.Keys.ToList().IndexOf(Command.Execution));

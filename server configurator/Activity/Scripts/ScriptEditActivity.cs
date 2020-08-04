@@ -156,6 +156,10 @@ namespace ab
         private void ButtonStartScript_Click(object sender, EventArgs e)
         {
             string errMsg = ReadView(scriptHardware.Id);
+            if (scriptHardware.Name != ScriptName.Text)
+            {
+                errMsg += $"{GetString(Resource.String.saving_is_required)}";
+            }
 
             if (!string.IsNullOrWhiteSpace(errMsg))
             {
@@ -214,10 +218,7 @@ namespace ab
         protected override string ReadView(int scriptId)
         {
             string errMsg = base.ReadView(scriptId);
-            if (scriptHardware.Name != ScriptName.Text)
-            {
-                errMsg += $"{GetString(Resource.String.saving_is_required)}";
-            }
+            
             return errMsg;
         }
 

@@ -16,9 +16,6 @@ namespace ab.Model
         public override string ToString()
         {
             string hw_name = $"{Name} ({Address})";
-#if DEBUG
-            hw_name = $"#{Id}; {hw_name}";
-#endif
             return hw_name;
         }
     }

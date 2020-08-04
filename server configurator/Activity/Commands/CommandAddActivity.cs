@@ -13,7 +13,9 @@ using Android.Widget;
 using AndroidX.AppCompat.Widget;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ab
 {
@@ -227,9 +229,10 @@ namespace ab
         protected CommandModel ReadFormToObject(CommandModel my_command)
         {
             Log.Debug(TAG, "ReadFormToObject");
+            Regex FloatSeparator = new Regex(@"[.,]");
             my_command.TypeCommand = SelectedTypeCommand;
             my_command.Hidden = HiddenCommandCheckBox.Checked;
-            my_command.PauseBeforeExecution = double.Parse($"0{PauseSecondsBeforeStarting.Text}");
+            my_command.PauseBeforeExecution = double.Parse($"0{FloatSeparator.Replace(PauseSecondsBeforeStarting.Text, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator)}");
             my_command.Execution = command_executer_id;
             my_command.ExecutionParametr = command_executer_parameter?.ToString();
 
@@ -251,6 +254,12 @@ namespace ab
                 {
                     my_command.PortExecutionConditionAllowingState = null;
                 }
+            }
+            else
+            {
+                my_command.PortExecutionConditionId = null;
+                my_command.PortExecutionCondition = null;
+                my_command.PortExecutionConditionAllowingState = null;
             }
 
             switch (SelectedTypeCommand)
@@ -292,13 +301,20 @@ namespace ab
                     }
                     break;
                 case TypesCommands.Exit:
-                    lock (DatabaseContext.DbLocker)
+                    if (command_executer_id > 0)
                     {
-                        using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                        lock (DatabaseContext.DbLocker)
                         {
-                            CommandModel cmd = db.Commands.Include(x => x.Script).FirstOrDefault(x => x.Id == command_executer_id);
-                            my_command.Name = $"{cmd.Script} ●> {cmd}";
+                            using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                            {
+                                CommandModel cmd = db.Commands.Include(x => x.Script).FirstOrDefault(x => x.Id == command_executer_id);
+                                my_command.Name = $"{cmd.Script} ●> {cmd}";
+                            }
                         }
+                    }
+                    else
+                    {
+                        my_command.Name = GetString(Resource.String.exit_title);
                     }
                     break;
             }

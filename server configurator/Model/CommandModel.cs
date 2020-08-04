@@ -87,9 +87,6 @@ namespace ab.Model
         public override string ToString()
         {
             string command_name = $"{Name}{(Hidden ? " [H]" : "")}{(PauseBeforeExecution > 0 ? $" [p {PauseBeforeExecution} sec]" : "")}";
-#if DEBUG
-            command_name = $"#{Id}; {command_name}";
-#endif
             return command_name;
         }
     }

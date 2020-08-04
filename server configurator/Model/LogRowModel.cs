@@ -15,9 +15,6 @@ namespace ab.Model
         public override string ToString()
         {
             string ret_val = $"[{CreatedAt}]|[{Status}]|[{TAG}] {Name}";
-#if DEBUG
-            ret_val = $"#{Id}: {ret_val}";
-#endif
             return ret_val;
         }
     }
