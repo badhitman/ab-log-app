@@ -349,20 +349,57 @@ namespace ab.Services
                                 BackgroundWorker bw = new BackgroundWorker();
                                 bw.DoWork += new DoWorkEventHandler(RunScriptAction);
                                 bw.ProgressChanged += (object sender, ProgressChangedEventArgs e) => { };
-                                bw.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e)=> { };
+                                bw.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e) => { };
                                 bw.RunWorkerAsync(taskScript);
 
                                 //Thread RunScriptThread = new Thread(RunScriptAction) { IsBackground = false };
                                 //RunScriptThread.Start(taskScript);
                             }
                         }
-                        else if (cmd == "/logs")
-                        {
-                            response_msg += $"Статистика логов:{System.Environment.NewLine}";
-                        }
                         else if (view_logs_regex.IsMatch(cmd))
                         {
-                            response_msg += $"Просмотр логов:{System.Environment.NewLine}";
+                            Match match = view_logs_regex.Match(cmd);
+                            int read_log_id_at = int.Parse(match.Groups[1].Value);
+                            if (read_log_id_at == 0)
+                            {
+                                lock (LogsContext.DbLocker)
+                                {
+                                    using (LogsContext logs_db = new LogsContext())
+                                    {
+                                        read_log_id_at = logs_db.Logs.Max(x => x.Id);
+                                    }
+                                }
+                            }
+                            List<LogRowModel> logRows = null;
+                            lock (LogsContext.DbLocker)
+                            {
+                                using (LogsContext logs_db = new LogsContext())
+                                {
+                                    logRows = logs_db.Logs.OrderByDescending(x => x.Id).Where(x => x.Id <= read_log_id_at).Take(10).ToList();
+                                }
+                            }
+
+                            if (logRows == null || logRows.Count == 0)
+                            {
+                                response_msg += $"Нет доступных логов для просмотра!{System.Environment.NewLine}{System.Environment.NewLine}";
+                            }
+                            else
+                            {
+                                response_msg += $"Просмотр логов:{System.Environment.NewLine}{System.Environment.NewLine}";
+                                logRows.ForEach(x => { response_msg += $"[{x.CreatedAt}]{x.Status}{System.Environment.NewLine}{x.Name}{System.Environment.NewLine}{System.Environment.NewLine}"; });
+
+                                int next_at = logRows.Min(x => x.Id - 1);
+                                lock (LogsContext.DbLocker)
+                                {
+                                    using (LogsContext logs_db = new LogsContext())
+                                    {
+                                        if (logs_db.Logs.Any(x => x.Id == next_at))
+                                        {
+                                            response_msg += $"/logs_at_{next_at} - далее";
+                                        }
+                                    }
+                                }
+                            }
                         }
                         else if (get_harware_regex.IsMatch(cmd))
                         {
@@ -639,14 +676,14 @@ namespace ab.Services
                         }
                         else
                         {
-                            response_msg = $"Доступные команда:{System.Environment.NewLine}" +
+                            response_msg = $"Доступные команды:{System.Environment.NewLine}" +
                                 $"/hardwares - список устройств{System.Environment.NewLine}";
 
                             if (user.CommandsAllowed)
                             {
                                 response_msg += $"/scripts - список скриптов{System.Environment.NewLine}";
                             }
-                            response_msg += "/logs - просмотр логов";
+                            response_msg += "/logs_at_0 - просмотр логов";
                         }
                     sendTelegramMessage: telegramClient.sendMessage(update.message.from.id.ToString(), response_msg.Trim());
                     }
