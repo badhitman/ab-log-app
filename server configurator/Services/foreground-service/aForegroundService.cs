@@ -386,7 +386,7 @@ namespace ab.Services
                             else
                             {
                                 response_msg += $"Просмотр логов:{System.Environment.NewLine}{System.Environment.NewLine}";
-                                logRows.ForEach(x => { response_msg += $"[{x.CreatedAt}]{x.Status}{System.Environment.NewLine}{x.Name}{System.Environment.NewLine}{System.Environment.NewLine}"; });
+                                logRows.ForEach(x => { response_msg += $"[{x.CreatedAt}]▪{x.Status}{System.Environment.NewLine}{x.Name}{System.Environment.NewLine}{System.Environment.NewLine}"; });
 
                                 int next_at = logRows.Min(x => x.Id - 1);
                                 lock (LogsContext.DbLocker)
