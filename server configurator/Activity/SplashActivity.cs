@@ -69,6 +69,9 @@ namespace ab
         async void SimulateSplash()
         {
             LogsContext logsDB = new LogsContext();
+            
+            await logsDB.Database.EnsureCreatedAsync();
+
             string log_msg = GetText(Resource.String.logs_database_ensure_created) + System.Environment.NewLine + LogsContext.DatabasePathLogs;
             RunOnUiThread(() =>
             {
@@ -79,7 +82,7 @@ namespace ab
             {
                 logsDB.AddLogRow(LogStatusesEnum.Info, GetText(Resource.String.start_app_msg), TAG);
             }
-            catch (DbUpdateException ex)
+            catch (Exception ex)
             {
                 string err_message = ex.Message;
                 if (ex.InnerException != null)
@@ -90,7 +93,11 @@ namespace ab
                         LogsContext.DatabasePathLogs;
 
                 }
-                await logsDB.Database.EnsureDeletedAsync();
+                if(File.Exists(LogsContext.DatabasePathLogs))
+                {
+                    File.Delete(LogsContext.DatabasePathLogs);
+                }
+
                 await logsDB.Database.EnsureCreatedAsync();
                 logsDB.AddLogRow(LogStatusesEnum.Error, err_message, TAG);
                 logsDB.AddLogRow(LogStatusesEnum.Trac, GetText(Resource.String.start_app_msg), TAG);
@@ -102,6 +109,7 @@ namespace ab
             }
 
             DatabaseContext db = new DatabaseContext(gs.DatabasePathBase);
+            db.Database.EnsureCreated();
             AddSplashText($"db patch: {gs.DatabasePathBase}");
 #if DEBUG            
             log_msg = GetText(Resource.String.deleting_outdated_logs);
