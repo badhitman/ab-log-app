@@ -121,7 +121,7 @@ HTTP/MQTT сервис исполняется в "Запущеной служб�
 
 ![screenshot-14](./screenshots/screenshot-14.png)
 
-
+![screenshot-15](./screenshots/screenshot-15.png)
 
 ![управляющие контроллеры](./screenshots/hardwares.png)
 
