@@ -149,6 +149,10 @@
 
 ![screenshot-15](./screenshots/screenshot-15.png)
 
+> просмотр логов доступен и через Telegram. Сообщения получаются порциями по 10 сообщений начиная с конца (с самого свежего сообщения) в сторону начала (к самому старому).
+
+![screenshot-16](./screenshots/screenshot-16.png)
+
 TelegramBot
 
 ![TelegramBot 1](./screenshots/telegram-bot-1.jpg)
