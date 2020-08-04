@@ -117,7 +117,7 @@
 
 ![screenshot-13](./screenshots/screenshot-13.png)
 
-## Логи программы доступны для просмотра:
+## Логи
 
 ![screenshot-14](./screenshots/screenshot-14.png)
 
