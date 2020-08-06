@@ -120,6 +120,8 @@
 
 ![screenshot-17](./screenshots/screenshot-17.png)
 
+Схема расположения элементов управления сценариями/командами
+
 ![screenshot-18](./screenshots/screenshot-18.png)
 
 ## TelegramBot
