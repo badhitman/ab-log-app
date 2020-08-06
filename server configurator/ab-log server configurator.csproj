@@ -27,6 +27,9 @@
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
   </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+</PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>portable</DebugType>
@@ -44,6 +47,7 @@
     <BundleAssemblies>false</BundleAssemblies>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <MandroidI18n />
+    <AndroidSupportedAbis />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>

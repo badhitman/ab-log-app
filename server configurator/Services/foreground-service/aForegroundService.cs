@@ -998,9 +998,9 @@ namespace ab.Services
                 }
                 else
                 {
-                    TelegramBotSurveyInterval = intent.GetIntExtra(Constants.TELEGRAM_BOT_SURVEY_INTERVAL, -1);
+                    TelegramBotSurveyInterval = Preferences.Get(Resources.GetResourceEntryName(Resource.Id.telegram_bot_interval), 0);//intent.GetIntExtra(Constants.TELEGRAM_BOT_SURVEY_INTERVAL, -1);
                     TelegramBotToken = intent.GetStringExtra(Constants.TELEGRAM_BOT_TOKEN);
-
+                    
                     Log.Info(TAG, $"OnStartCommand: {GetText(Resource.String.the_service_is_being_started_title)}");
                     RegisterForegroundService(ipAddress + ":" + listener_port);
                     StartForegroundService(listener_port);

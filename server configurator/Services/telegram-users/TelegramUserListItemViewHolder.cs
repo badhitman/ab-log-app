@@ -17,7 +17,7 @@ namespace ab.Services
 
         public TextView TelegramFirstSecondName { get; private set; }
         public TextView TelegramId { get; private set; }
-        public AppCompatSpinner LinkedUserSpinner { get; private set; }
+        public TextView LinkedUser { get; private set; }
 
         public TelegramUserListItemViewHolder(View itemView) : base(itemView)
         {
@@ -25,11 +25,7 @@ namespace ab.Services
 
             TelegramFirstSecondName = itemView.FindViewById<TextView>(Resource.Id.textViewTelegramFirstSecondName);
             TelegramId = itemView.FindViewById<TextView>(Resource.Id.textViewTelegramId);
-            LinkedUserSpinner = itemView.FindViewById<AppCompatSpinner>(Resource.Id.spinnerLinkedUser);
-
-            ArrayAdapter<string> adapter = new ArrayAdapter<string>(itemView.Context, Android.Resource.Layout.SimpleSpinnerItem, TelegramUsersListAdapter.LinkedUsers.Values.ToList());
-            adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            LinkedUserSpinner.Adapter = adapter;
+            LinkedUser = itemView.FindViewById<TextView>(Resource.Id.textViewJoinedUser);
         }
     }
 }

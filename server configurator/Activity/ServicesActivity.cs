@@ -255,11 +255,11 @@ namespace ab
             stopServiceIntent.SetAction(Constants.ACTION_STOP_SERVICE);
 
             long telegramBotId = Preferences.Get(Constants.TELEGRAM_BOT_ID, (long)0);
-            string token = Preferences.Get(base.Resources.GetResourceEntryName(Resource.Id.editTextTelegramBotToken), string.Empty);
+            string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty); //Preferences.Get(base.Constants.TELEGRAM_TOKEN, string.Empty);
             if (telegramBotId > 0 && !string.IsNullOrWhiteSpace(token))
             {
                 startServiceIntent.PutExtra(Constants.TELEGRAM_BOT_TOKEN, token);
-                startServiceIntent.PutExtra(Constants.TELEGRAM_BOT_SURVEY_INTERVAL, Preferences.Get(Resources.GetResourceEntryName(Resource.Id.telegram_bot_interval), 3));
+                startServiceIntent.PutExtra(Resources.GetResourceEntryName(Resource.Id.telegram_bot_interval), Preferences.Get(Resources.GetResourceEntryName(Resource.Id.telegram_bot_interval), 3));
             }
             else
             {
@@ -297,7 +297,7 @@ namespace ab
 
         private void Input_TextChanged(object sender, Android.Text.TextChangedEventArgs e)
         {
-            AppCompatEditText text_field = (AppCompatEditText)sender;
+            AppCompatEditText text_field = (AppCompatEditText)sender;//Constants.TELEGRAM_BOT_SURVEY_INTERVAL
             if (text_field.InputType == Android.Text.InputTypes.ClassNumber)
             {
                 Preferences.Set(Resources.GetResourceEntryName(text_field.Id), int.Parse("0" + text_field.Text));

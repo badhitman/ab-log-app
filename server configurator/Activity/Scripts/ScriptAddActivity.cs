@@ -34,8 +34,6 @@ namespace ab
         protected AppCompatSpinner PortTrigger;
         protected AppCompatSpinner StateTrigger;
 
-
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             Log.Debug(TAG, "OnCreate");

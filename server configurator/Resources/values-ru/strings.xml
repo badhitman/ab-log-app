@@ -199,4 +199,5 @@
   <string name="post_data_curl_title">POST параметры (необязательно)</string>
 
   <string name="palette_system_colors_title">Палитра системных цветов:</string>
+  <string name="telegram_account_title">Telegram аккаунт</string>
 </resources>

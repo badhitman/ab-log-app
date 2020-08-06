@@ -27,8 +27,10 @@ namespace ab.Services
             {
                 lock (DatabaseContext.DbLocker)
                 {
-                    using DatabaseContext db = new DatabaseContext(gs.DatabasePathBase);
-                    return db.Commands.Where(x => x.ScriptId == ScriptId).Count();
+                    using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                    {
+                        return db.Commands.Where(x => x.ScriptId == ScriptId).Count();
+                    }
                 }
             }
         }

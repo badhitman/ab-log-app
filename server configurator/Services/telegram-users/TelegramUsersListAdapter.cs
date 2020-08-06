@@ -12,6 +12,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
+using Microsoft.EntityFrameworkCore;
 
 namespace ab.Services
 {
@@ -19,27 +20,12 @@ namespace ab.Services
     {
         public static readonly string TAG = "● telegram-users-list-adapter";
 
-        public static Dictionary<int, string> LinkedUsers;
-
         public override int ItemCount { get { lock (DatabaseContext.DbLocker) { using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase)) { return db.TelegramUsers.Count(); } } } }
         Context mContext;
         public TelegramUsersListAdapter(Context context)
         {
             Log.Debug(TAG, "~ constructor");
             mContext = context;
-            LinkedUsers = new Dictionary<int, string>
-            {
-                { 0, "" }
-            };
-            List<UserModel> users;
-            lock (DatabaseContext.DbLocker)
-            {
-                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                {
-                    users = db.Users.ToList();
-                }
-            }
-            users.ForEach(x => { LinkedUsers.Add(x.Id, x.Name); });
         }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
@@ -50,7 +36,7 @@ namespace ab.Services
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-                    TelegramUserModel row = db.TelegramUsers.Skip(position).FirstOrDefault();
+                    TelegramUserModel row = db.TelegramUsers.Include(x => x.LinkedUser).Skip(position).FirstOrDefault();
 
                     telegramUsersViewHolder.TelegramId.Text = row.TelegramId + (string.IsNullOrWhiteSpace(row.UserName) ? "" : $" (@{row.UserName})");
 
@@ -65,39 +51,18 @@ namespace ab.Services
                         telegramUsersViewHolder.TelegramFirstSecondName.SetTextColor(Color.Black);
                     }
 
-                    if (LinkedUsers.ContainsKey(row.LinkedUserId))
+                    if (row.LinkedUser != null)
                     {
-                        telegramUsersViewHolder.LinkedUserSpinner.SetSelection(LinkedUsers.Keys.ToList().IndexOf(row.LinkedUserId));
+                        telegramUsersViewHolder.LinkedUser.Text = row.LinkedUser.Name;
+                        telegramUsersViewHolder.LinkedUser.SetTextColor(Color.Black);
                     }
                     else
                     {
-                        telegramUsersViewHolder.LinkedUserSpinner.SetSelection(0);
+                        telegramUsersViewHolder.LinkedUser.Text = "< - >";
+                        telegramUsersViewHolder.LinkedUser.SetTextColor(Color.Gray);
                     }
-                    telegramUsersViewHolder.LinkedUserSpinner.Tag = row.Id;
-                }
-            }
 
-            telegramUsersViewHolder.LinkedUserSpinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs>(LinkedUser_ItemSelected);
-        }
-
-        private void LinkedUser_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            Log.Debug(TAG, "LinkedUser_ItemSelected");
-            Spinner spinner = (Spinner)sender;
-            int telegram_user_id = (int)spinner.Tag;
-            int user_id = LinkedUsers.Keys.ElementAt(e.Position);
-
-            lock (DatabaseContext.DbLocker)
-            {
-                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                {
-                    TelegramUserModel telegramUserModel = db.TelegramUsers.Find(telegram_user_id);
-                    if (user_id != telegramUserModel.LinkedUserId)
-                    {
-                        telegramUserModel.LinkedUserId = user_id;
-                        db.TelegramUsers.Update(telegramUserModel);
-                        db.SaveChanges();
-                    }
+                    telegramUsersViewHolder.LinkedUser.Tag = row.Id;
                 }
             }
         }

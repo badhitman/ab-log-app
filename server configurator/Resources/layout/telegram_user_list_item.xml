@@ -41,11 +41,14 @@
             android:layout_gravity="left"
             android:foregroundGravity="left"
             android:gravity="left" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
+        
+            <TextView
+            android:text="User"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinnerLinkedUser" />
+            android:id="@+id/textViewJoinedUser" />
+
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

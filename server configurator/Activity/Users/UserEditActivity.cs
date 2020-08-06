@@ -55,19 +55,34 @@ namespace ab
                 return;
             }
 
+            UserModel user = null;
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
 
-                    UserModel user = db.Users.Find(user_id);
-                    userId = user?.Id ?? 0;
-                    UserName.Text = user?.Name;
-                    UserEmail.Text = user?.Email;
-                    UserPhone.Text = user?.Phone;
-                    UserAlarmSubscribing.Checked = user.AlarmSubscriber;
-                    UserCommandsAllowed.Checked = user.CommandsAllowed;
+                    user = db.Users.Find(user_id);
                 }
+            }
+            userId = user.Id;
+            UserName.Text = user.Name;
+            UserEmail.Text = user.Email;
+            UserPhone.Text = user.Phone;
+            UserAlarmSubscribing.Checked = user.AlarmSubscriber;
+            UserCommandsAllowed.Checked = user.CommandsAllowed;
+
+            TelegramUserModel telegramUser = null;
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+
+                    telegramUser = db.TelegramUsers.FirstOrDefault(x => x.LinkedUserId == user.Id);
+                }
+            }
+            if (telegramUser != null)
+            {
+                TelegramAccount.SetSelection(TelegramUsers.Keys.ToList().IndexOf(telegramUser.Id));
             }
 
             UserCardHeader.Text = GetText(Resource.String.edit_user_title);
@@ -78,22 +93,6 @@ namespace ab
             buttonDeleteUser.Click += ButtonDeleteUser_Click;
             buttonDeleteUser.LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent);
             UserFooterLayout.AddView(buttonDeleteUser);
-
-            lock (DatabaseContext.DbLocker)
-            {
-                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
-                {
-                    List<TelegramUserModel> telegram_users = db.TelegramUsers.Where(x => x.LinkedUserId == userId).ToList();
-                    if (telegram_users.Count > 0)
-                    {
-                        UserFooterLayout.AddView(new TextView(this) { Text = "Telegram users" });
-                        foreach (TelegramUserModel t_user in telegram_users)
-                        {
-                            UserFooterLayout.AddView(new TextView(this) { Text = $"  ~ {t_user}" });
-                        }
-                    }
-                }
-            }
         }
 
         private void ButtonDeleteUser_Click(object sender, EventArgs e)
@@ -152,6 +151,7 @@ namespace ab
                 return;
             }
 
+            int selected_telegram_id = TelegramUsers.Keys.ToList()[TelegramAccount.SelectedItemPosition];
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
@@ -166,6 +166,21 @@ namespace ab
                     user.CommandsAllowed = UserCommandsAllowed.Checked;
 
                     db.Users.Update(user);
+                    if (selected_telegram_id > 0)
+                    {
+                        TelegramUserModel telegramUser = db.TelegramUsers.Find(selected_telegram_id);
+                        telegramUser.LinkedUserId = user.Id;
+                        List<TelegramUserModel> other_telegram_users = db.TelegramUsers.Where(x=>x.LinkedUserId == user.Id && x.Id == selected_telegram_id).ToList();
+                        if(other_telegram_users != null && other_telegram_users.Count > 0)
+                        {
+                            other_telegram_users.ForEach(x=> { x.LinkedUserId = null; });
+                        }
+                    }
+                    else
+                    {
+                        TelegramUserModel telegramUser = db.TelegramUsers.FirstOrDefault(x => x.LinkedUserId == userId);
+                        telegramUser.LinkedUserId = null;
+                    }
                     db.SaveChanges();
                 }
             }

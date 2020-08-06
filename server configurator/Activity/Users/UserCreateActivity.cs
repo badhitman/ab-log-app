@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ab.Model;
 using ab.Services;
@@ -19,6 +20,8 @@ namespace ab
     {
         public static new readonly string TAG = "● user-create-activity";
 
+        public Dictionary<int, string> TelegramUsers;
+
         protected override int ViewId => Resource.Layout.user_activity;
         protected override int ToolbarId => Resource.Id.user_toolbar;
         protected override int DrawerLayoutId => Resource.Id.user_drawer_layout;
@@ -30,6 +33,7 @@ namespace ab
         protected AppCompatEditText UserName;
         protected AppCompatEditText UserEmail;
         protected AppCompatEditText UserPhone;
+        protected Spinner TelegramAccount;
 
         protected Switch UserAlarmSubscribing;
         protected Switch UserCommandsAllowed;
@@ -48,6 +52,7 @@ namespace ab
             UserName = FindViewById<AppCompatEditText>(Resource.Id.user_name);
             UserEmail = FindViewById<AppCompatEditText>(Resource.Id.user_email);
             UserPhone = FindViewById<AppCompatEditText>(Resource.Id.user_phone);
+            TelegramAccount = FindViewById<Spinner>(Resource.Id.spinnerJoinedTelegramAccount);
 
             UserAlarmSubscribing = FindViewById<Switch>(Resource.Id.user_alarms_switch);
             UserCommandsAllowed = FindViewById<Switch>(Resource.Id.user_commands_switch);
@@ -55,6 +60,26 @@ namespace ab
             UserFooterLayout = FindViewById<LinearLayout>(Resource.Id.user_footer_layout);
 
             UserCardButtonOk = FindViewById<AppCompatButton>(Resource.Id.user_button_ok);
+
+            int user_id = Intent.Extras.GetInt(nameof(UserModel.Id), 0);
+            List<TelegramUserModel> telegram_users = new List<TelegramUserModel>();
+            lock (DatabaseContext.DbLocker)
+            {
+                using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
+                {
+                    telegram_users = db.TelegramUsers.Where(x => x.LinkedUserId == null || x.LinkedUserId == user_id).ToList();
+                }
+            }
+
+            TelegramUsers = new Dictionary<int, string>() { { 0, "" } };
+            if (telegram_users != null && telegram_users.Count > 0)
+            {
+                telegram_users.ForEach(x => { TelegramUsers.Add(x.Id, x.ToString()); });
+            }
+
+            ArrayAdapter<string> adapterUsers = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem, TelegramUsers.Values.ToList());
+            adapterUsers.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            TelegramAccount.Adapter = adapterUsers;
         }
 
         protected override void OnResume()
@@ -115,6 +140,7 @@ namespace ab
                 return;
             }
 
+            int selected_telegram_id = TelegramUsers.Keys.ToList()[TelegramAccount.SelectedItemPosition];
             lock (DatabaseContext.DbLocker)
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
@@ -129,6 +155,12 @@ namespace ab
                     };
                     db.Users.Add(user);
                     db.SaveChanges();
+                    if (selected_telegram_id > 0)
+                    {
+                        TelegramUserModel telegramUser = db.TelegramUsers.Find(selected_telegram_id);
+                        telegramUser.LinkedUserId = user.Id;
+                        db.SaveChanges();
+                    }
                 }
             }
             StartActivity(typeof(UsersListActivity));

@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////
 
 using ab.Model;
+using Android.Content.Res;
 using Android.Util;
 using Microsoft.EntityFrameworkCore;
 using System;

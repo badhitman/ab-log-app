@@ -40,7 +40,7 @@ namespace ab
             buttonCheckTelegramBotToken = FindViewById<Button>(Resource.Id.button_check_telegram_bot_token);
             linearLayoutStatusCheckTelegramBotToken = FindViewById<LinearLayout>(Resource.Id.linearLayoutCheckTelegramBotToken);
             recyclerViewUsersList = FindViewById<RecyclerView>(Resource.Id.recyclerViewTelegramUsersList);
-            string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);
+            string token = Preferences.Get(Constants.TELEGRAM_TOKEN, string.Empty);//Constants.TELEGRAM_TOKEN
             editTextToken.Text = token;
             buttonCheckTelegramBotToken.Enabled = !string.IsNullOrEmpty(token);
 

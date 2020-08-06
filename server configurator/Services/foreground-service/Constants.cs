@@ -14,7 +14,7 @@
         public const string ACTION_SERVICE_ACTIVITY = "ab.action.SERVICE_ACTIVITY";
 
         public const string TELEGRAM_BOT_TOKEN = "ab.action.TELEGRAM_BOT_TOKEN";
-        public const string TELEGRAM_BOT_SURVEY_INTERVAL = "ab.action.TELEGRAM_BOT_SURVEY_INTERVAL";
+        //public const string TELEGRAM_BOT_SURVEY_INTERVAL = "ab.action.TELEGRAM_BOT_SURVEY_INTERVAL";
         public const string TELEGRAM_BOT_ID = "ab.action.TELEGRAM_BOT_ID";
         public const string TELEGRAM_TOKEN = "ab.action.TELEGRAM_TELEGRAM_TOKEN";
     }

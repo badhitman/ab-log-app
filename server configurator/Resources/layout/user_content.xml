@@ -81,6 +81,18 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/user_phone" />
 
+            <TextView
+                android:text="@string/telegram_account_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerJoinedTelegramAccount" />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
