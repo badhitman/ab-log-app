@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
+
     <androidx.appcompat.widget.AppCompatTextView
         android:text="@string/controller_title"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -12,22 +12,37 @@
         android:layout_height="wrap_content"
         android:minWidth="25px"
         android:minHeight="25px" />
-    
+
     <androidx.appcompat.widget.AppCompatSpinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinnerControllerCommand" />
-    
+
     <androidx.appcompat.widget.AppCompatTextView
         android:text="@string/command_title"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    
-    <androidx.appcompat.widget.AppCompatEditText
-        android:inputType="text"
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editTextParametrControllerCommand" />   
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="/?cmd="
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="#ff4e3fff" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextParametrControllerCommand" />
+
+    </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
