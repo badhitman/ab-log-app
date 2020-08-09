@@ -39,10 +39,10 @@ namespace ab.Services
             //modelBuilder.Entity<UserModel>().HasAlternateKey(u => u.Phone);
             //modelBuilder.Entity<UserModel>().HasAlternateKey(u => u.Email);
 
-            modelBuilder.Entity<HardwareModel>().HasAlternateKey(u => u.Name);
-            modelBuilder.Entity<HardwareModel>().HasAlternateKey(u => u.Address);
+            //modelBuilder.Entity<HardwareModel>().HasAlternateKey(u => u.Name);
+            //modelBuilder.Entity<HardwareModel>().HasAlternateKey(u => u.Address);
 
-            modelBuilder.Entity<PortModel>().HasAlternateKey(u => new { u.HardwareId, u.PortNumb });
+            //modelBuilder.Entity<PortModel>().HasAlternateKey(u => new { u.HardwareId, u.PortNumb });
 
             //modelBuilder.Entity<ScriptHardwareModel>().HasAlternateKey(u => u.Name);
             //modelBuilder.Entity<ComandScriptModel>().HasAlternateKey(u => u.Name);

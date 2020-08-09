@@ -170,16 +170,19 @@ namespace ab
                     {
                         TelegramUserModel telegramUser = db.TelegramUsers.Find(selected_telegram_id);
                         telegramUser.LinkedUserId = user.Id;
-                        List<TelegramUserModel> other_telegram_users = db.TelegramUsers.Where(x=>x.LinkedUserId == user.Id && x.Id == selected_telegram_id).ToList();
-                        if(other_telegram_users != null && other_telegram_users.Count > 0)
+                        List<TelegramUserModel> other_telegram_users = db.TelegramUsers.Where(x => x.LinkedUserId == user.Id && x.Id == selected_telegram_id).ToList();
+                        if (other_telegram_users != null && other_telegram_users.Count > 0)
                         {
-                            other_telegram_users.ForEach(x=> { x.LinkedUserId = null; });
+                            other_telegram_users.ForEach(x => { x.LinkedUserId = null; });
                         }
                     }
                     else
                     {
                         TelegramUserModel telegramUser = db.TelegramUsers.FirstOrDefault(x => x.LinkedUserId == userId);
-                        telegramUser.LinkedUserId = null;
+                        if (telegramUser != null)
+                        {
+                            telegramUser.LinkedUserId = null;
+                        }
                     }
                     db.SaveChanges();
                 }

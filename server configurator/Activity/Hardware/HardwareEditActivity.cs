@@ -14,6 +14,8 @@ using Android.Widget;
 using AndroidX.AppCompat.Widget;
 using Android.Content;
 using Android.Util;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace ab
 {
@@ -32,8 +34,8 @@ namespace ab
             Log.Debug(TAG, "OnCreate");
 
             base.OnCreate(savedInstanceState);
-            int hardware_id = Intent.Extras.GetInt(nameof(HardwareModel.Id), 0);
-            if (hardware_id < 1)
+            hardwareId = Intent.Extras.GetInt(nameof(HardwareModel.Id), 0);
+            if (hardwareId < 1)
             {
                 string err_title = GetText(Resource.String.err_title_2);
                 HardwareName.Text = err_title;
@@ -59,8 +61,7 @@ namespace ab
             {
                 using (DatabaseContext db = new DatabaseContext(gs.DatabasePathBase))
                 {
-
-                    hardware = db.Hardwares.Find(hardware_id);
+                    hardware = db.Hardwares.FirstOrDefault(x => x.Id == hardwareId);
                     hardwareId = hardware?.Id ?? 0;
                     HardwareName.Text = hardware?.Name;
                     HardwareAddress.Text = hardware?.Address;
@@ -202,7 +203,7 @@ namespace ab
                     db.Hardwares.Update(hardware);
                     db.SaveChanges();
                 }
-            }
+            }            
             StartActivity(typeof(HardwaresListActivity));
         }
     }

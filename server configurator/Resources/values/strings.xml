@@ -229,4 +229,6 @@
 
   <string name="palette_system_colors_title">A palette of system colors:</string>
   <string name="telegram_account_title">Telegram account</string>
+  <string name="configuring_log_display_title">Configuring log display</string>
+  <string name="displayed_statuses_title">Displayed statuses</string>
 </resources>

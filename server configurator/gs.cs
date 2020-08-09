@@ -23,7 +23,11 @@ namespace ab
         {
             get
             {
-                string basePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
+                string basePath = (string)Android.OS.Environment.GetExternalStoragePublicDirectory("ab-log.ru");//System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
+                if(!Directory.Exists(basePath))
+                {
+                    Directory.CreateDirectory(basePath);
+                }
                 return Path.Combine(basePath, DatabaseFilenameBase);
             }
         }

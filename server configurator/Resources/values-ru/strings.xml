@@ -200,4 +200,6 @@
 
   <string name="palette_system_colors_title">Палитра системных цветов:</string>
   <string name="telegram_account_title">Telegram аккаунт</string>
+  <string name="configuring_log_display_title">Настройка отображения логов</string>
+  <string name="displayed_statuses_title">Отображаемые статусы</string>
 </resources>

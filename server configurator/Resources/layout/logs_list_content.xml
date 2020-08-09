@@ -6,17 +6,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/logs_app_bar"
+    tools:showIn="@layout/logs_list_app_bar"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/logs_title"
-        android:gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:clickable="true"
-        android:id="@+id/logs_title"/>
+        android:gravity="center_horizontal">
+
+        <ImageButton
+            android:contentDescription="refresh"
+            android:src="@drawable/ic_refresh"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/RefreshLogView"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/logs_title"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:clickable="true" />
+
+        <ImageButton
+            android:contentDescription="settings"
+            android:src="@drawable/ic_settings"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/SettingsLogView"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/SettingsLogViewArea"
+        android:orientation="vertical" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:scrollbars="vertical"
